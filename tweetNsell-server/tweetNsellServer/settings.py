@@ -144,3 +144,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+from dotenv import load_dotenv
+load_dotenv()
+

@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
 class ServiceIndustry(models.Model):
-    name_en = models.CharField(max_length = 30)
-    name_es = models.CharField(max_length = 30)
+    name_en = models.CharField(max_length = 30, unique=True)
+    name_es = models.CharField(max_length = 30, unique=True)
     
     def __str__(self):
         return "%s (%s)" % (self.name_en, self.name_es)
@@ -47,7 +47,7 @@ class Brand(models.Model):
 
     def default_service_industry():
         if not (ServiceIndustry.objects.filter(name_en='Unspecified').exists()):
-            service_industry = ServiceIndustry.objects.create(name_en='Unspecified', name_es='No especificada')
+            service_industry = ServiceIndustry(name_en='Unspecified', name_es='No especificada')
             service_industry.save()
         return ServiceIndustry.objects.get(name_en='Unspecified').pk
 
@@ -81,7 +81,7 @@ class Opinion(models.Model):
     is_pinned = models.BooleanField(default = False)
 
     POSITIVE = 'pos'
-    NEGATIVE = 'nwg'
+    NEGATIVE = 'neg'
     NEUTRAL = 'neu'
     UNCATEGORIZED = 'unc'
 

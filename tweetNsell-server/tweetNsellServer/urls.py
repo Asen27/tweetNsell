@@ -25,5 +25,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('login/', obtain_auth_token),
-    path('getUserByToken/', views.GetUserView.as_view(),  name='get_user')
+    path('getUserByToken/', views.GetUserView.as_view(),  name='get_user'),
+    path('register/', views.RegisterBrand.as_view(), name='register_brand')
 ]

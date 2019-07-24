@@ -12,6 +12,8 @@ log.txt
 .vscode/
 npm-debug.log*
 
+tweetNsell-server/tweetNsellServer/.env
+
 .idea/
 .env
 .sourcemaps/

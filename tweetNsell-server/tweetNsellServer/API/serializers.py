@@ -16,17 +16,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'password', 'email', 'is_staff']
 
 class BrandSerializer(serializers.ModelSerializer):
-    user_profile = UserSerializer()
+    user_profile = UserSerializer(many=False, read_only=True)
 
-    service_industry = serializers.SerializerMethodField()
 
-    def get_service_industry(self, obj):
-        if (obj.language == 'en'):
-            slug_field = 'name_en'
-        else:
-            slug_field = 'name_es'
-
-        return serializers.SlugRelatedField(many=False, read_only=True,slug_field=slug_field)
+    service_industry = ServiceIndustrySerializer(many=False, read_only=True)
 
     class Meta:
         model = Brand

@@ -9,8 +9,13 @@ class ServiceIndustry(models.Model):
     def __str__(self):
         return "%s (%s)" % (self.name_en, self.name_es)
 
+    class Meta:
+        verbose_name = "Service Industry"
+        verbose_name_plural = "Service Industries"
+
+
 class Administrator(models.Model):
-    user_profile = models.OneToOneField(User, on_delete = models.CASCADE)
+    user_profile = models.OneToOneField(User, on_delete = models.CASCADE, primary_key=True)
 
     def __str__(self):
         return self.user_profile.username
@@ -40,7 +45,14 @@ class Brand(models.Model):
     social_rating = JSONField()
     are_all_opinions_evaluated = models.BooleanField(default = True)
 
-    service_industry = models.ForeignKey(ServiceIndustry, null=True, on_delete=models.SET_NULL)
+    def default_service_industry():
+        if not (ServiceIndustry.objects.filter(name_en='Unspecified').exists()):
+            service_industry = ServiceIndustry.objects.create(name_en='Unspecified', name_es='No especificada')
+            service_industry.save()
+        return ServiceIndustry.objects.get(name_en='Unspecified').pk
+
+
+    service_industry = models.ForeignKey(ServiceIndustry, default=default_service_industry, on_delete=models.SET_DEFAULT)
 
     def __str__(self):
         return self.user_profile.username

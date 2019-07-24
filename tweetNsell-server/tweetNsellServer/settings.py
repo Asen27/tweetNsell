@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'tweetNsellServer.API',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders'
 ]
 
 REST_FRAMEWORK = {
@@ -59,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'tweetNsellServer.urls'
@@ -140,3 +142,5 @@ REST_FRAMEWORK = {
     'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }
+
+CORS_ORIGIN_ALLOW_ALL = True

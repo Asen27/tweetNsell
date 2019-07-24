@@ -26,5 +26,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', obtain_auth_token),
     path('getUserByToken/', views.GetUserView.as_view(),  name='get_user'),
-    path('register/', views.RegisterBrand.as_view(), name='register_brand')
+    path('register/', views.RegisterBrand.as_view(), name='register_brand'),
+    path('service-industries/create/', views.CreateServiceIndustry.as_view(), name='create_service_industry'),
+    path('service-industries/', views.ServiceIndustriesList.as_view(), name='service-industries-list'),
+    path('service-industries/delete/<int:id>/', views.DeleteServiceIndustry.as_view(), name='delete-service-industry')
 ]

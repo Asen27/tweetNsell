@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.http import FileResponse, HttpResponse
-from rest_framework import generics
+from rest_framework.generics import ListAPIView, DestroyAPIView
 from .models import ServiceIndustry, Administrator, Brand, Opinion
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -257,3 +257,61 @@ class RegisterBrand(APIView):
         brand.save()
 
         return JsonResponse({'message':'Sign up performed successfuly'}, status=201)
+
+
+class ServiceIndustriesList(ListAPIView):
+    
+    permission_classes = (IsAdminUser, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = ServiceIndustrySerializer
+
+    def get_queryset(self):
+        return ServiceIndustry.objects.all().order_by('name_en')
+
+
+class CreateServiceIndustry(APIView):
+    permission_classes = (IsAdminUser, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    def post(self, request):
+
+        name_en = request.data.get('name_en')
+        name_es = request.data.get('name_es')
+
+
+        try:
+            service_industry = ServiceIndustry(name_en = name_en, name_es = name_es)
+            service_industry.save()
+
+        except Exception:
+            return JsonResponse({'error': 'This service industry already exists!'}, status=500)
+
+        else:
+            return JsonResponse({'message':'Service industry created successfuly'}, status=201)
+        
+
+class DeleteServiceIndustry(DestroyAPIView):
+    permission_classes = (IsAdminUser, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = ServiceIndustrySerializer
+    lookup_field = 'id'
+
+
+    def get_queryset(self):
+        queryset = ServiceIndustry.objects.all()
+        return queryset
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Exception:
+            return JsonResponse({'error': "This service industry doesn't exists!"}, status=500)
+        else:
+            if instance.name_en == 'Unspecified':
+                return JsonResponse({'error': "The default service industry can't be deleted!"}, status=500)
+            else:
+                self.perform_destroy(instance)
+                return JsonResponse({'message':'The service industry has been deleted successfuly'}, status=201)
+        

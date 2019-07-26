@@ -16,6 +16,7 @@ from datetime import datetime
 from django.http.response import JsonResponse
 #from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 #from collections import namedtuple
+from dateutil import parser
 from django.contrib.auth.hashers import make_password
 from urllib.parse import unquote
 from urllib.error import URLError
@@ -123,8 +124,10 @@ def get_brand_profile(twitter_api, username):
     
     brand_info = {}
 
-    
-    response = make_twitter_request(twitter_api.users.show, screen_name=username, include_entities=True)
+    try:
+        response = make_twitter_request(twitter_api.users.show, screen_name=username, include_entities=True)
+    except Exception:
+        response = None
 
     if response is None:
         return None
@@ -226,12 +229,12 @@ class RegisterBrand(APIView):
         social_rating['neutral'] = 0
 
         if (service_industry == ''):
-            service_industry_object = ServiceIndustry.objects.filter(name_en='Unspecified').first()
+            service_industry_object = ServiceIndustry.objects.filter(name_en='Unspecified')[:1].get()
         else:
             if (ServiceIndustry.objects.filter(name_en=service_industry).exists()):
-                service_industry_object = ServiceIndustry.objects.filter(name_en=service_industry).first()
+                service_industry_object = ServiceIndustry.objects.filter(name_en=service_industry)[:1].get()
             else:
-                service_industry_object = ServiceIndustry.objects.filter(name_en='Unspecified').first()
+                service_industry_object = ServiceIndustry.objects.filter(name_en='Unspecified')[:1].get()
 
         try:
             user_profile = User(username=username, password=encrypted_password, email=email)
@@ -315,3 +318,140 @@ class DeleteServiceIndustry(DestroyAPIView):
                 self.perform_destroy(instance)
                 return JsonResponse({'message':'The service industry has been deleted successfuly'}, status=201)
         
+
+
+class LoadOpinions(APIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+
+    def search_for_opinions(self, twitter_api, username, language, last_tweet_id=None, max_results=200):
+
+        q = '@%s -filter:retweets AND filter:safe' % username
+        
+        try:
+            search_results = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=100, tweet_mode='extended', include_entities=True, since_id=last_tweet_id)
+        
+        except Exception as e:
+            print(str(e))
+            return None  
+        
+        opinions = search_results['statuses']
+
+        max_results = min(500, max_results)
+        stop = False
+        for _ in range(5): 
+            if len(search_results['statuses']) < 100:
+                stop = True
+            
+            if stop is False:
+                max_id = search_results['statuses'][-1]['id_str']
+                try:
+                    search_results = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=100, tweet_mode='extended', include_entities=True, max_id=max_id, since_id=last_tweet_id)
+                except Exception:
+                    return None
+               
+                opinions += search_results['statuses'][1:]
+            else:
+                break
+            
+            if len(opinions) > max_results: 
+                break
+                
+        return opinions
+
+
+
+    def post(self, request):
+
+        brand = get_user_by_token(request)
+
+        if not (isinstance(brand, Brand)):
+            return JsonResponse({'error':'Only brands can search for opinions!'}, status=500)
+
+        twitter_api = oauth_login()
+
+        language = brand.language
+
+        try:
+            last_tweet_id = Opinion.objects.filter(brand = brand, is_latest = True)[:1].get()
+        except Opinion.DoesNotExist:
+            last_tweet_id = None
+
+        opinions = self.search_for_opinions(twitter_api, brand.user_profile.username, language , last_tweet_id)
+
+        if opinions is None:
+            return JsonResponse({'error':'A problem occurred while searching the opinions!'}, status=500)
+
+
+        is_first = True;
+        for opinion in opinions:
+            if (opinion['lang'] == brand.language and len(opinion['entities']['user_mentions']) == 1 and len(opinion['entities']['urls']) == 0):
+                id = opinion['id_str']
+                text = unquote(opinion['full_text'])
+                text = re.sub(r'https?:\/\/.*[\r\n]*', ' ', text, flags=re.MULTILINE)
+                language = opinion['lang']
+                publication_moment = parser.parse(opinion['created_at'])
+                number_favorites = opinion['favorite_count']
+                number_retweets = opinion['retweet_count']
+                author_id = opinion['user']['id_str']
+                author_name = unquote(opinion['user']['name'])
+                author_screen_name = opinion['user']['screen_name']
+                try:
+                    author_url = opinion['user']['entities']['url']['urls'][0]['expanded_url']
+                except Exception:
+                    author_url = ''
+                author_number_followers = opinion['user']['followers_count']
+                if is_first is True:
+                    is_latest = True
+                    is_first = False
+                else:
+                    is_latest = False
+            
+                try:
+                    author = Customer(
+                    id = author_id, 
+                    screen_name = author_screen_name, 
+                    name = author_name,
+                    url =author_url,
+                    number_followers = author_number_followers)
+                    author.save()
+                
+                except Exception:
+                    if Customer.objects.filter(id = author_id).exists():
+                        author = Customer.objects.get(pk = author_id)
+                    else:
+                        print('VNIMANIEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!')
+                        author = Customer(
+                        id = '7857353745384753875', 
+                        screen_name = "senranbay", 
+                        name = "Asen",
+                        url = '',
+                        number_followers = 3)
+                        author.save()
+
+                try:
+
+                    new_opinion = Opinion(
+                    id = id, 
+                    text = text,
+                    language = language, 
+                    publication_moment = publication_moment,
+                    number_favorites = number_favorites,
+                    number_retweets = number_retweets,
+                    is_latest = is_latest,
+                    is_pinned = False,
+                    attitude = 'unc',
+                    brand = brand,
+                    author = author
+                    )
+                    new_opinion.save()
+
+                except Exception as e:
+                    print(str(e))
+                    print(text)
+
+                    
+        brand.are_all_opinions_evaluated = False
+        brand.save()          
+        return JsonResponse({'message':'Tweets loaded successfuly'}, status=201)

@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.http import FileResponse, HttpResponse
-from rest_framework.generics import ListAPIView, DestroyAPIView
+from rest_framework.generics import ListAPIView, DestroyAPIView, UpdateAPIView
 from .models import ServiceIndustry, Administrator, Brand, Customer, Opinion
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -455,3 +455,211 @@ class LoadOpinions(APIView):
         brand.are_all_opinions_evaluated = False
         brand.save()          
         return JsonResponse({'message':'Tweets loaded successfuly'}, status=201)
+
+    
+class AllOpinionsList(ListAPIView):
+    
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user).order_by('-publication_moment')
+
+class NewOpinionsList(ListAPIView):
+    
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user, attitude = 'unc').order_by('-publication_moment')
+
+
+class EvaluatedOpinionsList(ListAPIView):
+    
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user).exclude(attitude = 'unc').order_by('-publication_moment')
+
+
+class PinnedOpinionsList(ListAPIView):
+    
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user, is_Pinned = True).order_by('-publication_moment')
+
+class PositiveOpinionsList(ListAPIView):
+    
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user, attitude = 'pos').order_by('-publication_moment')
+
+class NegativeOpinionsList(ListAPIView):
+    
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user, attitude = 'neg').order_by('-publication_moment')
+
+class NeutralOpinionsList(ListAPIView):
+    
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+    
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user, attitude = 'neu').order_by('-publication_moment')
+
+    
+class PinOpinion(UpdateAPIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+    lookup_field = 'id'
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Exception:
+            return JsonResponse({'error': "This opinion doesn't exists!"}, status=500)
+        else:
+            if instance.is_pinned:
+                return JsonResponse({'error': "This opinion is already pinned!"}, status=500)
+            else:
+                instance.is_pinned = True
+                instance.save()
+                return JsonResponse({'message':'The opinion has been pinned successfuly'}, status=201)
+
+
+class UnpinOpinion(UpdateAPIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+    lookup_field = 'id'
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+            
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Exception:
+            return JsonResponse({'error': "This opinion doesn't exists!"}, status=500)
+        else:
+            if not instance.is_pinned:
+                return JsonResponse({'error': "This opinion is not pinned!"}, status=500)
+            else:
+                instance.is_pinned = False
+                instance.save()
+                return JsonResponse({'message':'The opinion has been unpinned successfuly'}, status=201)
+    
+
+    
+

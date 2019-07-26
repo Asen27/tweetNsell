@@ -30,5 +30,14 @@ urlpatterns = [
     path('service-industries/create/', views.CreateServiceIndustry.as_view(), name='create_service_industry'),
     path('service-industries/', views.ServiceIndustriesList.as_view(), name='service_industries_list'),
     path('service-industries/delete/<int:id>/', views.DeleteServiceIndustry.as_view(), name='delete_service_industry'),
-    path('opinions/load/', views.LoadOpinions.as_view(), name='load_opinions')
+    path('opinions/load/', views.LoadOpinions.as_view(), name='load_opinions'),
+    path('opinions/all/', views.AllOpinionsList.as_view(), name='opinions_list_all'),
+    path('opinions/new/', views.NewOpinionsList.as_view(), name='opinions_list_new'),
+    path('opinions/evaluated/', views.EvaluatedOpinionsList.as_view(), name='opinions_list_evaluated'),
+    path('opinions/pinned/', views.PinnedOpinionsList.as_view(), name='opinions_list_pinned'),
+    path('opinions/positive/', views.PositiveOpinionsList.as_view(), name='opinions_list_positive'),
+    path('opinions/negative/', views.NegativeOpinionsList.as_view(), name='opinions_list_negative'),
+    path('opinions/neutral/', views.NeutralOpinionsList.as_view(), name='opinions_list_neutral'),
+    path('opinions/pin/<int:id>/', views.PinOpinion.as_view(), name='pin_opinion'),
+    path('opinions/unpin/<int:id>/', views.UnpinOpinion.as_view(), name='unpin_opinion')
 ]

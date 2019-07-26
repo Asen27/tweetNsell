@@ -46,3 +46,39 @@ class AdministratorSerializer(serializers.ModelSerializer):
         fields = [
             'user_profile'
         ]
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Customer
+        fields = [
+            'name',
+            'screen_name',
+            'url',
+            'number_followers'
+        ]
+
+class OpinionSerializer(serializers.ModelSerializer):
+
+    author = CustomerSerializer(many=False, read_only=True)
+    brand = serializers.StringRelatedField(many=False)
+
+    class Meta:
+        model = Opinion
+        fields = [
+            'id',
+            'text',
+            'language',
+            'publication_moment',
+            'number_favorites',
+            'number_retweets',
+            'is_latest',
+            'is_pinned',
+            'attitude',
+            'brand',
+            'author'
+        ]
+
+
+

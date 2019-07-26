@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.http import FileResponse, HttpResponse
 from rest_framework.generics import ListAPIView, DestroyAPIView
-from .models import ServiceIndustry, Administrator, Brand, Opinion
+from .models import ServiceIndustry, Administrator, Brand, Customer, Opinion
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication

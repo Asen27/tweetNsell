@@ -58,6 +58,17 @@ class Brand(models.Model):
         return self.user_profile.username
 
 
+class Customer(models.Model):
+    id = models.CharField(max_length = 30, primary_key=True)
+    screen_name = models.CharField(max_length = 25, unique = True)
+    name = models.CharField(max_length = 50, blank = True)
+    url = models.CharField(max_length = 100, blank = True)
+    number_followers = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.screen_name
+
+
 class Opinion(models.Model):
     id = models.CharField(max_length = 30, primary_key=True)
     text = models.TextField(blank = True)
@@ -99,6 +110,8 @@ class Opinion(models.Model):
 
 
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+
+    author = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.id

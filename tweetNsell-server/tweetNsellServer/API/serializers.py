@@ -1,4 +1,4 @@
-from .models import ServiceIndustry, Administrator, Brand, Opinion
+from .models import ServiceIndustry, Administrator, Brand, Customer, Opinion
 from rest_framework import serializers
 from django.contrib.auth.models import User
 

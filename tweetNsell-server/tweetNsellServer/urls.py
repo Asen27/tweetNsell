@@ -39,5 +39,8 @@ urlpatterns = [
     path('opinions/negative/', views.NegativeOpinionsList.as_view(), name='opinions_list_negative'),
     path('opinions/neutral/', views.NeutralOpinionsList.as_view(), name='opinions_list_neutral'),
     path('opinions/pin/<int:id>/', views.PinOpinion.as_view(), name='pin_opinion'),
-    path('opinions/unpin/<int:id>/', views.UnpinOpinion.as_view(), name='unpin_opinion')
+    path('opinions/unpin/<int:id>/', views.UnpinOpinion.as_view(), name='unpin_opinion'),
+    path('opinions/evaluate/<int:id>/', views.EvaluateOpinion.as_view(), name='evaluate_opinion'),
+    path('opinions/delete/<int:id>/', views.DeleteOpinion.as_view(), name='delete_opinion'),
+    path('opinions/evaluate/all/', views.EvaluateAllOpinions.as_view(), name='evaluate_all_opinions')
 ]

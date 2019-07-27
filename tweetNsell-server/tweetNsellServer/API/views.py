@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from datetime import datetime
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from googletrans import Translator
 #from dateutil.relativedelta import relativedelta
 #from django.db.models import Q, Count, StdDev, Avg, Sum, Case, When, IntegerField, Value
 #from django.utils.datastructures import MultiValueDictKeyError
@@ -27,7 +29,8 @@ import os
 #import json
 import time
 import sys
-
+import emoji
+import regex
 
 
 
@@ -175,6 +178,92 @@ def get_user_by_token(request):
         user = Brand.objects.get(user_profile=user_profile)
     
     return user
+
+
+def spanish_sentiment_analyzer(opinion):
+    opinion_without_whitespaces = opinion.strip()
+    opinion_without_mentions = re.sub(r'@\S+', '', opinion_without_whitespaces)
+    opinion_without_hashtags = opinion_without_mentions.replace("#", "")
+    
+   
+    emoji_list = []
+    emojis = regex.findall(r'\X', opinion_without_hashtags)
+    
+    for element in emojis:
+        if any(char in emoji.UNICODE_EMOJI for char in element):
+            emoji_list.append(element)
+        
+    if len(emoji_list) > 0:
+
+        acceptable_characters = "abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789áéíóúÁÉÍÓÚñÑ.,¿?¡!;:-()"
+        opinion_without_emojis = ''.join([char if char in acceptable_characters else " " for char in list(opinion_without_hashtags)])
+    
+    else:
+        opinion_without_emojis = opinion_without_hashtags
+
+
+    opinion_to_lowercase = opinion_without_emojis.lower()
+    
+
+    translator = Translator()
+    try:
+        translated_opinion = translator.translate(opinion_to_lowercase, src='es', dest='en').text
+    except Exception:
+        return 'neu'
+    else:
+        if len(emoji_list) > 0:
+            for elem in emoji_list:
+                translated_opinion += " " + elem
+
+        analyzer = SentimentIntensityAnalyzer()
+        score = analyzer.polarity_scores(translated_opinion)
+        compound = float(score['compound'])
+        if compound > 0.3:
+            attitude = 'pos'
+        elif compound < -0.3:
+            attitude = 'neg'
+        else:
+            attitude = 'neu'
+        return attitude
+
+
+def english_sentiment_analyzer(opinion):
+    opinion_without_whitespaces = opinion.strip()
+    opinion_without_mentions = re.sub(r'@\S+', '', opinion_without_whitespaces)
+    opinion_without_hashtags = opinion_without_mentions.replace("#", "")
+    
+   
+    emoji_list = []
+    emojis = regex.findall(r'\X', opinion_without_hashtags)
+
+        
+    for element in emojis:
+        if any(char in emoji.UNICODE_EMOJI for char in element):
+            emoji_list.append(element)
+        
+    if len(emoji_list) > 0:
+        acceptable_characters = "abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789áéíóúÁÉÍÓÚñÑ.,¿?¡!;:-()+='$%&<>€/"
+        opinion_without_emojis = ''.join([char if char in acceptable_characters else " " for char in list(opinion_without_hashtags)])
+
+        for elem in emoji_list:
+            opinion_without_emojis += " " + elem
+
+        processed_opinion = opinion_without_emojis
+    else:
+        processed_opinion = opinion_without_hashtags
+
+    analyzer = SentimentIntensityAnalyzer()
+    score = analyzer.polarity_scores(processed_opinion)
+    compound = float(score['compound'])
+    if compound > 0.3:
+        attitude = 'pos'
+    elif compound < -0.3:
+        attitude = 'neg'
+    else:
+        attitude = 'neu'
+    return attitude
+
+
 
 class GetUserView(APIView):
     permission_classes = (IsAuthenticated, )
@@ -470,8 +559,6 @@ class LoadOpinions(APIView):
 
                 
         
-
-    
 class AllOpinionsList(ListAPIView):
     
     permission_classes = (IsAuthenticated, )
@@ -674,7 +761,143 @@ class UnpinOpinion(UpdateAPIView):
                 instance.is_pinned = False
                 instance.save()
                 return JsonResponse({'message':'The opinion has been unpinned successfuly'}, status=201)
-    
 
-    
 
+class EvaluateOpinion(UpdateAPIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+    lookup_field = 'id'
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+            
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Exception:
+            return JsonResponse({'error': "This opinion doesn't exists!"}, status=500)
+        else:
+            if not instance.attitude == 'unc':
+                return JsonResponse({'error': "This opinion has been evaluated already!"}, status=500)
+            else:
+                opinion = instance.text
+                if instance.language == 'en':
+                    attitude = english_sentiment_analyzer(opinion)
+                else:
+                    attitude = spanish_sentiment_analyzer(opinion)
+                instance.attitude = attitude
+                instance.number_new_opinions -= 1
+                instance.save()
+                brand = instance.brand
+                if attitude = 'pos':
+                    brand.social_rating['positive'] += 1
+                elif attitude = 'neu':
+                    brand.social_rating['neutral'] += 1
+                else
+                    brand.social_rating['negative'] += 1
+                brand.save()
+                
+                return JsonResponse({'message':'The opinion has been evaluated successfuly'}, status=201)  
+
+
+class EvaluateAllOpinions(APIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    def post(self, request):
+
+        brand = get_user_by_token(request)
+
+        if not (isinstance(brand, Brand)):
+            return JsonResponse({'error':'Only brands can evaluate opinions!'}, status=500)
+
+        opinions = Opinion.objects.filter(brand = brand, attitude = 'unc')
+    
+        if len(opinions) == 0:
+            return JsonResponse({'error':'There are no unevaluated opinions!'}, status=201)
+        else:
+            for opinion in opinions:
+
+                opinion = instance.text
+                if opinion.language == 'en':
+                    attitude = english_sentiment_analyzer(opinion)
+                else:
+                    attitude = spanish_sentiment_analyzer(opinion)
+                opinion.attitude = attitude
+                opinion.save()
+                if attitude = 'pos':
+                    brand.social_rating['positive'] += 1
+                elif attitude = 'neu':
+                    brand.social_rating['neutral'] += 1
+                else
+                    brand.social_rating['negative'] += 1
+            
+            brand.number_new_opinions -= len(opinions)
+            brand.save()
+
+            return JsonResponse({'message':'Opinions evaluated successfuly'}, status=201)
+
+
+class DeleteOpinion(DestroyAPIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = OpinionSerializer
+    lookup_field = 'id'
+
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+            
+    def get_queryset(self):
+        return Opinion.objects.filter(brand__user_profile = self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Exception:
+            return JsonResponse({'error': "This opinion doesn't exists!"}, status=500)
+        else:
+            if instance.attitude != 'unc':
+                brand = instance.brand
+                brand.number_new_opinions -= 1
+                if instance.attitude == 'pos':
+                    brand.social_rating['positive'] -= 1
+                elif instance.attitude == 'neu':
+                    brand.social_rating['neutral'] -= 1
+                else:
+                    brand.social_rating['negative'] -= 1
+                brand.save()
+
+            if instance.is_latest:
+                try:
+                    new_latest_tweet = Opinion.objects.filter(brand = instance.brand).order_by('-publication_moment')[:1].get()
+                except Opinion.DoesNotExist:
+                    pass
+                else:
+                    new_latest_tweet.is_latest = True
+                    new_latest_tweet.save()
+            
+
+            self.perform_destroy(instance)
+            return JsonResponse({'message':'The opinion has been deleted successfuly'}, status=201)
+        

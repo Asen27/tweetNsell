@@ -44,6 +44,7 @@ class Brand(models.Model):
     is_verified = models.BooleanField(default = False)
     social_rating = JSONField()
     are_all_opinions_evaluated = models.BooleanField(default = True)
+    number_new_opinions = models.PositiveIntegerField(default=0)
 
     def default_service_industry():
         if not (ServiceIndustry.objects.filter(name_en='Unspecified').exists()):

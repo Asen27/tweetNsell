@@ -253,7 +253,7 @@ class RegisterBrand(APIView):
             url = brand_info['url'],
             is_verified = brand_info['is_verified'],
             social_rating = social_rating,
-            are_all_opinions_evaluated = True,
+            number_new_opinions = 0,
             service_industry = service_industry_object
         )
 
@@ -324,7 +324,6 @@ class LoadOpinions(APIView):
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
-
     def search_for_opinions(self, twitter_api, username, language, last_tweet_id=None, max_results=200):
 
         q = '@%s -filter:retweets AND filter:safe' % username
@@ -374,31 +373,35 @@ class LoadOpinions(APIView):
         language = brand.language
 
         try:
-            last_tweet_id = Opinion.objects.filter(brand = brand, is_latest = True)[:1].get()
+            last_tweet = Opinion.objects.filter(brand = brand, is_latest = True)[:1].get()
+            last_tweet_id = last_tweet.id
+            print(last_tweet_id)
         except Opinion.DoesNotExist:
+            last_tweet = None
             last_tweet_id = None
 
-        opinions = self.search_for_opinions(twitter_api, brand.user_profile.username, language , last_tweet_id)
+        opinions = self.search_for_opinions(twitter_api, brand.user_profile.username, language, last_tweet_id=last_tweet_id)
+       
 
         if opinions is None:
             return JsonResponse({'error':'A problem occurred while searching the opinions!'}, status=500)
 
-
+        num_results = 0
         is_first = True;
         for opinion in opinions:
             if (opinion['lang'] == brand.language and len(opinion['entities']['user_mentions']) == 1 and len(opinion['entities']['urls']) == 0):
                 id = opinion['id_str']
-                text = unquote(opinion['full_text'])
-                text = re.sub(r'https?:\/\/.*[\r\n]*', ' ', text, flags=re.MULTILINE)
+                text = opinion['full_text']   # WARNING!!!!!!!!!!!!!!
+                text = re.sub(r'https?:\/\/.*[\r\n]*', ' ', text, flags=re.MULTILINE) 
                 language = opinion['lang']
                 publication_moment = parser.parse(opinion['created_at'])
                 number_favorites = opinion['favorite_count']
                 number_retweets = opinion['retweet_count']
                 author_id = opinion['user']['id_str']
-                author_name = unquote(opinion['user']['name'])
+                author_name = opinion['user']['name']
                 author_screen_name = opinion['user']['screen_name']
                 try:
-                    author_url = opinion['user']['entities']['url']['urls'][0]['expanded_url']
+                    author_url = opinion['user']['entities']['url']['urls'][0]['display_url']
                 except Exception:
                     author_url = ''
                 author_number_followers = opinion['user']['followers_count']
@@ -451,10 +454,22 @@ class LoadOpinions(APIView):
                     print(str(e))
                     print(text)
 
-                    
-        brand.are_all_opinions_evaluated = False
-        brand.save()          
-        return JsonResponse({'message':'Tweets loaded successfuly'}, status=201)
+                else:
+                    num_results += 1
+                    if is_latest is True and last_tweet is not None:
+                        last_tweet.is_latest = False
+                        last_tweet.save()
+
+
+        if num_results == 0:
+            return JsonResponse({'message':'There are no new tweets'}, status=201)
+        else:
+            brand.number_new_opinions = num_results
+            brand.save()  
+            return JsonResponse({'message':'Tweets loaded successfuly'}, status=201)
+
+                
+        
 
     
 class AllOpinionsList(ListAPIView):

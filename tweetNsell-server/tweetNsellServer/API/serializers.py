@@ -33,7 +33,7 @@ class BrandSerializer(serializers.ModelSerializer):
             'url',
             'is_verified',
             'social_rating',
-            'are_all_opinions_evaluated',
+            'number_new_opinions',
             'service_industry'
         ]
 

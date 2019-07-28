@@ -43,7 +43,6 @@ class Brand(models.Model):
     url = models.CharField(max_length = 60, blank = True)
     is_verified = models.BooleanField(default = False)
     social_rating = JSONField()
-    are_all_opinions_evaluated = models.BooleanField(default = True)
     number_new_opinions = models.PositiveIntegerField(default=0)
 
     def default_service_industry():

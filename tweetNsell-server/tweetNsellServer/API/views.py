@@ -20,13 +20,13 @@ from django.http.response import JsonResponse
 #from collections import namedtuple
 from dateutil import parser
 from django.contrib.auth.hashers import make_password
-from urllib.parse import unquote
+#from urllib.parse import unquote
 from urllib.error import URLError
 from http.client import BadStatusLine
 import re
 import twitter
 import os
-#import json
+import html
 import time
 import sys
 import emoji
@@ -138,11 +138,11 @@ def get_brand_profile(twitter_api, username):
     if response['protected'] == 'true':
         return None
 
+
     brand_info['id'] = response['id_str']
     brand_info['username'] = username
-    brand_info['name'] = unquote(response['name'])
-    brand_info['location'] = unquote(response['location'])
-    brand_info['description'] = unquote(response['description'])
+    brand_info['name'] = html.unescape(response['name'])
+    brand_info['location'] = html.unescape(response['location'])
     brand_info['is_verified'] = response['verified']
 
     
@@ -161,6 +161,20 @@ def get_brand_profile(twitter_api, username):
 
     except Exception:
         brand_info['url'] =''
+
+
+    try:
+        has_links_in_description = len(response['entities']['description']['urls']) > 0
+    except Exception:
+        brand_info['description'] = response['description']
+    else:
+        if has_links_in_description:
+            description = html.unescape(response['description'])
+            for link in response['entities']['description']['urls']:
+                description = description.replace(link['url'], link['display_url'])
+            brand_info['description'] = description
+        else:
+            brand_info['description'] = html.unescape(response['description'])
 
     return brand_info
 
@@ -293,7 +307,7 @@ class RegisterBrand(APIView):
         digit_error = re.search(r"\d", password) is None
         uppercase_error = re.search(r"[A-Z]", password) is None
         lowercase_error = re.search(r"[a-z]", password) is None
-        symbol_error = re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password) is None
+        symbol_error = re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~<>"+r'"]', password) is None
         is_password_invalid = length_error or digit_error or uppercase_error or lowercase_error or symbol_error
         if is_password_invalid:
             return JsonResponse({'error':'Invalid password!'}, status=500)
@@ -480,14 +494,14 @@ class LoadOpinions(APIView):
         for opinion in opinions:
             if (opinion['lang'] == brand.language and len(opinion['entities']['user_mentions']) == 1 and len(opinion['entities']['urls']) == 0):
                 id = opinion['id_str']
-                text = opinion['full_text']   # WARNING!!!!!!!!!!!!!!
+                text = html.unescape(opinion['full_text'])   
                 text = re.sub(r'https?:\/\/.*[\r\n]*', ' ', text, flags=re.MULTILINE) 
                 language = opinion['lang']
                 publication_moment = parser.parse(opinion['created_at'])
                 number_favorites = opinion['favorite_count']
                 number_retweets = opinion['retweet_count']
-                author_id = opinion['user']['id_str']
-                author_name = opinion['user']['name']
+                author_id = opinion['user']['id_str'] 
+                author_name = html.unescape(opinion['user']['name'])
                 author_screen_name = opinion['user']['screen_name']
                 try:
                     author_url = opinion['user']['entities']['url']['urls'][0]['display_url']
@@ -513,7 +527,7 @@ class LoadOpinions(APIView):
                     if Customer.objects.filter(id = author_id).exists():
                         author = Customer.objects.get(pk = author_id)
                     else:
-                        print('VNIMANIEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!')
+                        print('ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR!!!!!!!')
                         author = Customer(
                         id = '7857353745384753875', 
                         screen_name = "senranbay", 
@@ -553,7 +567,7 @@ class LoadOpinions(APIView):
         if num_results == 0:
             return JsonResponse({'message':'There are no new tweets'}, status=201)
         else:
-            brand.number_new_opinions = num_results
+            brand.number_new_opinions += num_results
             brand.save()  
             return JsonResponse({'message':'Tweets loaded successfuly'}, status=201)
 
@@ -797,15 +811,15 @@ class EvaluateOpinion(UpdateAPIView):
                     attitude = english_sentiment_analyzer(opinion)
                 else:
                     attitude = spanish_sentiment_analyzer(opinion)
-                instance.attitude = attitude
-                instance.number_new_opinions -= 1
-                instance.save()
                 brand = instance.brand
-                if attitude = 'pos':
+                instance.attitude = attitude
+                brand.number_new_opinions -= 1
+                instance.save()
+                if attitude == 'pos':
                     brand.social_rating['positive'] += 1
-                elif attitude = 'neu':
+                elif attitude == 'neu':
                     brand.social_rating['neutral'] += 1
-                else
+                else:
                     brand.social_rating['negative'] += 1
                 brand.save()
                 
@@ -830,18 +844,18 @@ class EvaluateAllOpinions(APIView):
         else:
             for opinion in opinions:
 
-                opinion = instance.text
+                text = opinion.text
                 if opinion.language == 'en':
-                    attitude = english_sentiment_analyzer(opinion)
+                    attitude = english_sentiment_analyzer(text)
                 else:
-                    attitude = spanish_sentiment_analyzer(opinion)
+                    attitude = spanish_sentiment_analyzer(text)
                 opinion.attitude = attitude
                 opinion.save()
-                if attitude = 'pos':
+                if attitude == 'pos':
                     brand.social_rating['positive'] += 1
-                elif attitude = 'neu':
+                elif attitude == 'neu':
                     brand.social_rating['neutral'] += 1
-                else
+                else:
                     brand.social_rating['negative'] += 1
             
             brand.number_new_opinions -= len(opinions)
@@ -877,9 +891,8 @@ class DeleteOpinion(DestroyAPIView):
         except Exception:
             return JsonResponse({'error': "This opinion doesn't exists!"}, status=500)
         else:
+            brand = instance.brand
             if instance.attitude != 'unc':
-                brand = instance.brand
-                brand.number_new_opinions -= 1
                 if instance.attitude == 'pos':
                     brand.social_rating['positive'] -= 1
                 elif instance.attitude == 'neu':
@@ -887,17 +900,25 @@ class DeleteOpinion(DestroyAPIView):
                 else:
                     brand.social_rating['negative'] -= 1
                 brand.save()
+            
+            else:
+                brand.number_new_opinions -= 1
+                brand.save()
 
             if instance.is_latest:
                 try:
-                    new_latest_tweet = Opinion.objects.filter(brand = instance.brand).order_by('-publication_moment')[:1].get()
+                    new_latest_tweet = Opinion.objects.filter(brand = brand, is_latest = False).order_by('-publication_moment')[:1].get()
                 except Opinion.DoesNotExist:
                     pass
                 else:
                     new_latest_tweet.is_latest = True
                     new_latest_tweet.save()
             
-
+            author_id = instance.author.id
             self.perform_destroy(instance)
+            are_there_other_opinions_same_author = Opinion.objects.filter(author__id = author_id).exists()
+            if not are_there_other_opinions_same_author:
+                Customer.objects.filter(pk = author_id).delete()
+
             return JsonResponse({'message':'The opinion has been deleted successfuly'}, status=201)
         

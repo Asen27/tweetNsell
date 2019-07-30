@@ -357,7 +357,9 @@ class RegisterBrand(APIView):
             is_verified = brand_info['is_verified'],
             social_rating = social_rating,
             number_new_opinions = 0,
-            service_industry = service_industry_object
+            service_industry = service_industry_object,
+            number_new_followers = 0,
+            followers_cursor = '0'
         )
 
         brand.save()

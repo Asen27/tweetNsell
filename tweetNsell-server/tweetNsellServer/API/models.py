@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
+import datetime
 
 class ServiceIndustry(models.Model):
     name_en = models.CharField(max_length = 30, unique=True)
@@ -44,6 +45,22 @@ class Brand(models.Model):
     is_verified = models.BooleanField(default = False)
     social_rating = JSONField()
     number_new_opinions = models.PositiveIntegerField(default=0)
+
+    last_followers_load_moment = models.DateTimeField(null = True)
+
+    followers_cursor = models.CharField(max_length = 30, default = '0')
+    number_new_followers = models.PositiveIntegerField(default=0)
+
+
+
+    def can_load_more_followers(self):
+        if self.last_followers_load_moment is None:
+            return True
+        else:
+            now = datetime.datetime.now()
+            time_difference = now - self.last_followers_load_moment
+            return time_difference.total_seconds() > 900
+
 
     def default_service_industry():
         if not (ServiceIndustry.objects.filter(name_en='Unspecified').exists()):
@@ -115,6 +132,27 @@ class Opinion(models.Model):
 
     def __str__(self):
         return self.id
+
+
+class Follower(models.Model):
+    id = models.CharField(max_length = 30, primary_key=True)
+    screen_name = models.CharField(max_length = 25, unique = True)
+    name = models.CharField(max_length = 50, blank = True)
+    is_verified = models.BooleanField(default = False)
+    location = models.CharField(max_length = 40, blank = True)
+    description = models.TextField(blank = True)
+    url = models.CharField(max_length = 60, blank = True)
+    number_tweets = models.PositiveIntegerField()
+    number_followers = models.PositiveIntegerField()
+    number_friends = models.PositiveIntegerField()
+    influence = models.DecimalField(null = True, max_digits=5, decimal_places=2)
+
+    brands = models.ManyToManyField(Brand)
+
+    def __str__(self):
+        return self.screen_name
+
+
 
 
 

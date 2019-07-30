@@ -1,6 +1,9 @@
-from .models import ServiceIndustry, Administrator, Brand, Customer, Opinion
+from .models import ServiceIndustry, Administrator, Brand, Customer, Opinion, Follower
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from django.db.models import Func, F, IntegerField
+from django.db.models.expressions import Value
+from django.db.models.functions import Cast
 
 class ServiceIndustrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,11 +18,40 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'password', 'email', 'is_staff']
 
+
+class CompetitorSerializer(serializers.ModelSerializer):
+
+    user_profile = UserSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Brand
+        fields = ['user_profile', 'name', 'is_verified', 'social_rating']
+
+
+
 class BrandSerializer(serializers.ModelSerializer):
     user_profile = UserSerializer(many=False, read_only=True)
 
 
     service_industry = ServiceIndustrySerializer(many=False, read_only=True)
+    competitors = serializers.SerializerMethodField()
+
+    def get_competitors(self, obj):
+        brand_id = obj.id
+        brand_service_industry = obj.service_industry
+        if brand_service_industry.name_en is not 'Unspecified':
+            num_positive_opinions = Func(F('social_rating'), Value('positive'), function='jsonb_extract_path_text')
+            num_positive_opinions = Cast(num_positive_opinions, IntegerField())
+
+            num_negative_opinions = Func(F('social_rating'), Value('negative'), function='jsonb_extract_path_text')
+            num_negative_opinions = Cast(num_negative_opinions, IntegerField())
+
+            query_set = Brand.objects.filter(service_industry = brand_service_industry).exclude(id = brand_id).annotate(
+                total_rating=num_positive_opinions - num_negative_opinions).order_by('-total_rating')
+        else:
+            query_set = Brand.objects.none()
+        return CompetitorSerializer(query_set, many=True).data
+
 
     class Meta:
         model = Brand
@@ -34,7 +66,12 @@ class BrandSerializer(serializers.ModelSerializer):
             'is_verified',
             'social_rating',
             'number_new_opinions',
-            'service_industry'
+            'service_industry',
+            'competitors',
+            'can_load_more_followers',
+            'followers_cursor',
+            'number_new_followers'
+
         ]
 
 
@@ -80,5 +117,23 @@ class OpinionSerializer(serializers.ModelSerializer):
             'author'
         ]
 
+class FollowerSerializer(serializers.ModelSerializer):
 
+    brands = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        fields = [
+            'id',
+            'screen_name',
+            'name',
+            'location',
+            'description',
+            'is_verified',
+            'url',
+            'number_followers',
+            'number_friends',
+            'number_tweets',
+            'influence',
+            'brands'
+        ]
 

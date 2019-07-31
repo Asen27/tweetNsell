@@ -5,11 +5,10 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.http import FileResponse, HttpResponse
 from rest_framework.generics import ListAPIView, DestroyAPIView, UpdateAPIView
-from .models import ServiceIndustry, Administrator, Brand, Customer, Opinion
+from .models import ServiceIndustry, Administrator, Brand, Customer, Opinion, Follower
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from datetime import datetime
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from googletrans import Translator
 #from dateutil.relativedelta import relativedelta
@@ -55,7 +54,7 @@ def make_twitter_request(twitter_api_func, max_errors=10, *args, **kw):
     # value for wait_period if the problem is a 500 level error. Block until the
     # rate limit is reset if it's a rate limiting issue (429 error). Returns None
     # for 401 and 404 errors, which requires special handling by the caller.
-    def handle_twitter_http_error(e, wait_period=2, sleep_when_rate_limited=True):
+    def handle_twitter_http_error(e, wait_period=2, sleep_when_rate_limited=False):
     
         if wait_period > 3600: # Seconds
             print('Too many retries. Quitting.', file=sys.stderr)
@@ -135,7 +134,7 @@ def get_brand_profile(twitter_api, username):
     if response is None:
         return None
 
-    if response['protected'] == 'true':
+    if response['protected'] == True:
         return None
 
 
@@ -166,7 +165,7 @@ def get_brand_profile(twitter_api, username):
     try:
         has_links_in_description = len(response['entities']['description']['urls']) > 0
     except Exception:
-        brand_info['description'] = response['description']
+        brand_info['description'] = html.unescape(response['description'])
     else:
         if has_links_in_description:
             description = html.unescape(response['description'])
@@ -923,4 +922,209 @@ class DeleteOpinion(DestroyAPIView):
                 Customer.objects.filter(pk = author_id).delete()
 
             return JsonResponse({'message':'The opinion has been deleted successfuly'}, status=201)
+
+
+
+
+class LoadFollowers(APIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    def get_followers(self, twitter_api, user_id, cursor = None, limit = 100):
+    
+        assert (user_id != None), \
+        "user_id argument is obligatory!"
+        
+        if cursor is None or cursor == '0':
+            cursor = -1
+        
+        try:
+            followers_ids = make_twitter_request(twitter_api.followers.ids, user_id = user_id, count = limit, cursor = cursor, stringify_ids = True)
+        except Exception:
+            return None, None
+
+        else:
+            if followers_ids is None:
+                return None, None
+            else:
+                followers_ids_as_list = followers_ids['ids']
+                print(len(followers_ids_as_list))
+                print(followers_ids['next_cursor_str'])
+        
+
+                followers_ids_as_string = ','.join(followers_ids_as_list)
+                try:
+                    followers = make_twitter_request(twitter_api.users.lookup, user_id = followers_ids_as_string, include_entities = True)
+                except Exception:
+                    return None, None
+
+                else:
+                    if followers is None:
+                        return None, None
+                    else:
+                        print(len(followers))
+                        return followers_ids['next_cursor_str'], followers
+
+        
+
+    def check_latest_activity(self, twitter_api, user_id):
+
+        assert (user_id != None), \
+        "user_id argument is obligatory!"    
+        
+        kw = {
+            'user_id': user_id, 
+            'count': 200,
+            'trim_user': 'true',
+            'exclude_replies': 'true',
+            'include_rts' : 'false',
+            }
+        
+        try:
+            tweets = make_twitter_request(twitter_api.statuses.user_timeline, **kw)
+
+        except Exception:
+            return None, None, None
+
+        else:
+            if tweets is None:
+                return None, None, None
+            else:
+                number_tweets = len(tweets)
+        
+                number_retweets = [0,4,5,6]
+
+               
+                
+                if number_tweets == 0:
+                    publication_moment = "Wed Oct 10 20:19:24 +0000 2018"
+                else:
+                    publication_moment = tweets[-1]['created_at']
+        
+
+                return number_tweets, number_retweets, publication_moment 
+
+    def post(self, request):
+
+        brand = get_user_by_token(request)
+
+        if not (isinstance(brand, Brand)):
+            return JsonResponse({'error':'Only brands can search for influencers!'}, status=500)
+
+        twitter_api = oauth_login()
+
+        
+        if brand.followers_cursor is '0':
+            cursor = None
+        else:
+            cursor = brand.followers_cursor
+
+
+        next_cursor, followers = self.get_followers(twitter_api, brand.id, cursor)
+        
+    
+        if followers is None or next_cursor is None:
+            return JsonResponse({'error':'A problem occurred while loading the followers!'}, status=500)
+
+        number_results = 0
+        for follower in followers:
+            if follower['protected'] == False :
+                id = follower['id_str']
+                create_new = False
+                try:
+                    existing_follower = Follower.objects.get(pk = id)
+
+                except Follower.DoesNotExist:
+                    create_new = True
+                
+                else:
+                    if brand.follower_set.filter(pk=existing_follower.pk).exists():
+                        continue
+                    
+                    else:
+
+                        existing_follower.brands.add(brand)
+                        #existing_follower.save()
+                        number_results += 1
+                        continue
+
+                    
+                if create_new is True:
+
+                    screen_name = follower['screen_name']
+                    name = html.unescape(follower['name'])
+                    location = html.unescape(follower['location'])
+                    is_verified = follower['verified']
+                    number_followers = follower['followers_count']
+                    number_friends = follower['friends_count']
+                    number_tweets = follower['statuses_count']
+
+                    try:
+                        url = follower['entities']['url']['urls'][0]['display_url']
+
+                    except Exception:
+                        url = ''
+
+
+                    try:
+                        has_links_in_description = len(follower['entities']['description']['urls']) > 0
+
+                    except Exception:
+                        description = html.unescape(follower['description'])
+        
+                    else:
+                        description = html.unescape(follower['description'])
+                        if has_links_in_description:
+                            for link in follower['entities']['description']['urls']:
+                                description = description.replace(link['url'], link['display_url'])
+                  
+
+                    k, k_retweets, k_tweet_publication_moment = self.check_latest_activity(twitter_api, id)
+
+                    if (k is None or k_retweets is None or k_tweet_publication_moment is None):
+                        print("Error!")
+                        continue
+                    else:
+
+                        try:
+
+                            new_follower = Follower(
+                            id = id, 
+                            screen_name = screen_name, 
+                            name = name,
+                            url = url,
+                            location = location,
+                            description = description,
+                            is_verified = is_verified,
+                            number_followers = number_followers,
+                            number_friends = number_friends,
+                            number_tweets = number_tweets,
+                            k = k,
+                            k_retweets = k_retweets,
+                            k_tweet_publication_moment = parser.parse(k_tweet_publication_moment)
+                            )
+                            new_follower.save()
+
+                
+                        
+                        except Exception as e:
+                            print(str(e))
+                            continue
+                    
+
+                        else:
+                            number_results += 1
+                            new_follower.brands.add(brand)
+
+
+        print(number_results)
+        brand.followers_cursor = next_cursor
+        brand.number_new_followers += number_results
+        brand.save()
+        if number_results == 0:
+            return JsonResponse({'message':'There are no new followers'}, status=201)
+        else:
+            return JsonResponse({'message':'Followers loaded successfuly'}, status=201)
+
+                
         

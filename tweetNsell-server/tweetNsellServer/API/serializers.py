@@ -68,7 +68,6 @@ class BrandSerializer(serializers.ModelSerializer):
             'number_new_opinions',
             'service_industry',
             'competitors',
-            'can_load_more_followers',
             'followers_cursor',
             'number_new_followers'
 

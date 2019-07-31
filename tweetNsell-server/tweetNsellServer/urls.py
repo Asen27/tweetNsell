@@ -42,5 +42,6 @@ urlpatterns = [
     path('opinions/unpin/<int:id>/', views.UnpinOpinion.as_view(), name='unpin_opinion'),
     path('opinions/evaluate/<int:id>/', views.EvaluateOpinion.as_view(), name='evaluate_opinion'),
     path('opinions/delete/<int:id>/', views.DeleteOpinion.as_view(), name='delete_opinion'),
-    path('opinions/evaluate/all/', views.EvaluateAllOpinions.as_view(), name='evaluate_all_opinions')
+    path('opinions/evaluate/all/', views.EvaluateAllOpinions.as_view(), name='evaluate_all_opinions'),
+    path('followers/load/', views.LoadFollowers.as_view(), name='load_followers')
 ]

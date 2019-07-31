@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
-import datetime
+
 
 class ServiceIndustry(models.Model):
     name_en = models.CharField(max_length = 30, unique=True)
@@ -46,20 +46,8 @@ class Brand(models.Model):
     social_rating = JSONField()
     number_new_opinions = models.PositiveIntegerField(default=0)
 
-    last_followers_load_moment = models.DateTimeField(null = True)
-
     followers_cursor = models.CharField(max_length = 30, default = '0')
     number_new_followers = models.PositiveIntegerField(default=0)
-
-
-
-    def can_load_more_followers(self):
-        if self.last_followers_load_moment is None:
-            return True
-        else:
-            now = datetime.datetime.now()
-            time_difference = now - self.last_followers_load_moment
-            return time_difference.total_seconds() > 900
 
 
     def default_service_industry():
@@ -146,6 +134,9 @@ class Follower(models.Model):
     number_followers = models.PositiveIntegerField()
     number_friends = models.PositiveIntegerField()
     influence = models.DecimalField(null = True, max_digits=5, decimal_places=2)
+    k_tweet_publication_moment = models.DateTimeField()
+    k = models.PositiveIntegerField()
+    k_retweets = JSONField()
 
     brands = models.ManyToManyField(Brand)
 

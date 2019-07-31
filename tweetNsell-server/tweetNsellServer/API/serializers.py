@@ -121,6 +121,7 @@ class FollowerSerializer(serializers.ModelSerializer):
     brands = serializers.StringRelatedField(many=True)
 
     class Meta:
+        model = Follower
         fields = [
             'id',
             'screen_name',

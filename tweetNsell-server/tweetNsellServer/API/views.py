@@ -11,6 +11,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from googletrans import Translator
+from django.db.models import F
 #from dateutil.relativedelta import relativedelta
 #from django.db.models import Q, Count, StdDev, Avg, Sum, Case, When, IntegerField, Value
 #from django.utils.datastructures import MultiValueDictKeyError
@@ -991,11 +992,12 @@ class LoadFollowers(APIView):
                 return None, None, None
             else:
                 number_tweets = len(tweets)
-        
-                number_retweets = [0,4,5,6]
 
-               
-                
+                number_retweets = []
+
+                for tweet in tweets:
+                    number_retweets.append(tweet['retweet_count'])
+
                 if number_tweets == 0:
                     publication_moment = "Wed Oct 10 20:19:24 +0000 2018"
                 else:
@@ -1127,4 +1129,67 @@ class LoadFollowers(APIView):
             return JsonResponse({'message':'Followers loaded successfuly'}, status=201)
 
                 
+
+class AllFollowersList(ListAPIView):
+    
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = FollowerSerializer
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        brand = Brand.objects.get(pk = self.request.user)
+        return  brand.follower_set.all().order_by(F('influence').desc(nulls_last=True))
+
+
+class NewFollowersList(ListAPIView):
+    
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = FollowerSerializer
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        brand = Brand.objects.get(pk = self.request.user)
+        return  brand.follower_set.all().exclude(influence__isnull = False).order_by('number_followers')
+
+class EvaluatedFollowersList(ListAPIView):
+    
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = FollowerSerializer
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        brand = Brand.objects.get(pk = self.request.user)
+        return  brand.follower_set.all().exclude(influence__isnull = True).order_by('influence')
         
+
+

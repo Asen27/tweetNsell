@@ -46,5 +46,7 @@ urlpatterns = [
     path('followers/load/', views.LoadFollowers.as_view(), name='load_followers'),
     path('followers/all/', views.AllFollowersList.as_view(), name='followers_list_all'),
     path('followers/new/', views.NewFollowersList.as_view(), name='followers_list_new'),
-    path('followers/evaluated/', views.EvaluatedFollowersList.as_view(), name='followers_list_evaluated')
+    path('followers/evaluated/', views.EvaluatedFollowersList.as_view(), name='followers_list_evaluated'),
+    path('followers/evaluate/<int:id>/', views.EvaluateFollower.as_view(), name='evaluate_follower'),
+    path('followers/evaluate/all/', views.EvaluateAllFollowers.as_view(), name='evaluate_all_followers'),
 ]

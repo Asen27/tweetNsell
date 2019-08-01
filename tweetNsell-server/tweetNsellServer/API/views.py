@@ -19,6 +19,9 @@ from django.http.response import JsonResponse
 #from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 #from collections import namedtuple
 from dateutil import parser
+from datetime import datetime, timezone
+from scholarmetrics import hindex
+from math import floor, log10
 from django.contrib.auth.hashers import make_password
 #from urllib.parse import unquote
 from urllib.error import URLError
@@ -276,6 +279,27 @@ def english_sentiment_analyzer(opinion):
     else:
         attitude = 'neu'
     return attitude
+
+
+def calculate_influence(k, k_tweet_publication_moment, k_retweets, number_followers):
+        if k == 0:
+            return 0.00
+        else:
+            now = datetime.now(timezone.utc)
+            delta = now - k_tweet_publication_moment
+            days_since_k_tweet = delta.days
+            if days_since_k_tweet == 0:
+                days_since_k_tweet += 1
+            tweets_creation_rate = k / days_since_k_tweet
+            average_retweets_per_tweet = sum(k_retweets) / k
+            h_index = hindex(k_retweets)
+            if number_followers > 0:
+                oom_number_followers = floor(log10(number_followers))
+            else:
+                oom_number_followers = 0
+            
+            return tweets_creation_rate * average_retweets_per_tweet * (h_index + oom_number_followers)
+
 
 
 
@@ -931,7 +955,8 @@ class LoadFollowers(APIView):
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
-    def get_followers(self, twitter_api, user_id, cursor = None, limit = 100):
+
+    def get_followers(self, twitter_api, user_id, cursor = None, limit = 500):
     
         assert (user_id != None), \
         "user_id argument is obligatory!"
@@ -951,20 +976,30 @@ class LoadFollowers(APIView):
                 followers_ids_as_list = followers_ids['ids']
                 print(len(followers_ids_as_list))
                 print(followers_ids['next_cursor_str'])
-        
+                followers = []
+                followers_ids_grouped = [followers_ids_as_list[x:x+100] for x in range(0, len(followers_ids_as_list), 100)]
 
-                followers_ids_as_string = ','.join(followers_ids_as_list)
-                try:
-                    followers = make_twitter_request(twitter_api.users.lookup, user_id = followers_ids_as_string, include_entities = True)
-                except Exception:
-                    return None, None
-
-                else:
-                    if followers is None:
-                        return None, None
+                for element in followers_ids_grouped:
+                    users_ids = ','.join(element)
+                    try:
+                        follower = make_twitter_request(twitter_api.users.lookup, user_id = users_ids, include_entities = True)
+                    except Exception as e:
+                        print(str(e))
+                        continue
                     else:
-                        print(len(followers))
-                        return followers_ids['next_cursor_str'], followers
+                        if follower is None:
+                            continue
+                        else:
+                            followers.extend(follower)
+
+                print(len(followers))
+                followers.sort(key=lambda k: k['followers_count'], reverse=True)
+
+                if len(followers) > 50:
+                    return followers_ids['next_cursor_str'] ,followers[:50]
+                else:
+                    return followers_ids['next_cursor_str'], followers
+
 
         
 
@@ -1058,7 +1093,6 @@ class LoadFollowers(APIView):
                     location = html.unescape(follower['location'])
                     is_verified = follower['verified']
                     number_followers = follower['followers_count']
-                    number_friends = follower['friends_count']
                     number_tweets = follower['statuses_count']
 
                     try:
@@ -1099,7 +1133,6 @@ class LoadFollowers(APIView):
                             description = description,
                             is_verified = is_verified,
                             number_followers = number_followers,
-                            number_friends = number_friends,
                             number_tweets = number_tweets,
                             k = k,
                             k_retweets = k_retweets,
@@ -1189,7 +1222,87 @@ class EvaluatedFollowersList(ListAPIView):
 
     def get_queryset(self):
         brand = Brand.objects.get(pk = self.request.user)
-        return  brand.follower_set.all().exclude(influence__isnull = True).order_by('influence')
-        
+        return  brand.follower_set.all().exclude(influence__isnull = True).order_by('-influence')
+
+
+
+class EvaluateFollower(UpdateAPIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = FollowerSerializer
+    lookup_field = 'id'
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        brand = Brand.objects.get(pk = self.request.user)
+        return  brand.follower_set.all()
+
+    def update(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Exception:
+            return JsonResponse({'error': "This follower doesn't exists!"}, status=500)
+        else:
+            if not instance.influence is None:
+                return JsonResponse({'error': "This follower already has influence!"}, status=500)
+            else:
+                try:
+                    influence = calculate_influence(instance.k, instance.k_tweet_publication_moment, instance.k_retweets, instance.number_followers)
+                
+                except Exception as e:
+                    print(str(e))
+                    return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=500)
+
+                else:
+                    brand = Brand.objects.get(pk = self.request.user)
+                    instance.influence = influence
+                    instance.save()
+                    brand.number_new_followers -= 1
+                    brand.save()
+
+                    return JsonResponse({'message':'The influence of the follower has been calculated successfuly'}, status=201)  
+
+class EvaluateAllFollowers(APIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    def post(self, request):
+
+        brand = get_user_by_token(request)
+
+        if not (isinstance(brand, Brand)):
+            return JsonResponse({'error':'Only brands can calculate the influence of their followers!'}, status=500)
+
+        followers = brand.follower_set.all().exclude(influence__isnull = False)
+
+
+        if len(followers) == 0:
+            return JsonResponse({'message':'All of the followers already have influence!'}, status=201)
+        else:
+            for follower in followers:
+                try:
+                    influence = calculate_influence(follower.k, follower.k_tweet_publication_moment, follower.k_retweets, follower.number_followers)
+                
+                except Exception as e:
+                    print(str(e))
+                    return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=500)
+
+                else:
+                    follower.influence = influence
+                    follower.save()
+
+            brand.number_new_followers -= len(followers)
+            brand.save()
+
+            return JsonResponse({'message':'Influence calculated successfuly'}, status=201)
 
 

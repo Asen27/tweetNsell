@@ -131,7 +131,6 @@ class FollowerSerializer(serializers.ModelSerializer):
             'is_verified',
             'url',
             'number_followers',
-            'number_friends',
             'number_tweets',
             'influence',
             'brands'

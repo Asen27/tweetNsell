@@ -7,6 +7,7 @@ python-dotenv==0.10.3
 djangorestframework==3.10.1
 python_twitter==3.5
 vaderSentiment==3.2.1
+scholarmetrics==0.2.1
 
 #psycopg2==2.8.3
 #pytz==2019.1

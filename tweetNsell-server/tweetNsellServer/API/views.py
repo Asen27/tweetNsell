@@ -1306,3 +1306,41 @@ class EvaluateAllFollowers(APIView):
             return JsonResponse({'message':'Influence calculated successfuly'}, status=201)
 
 
+class DeleteFollower(DestroyAPIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = FollowerSerializer
+    lookup_field = 'id'
+    
+
+    def check_permissions(self, request):
+       
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+            
+    def get_queryset(self):
+        brand = Brand.objects.get(pk = self.request.user)
+        return  brand.follower_set.all()
+
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Exception:
+            return JsonResponse({'error': "This follower doesn't exists!"}, status=500)
+        else:
+            brand = Brand.objects.get(pk = self.request.user)
+            instance.brands.remove(brand)
+            if instance.influence is None:
+                    brand.number_new_followers -= 1
+                    brand.save()
+            if instance.brands.all().count() == 0:
+                self.perform_destroy(instance)
+
+            return JsonResponse({'message':'The follower has been deleted successfuly'}, status=201)

@@ -23,6 +23,7 @@ tweetNsell-server/tweetNsellServer/.env
 coverage/
 www/
 node_modules/
+package-lock.json
 tmp/
 temp/
 platforms/
@@ -31,6 +32,21 @@ plugins/android.json
 plugins/ios.json
 $RECYCLE.BIN/
 __pycache__/
+
+
+/dist
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+
+/e2e/*.js
+/e2e/*.map
+
 
 .DS_Store
 Thumbs.db

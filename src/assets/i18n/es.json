@@ -17,6 +17,31 @@
         "REGISTER" : "Registrarse"
     },
 
+    "HEADER" : {
+        "PROFILE" : "Perfil",
+        "LOGOUT" : "Cerrar sesión"
+    },
+
+    "SIDEBAR" : {
+        "INFO" : "Info",
+        "DASHBOARD" : "Panel de control",
+        "DATA_MANAGEMENT": {
+            "MAIN" : "Gestión de datos",
+            "USERS" : "Usuarios",
+            "SERVICE_INDUSTRIES" : "Industrias"
+        },
+        "ONLINE_REPUTATION": {
+            "MAIN" : "Reputación online",
+            "OPINIONS" : "Opiniones",
+            "CHART" : "Gráfico"
+        },
+        "INFLUENCE_METER" : "Medidor de influencia",
+        "PROFILE" : "Perfil",
+        "LOGOUT" : "Cerrar sesión",
+        "COLLAPSE" : "Plegar"
+    },
+
+
     "ERROR" : {
         "LOGIN" : "¡El nombre de usuario o la contraseña no son correctos!",
         "REGISTER_1" : "¡Introduzca un nombre de usuario y una contraseña!",

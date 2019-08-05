@@ -1,9 +1,149 @@
-﻿<h1>Hi Asen </h1>
-<p>You're logged in with Angular 8!!</p>
-<h3>All registered users:</h3>
+﻿<nav class="navbar navbar-expand-lg fixed-top">
+        <a class="navbar-brand" href="#">Tweet 'N' Sell</a>
+        <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
+            <!-- <span class="navbar-toggler-icon"></span> -->
+            <i class="fa fa-bars text-muted" aria-hidden="true"></i>
+        </button>
+        <div class="collapse navbar-collapse">
 
-<h1 *ngIf="currentUser != null"><strong>{{ currentUser.user_profile.username }}</strong>
-    <strong>{{ currentUser.location }}</strong>
-    <strong>{{ currentUser.social_rating }}</strong>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown" ngbDropdown>
+                    <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                        <i class="fa fa-language"></i> {{ 'SETTINGS.APP_LANGUAGE' | translate }} <b class="caret"></b>
+                    </a>
+                    <div class="dropdown-menu-right" ngbDropdownMenu>
+                        <a class="dropdown-item" href="javascript:void(0)" (click)="changeLanguage('en')">
+                            {{ 'LANGUAGE.ENGLISH' | translate }}
+                        </a>
+                        <a class="dropdown-item" href="javascript:void(0)" (click)="changeLanguage('es')">
+                            {{ 'LANGUAGE.SPANISH' | translate }}
+                        </a>
+                    </div>
+                </li>&nbsp;
+                <li class="nav-item dropdown" ngbDropdown>
+                    <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                        <i *ngIf="!isUserAdmin" class="fa fa-user" style="color:red;"></i><i *ngIf="isUserAdmin" class="fa fa-star" style="color:yellow;"></i> {{ loggedUser.user_profile.username }} <b class="caret"></b>
+                    </a>
+                    <div class="dropdown-menu-right" ngbDropdownMenu>
+                        <a class="dropdown-item" [routerLink]="['/profile']">
+                            <i class="fa fa-fw fa-user"></i> {{ 'HEADER.PROFILE' | translate }}
+                        </a>
+                        <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">
+                            <i class="fa fa-fw fa-power-off"></i> {{ 'HEADER.LOGOUT' | translate }}
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <nav class="sidebar" [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed}">
+            <div class="list-group">
+                <a routerLink="/info" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                    <i class="fa fa-fw fa-info-circle"></i>&nbsp;
+                    <span>{{ 'SIDEBAR.INFO' | translate }}</span>
+                </a>
+                <a *ngIf="isUserAdmin" [routerLink]="['/dashboard']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                    <i class="fa fa-fw fa-tachometer"></i>&nbsp;
+                    <span>{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
+                </a>
+                <div *ngIf="isUserAdmin" class="nested-menu">
+                <a class="list-group-item" (click)="addExpandClass('management')">
+                    <i class="fa fa-database"></i>&nbsp;
+                    <span>{{ 'SIDEBAR.DATA_MANAGEMENT.MAIN' | translate }}</span>
+                        </a>
+                        <li class="nested" [class.expand]="showMenu === 'management'">
+                            <ul class="submenu">
+                                <li>
+                                    <a [routerLink]="['/users']" [routerLinkActive]="['router-link-active']">
+                                        <i class="fa fa-users"></i>&nbsp;
+                                        <span>{{ 'SIDEBAR.DATA_MANAGEMENT.USERS' | translate }}</span>
+                                    </a>
+                                </li>
+                                <li>
+                                        <a [routerLink]="['/service-industries']" [routerLinkActive]="['router-link-active']">
+                                        <i class="fa fa-industry"></i>&nbsp;
+                                        <span>{{ 'SIDEBAR.DATA_MANAGEMENT.SERVICE_INDUSTRIES' | translate }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </div>
+                    <div *ngIf="!isUserAdmin" class="nested-menu">
+                            <a class="list-group-item" (click)="addExpandClass('opinions')">
+                                <i class="fa fa-twitter"></i>&nbsp;
+                                <span>{{ 'SIDEBAR.ONLINE_REPUTATION.MAIN' | translate }}</span>
+                            </a>
+                            <li class="nested" [class.expand]="showMenu === 'opinions'">
+                                <ul class="submenu">
+                                    <li>
+                                        <a [routerLink]="['/online-reputation']" [routerLinkActive]="['router-link-active']">
+                                            <i class="fa fa-smile-o"></i>&nbsp;
+                                            <span>{{ 'SIDEBAR.ONLINE_REPUTATION.OPINIONS' | translate }}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                            <a [routerLink]="['/online-reputation/chart']" [routerLinkActive]="['router-link-active']">
+                                            <i class="fa fa-bar-chart"></i>&nbsp;
+                                            <span>{{ 'SIDEBAR.ONLINE_REPUTATION.CHART' | translate }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </div>
+                <a *ngIf="!isUserAdmin" [routerLink]="['/influence-meter']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                    <i class="fa fa-thermometer-three-quarters"></i>&nbsp;
+                    <span>{{ 'SIDEBAR.INFLUENCE_METER' | translate }}</span>
+                </a>
+                <div class="header-fields">
+                    <div class="nested-menu">
+                        <a class="list-group-item" (click)="addExpandClass('languages')">
+                            <span><i class="fa fa-language"></i>&nbsp; {{ 'SETTINGS.APP_LANGUAGE' | translate }} <b class="caret"></b></span>
+                        </a>
+                        <li class="nested" [class.expand]="showMenu === 'languages'">
+                            <ul class="submenu">
+                                <li>
+                                    <a href="javascript:void(0)" (click)="changeLanguage('en')">
+                                        {{ 'LANGUAGE.ENGLISH' | translate }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="changeLanguage('es')">
+                                        {{ 'LANGUAGE.SPANISH' | translate }}
+                                    </a>
+                                </li>
 
-</h1>
+                            </ul>
+                        </li>
+                    </div>
+                    <div class="nested-menu">
+                        <a class="list-group-item" (click)="addExpandClass('profile')">
+                            <span><i *ngIf="!isUserAdmin" class="fa fa-user" style="color:red;"></i><i *ngIf="isUserAdmin" class="fa fa-star" style="color:yellow;"></i> &nbsp; {{ loggedUser.user_profile.username }}</span>
+                        </a>
+                        <li class="nested" [class.expand]="showMenu === 'profile'">
+                            <ul class="submenu">
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        <span><i class="fa fa-fw fa-user"></i> {{ 'SIDEBAR.PROFILE' | translate }}</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/login']" (click)="logout()">
+                                        <span><i class="fa fa-fw fa-power-off"></i> {{ 'SIDEBAR.LOGOUT' | translate }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </div>
+                </div>
+            </div>
+            <div class="toggle-button" [ngClass]="{collapsed: collapsed}" (click)="toggleCollapsed()">
+                <i class="fa fa-fw fa-angle-double-{{collapsed?'right':'left'}}"></i>&nbsp;
+                <span> {{ 'SIDEBAR.COLLAPSE' | translate }}</span>
+            </div>
+        </nav>
+
+<section class="main-container" [ngClass]="{collapsedSection: collapsed}">
+                <router-outlet></router-outlet>
+</section>
+
+

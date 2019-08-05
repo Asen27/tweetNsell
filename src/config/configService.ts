@@ -15,10 +15,10 @@ export class ConfigService {
       urlAPI = '';
     }
     // pathFiles for Storage provider
-    let pathFiles = '/assets/storageFiles';
+    const pathFiles = '/assets/storageFiles';
     // myCustomVars
-    let myCustomVars1 = 123;
-    let myCustomVars2 = 456;
+    const myCustomVars1 = 123;
+    const myCustomVars2 = 456;
     return {
       restUrlPrefix: urlPrefix + urlAPI,
       restUrlPrefixLocalhost: urlPrefixLocalhost + urlAPI,

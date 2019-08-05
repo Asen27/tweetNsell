@@ -18,6 +18,30 @@
         "REGISTER" : "Sign up"
     },
 
+    "HEADER" : {
+        "PROFILE" : "Profile",
+        "LOGOUT" : "Log out"
+    },
+
+    "SIDEBAR" : {
+        "INFO" : "Info",
+        "DASHBOARD" : "Admin control panel",
+        "DATA_MANAGEMENT": {
+            "MAIN" : "Data management",
+            "USERS" : "Users",
+            "SERVICE_INDUSTRIES" : "Service industries"
+        },
+        "ONLINE_REPUTATION": {
+            "MAIN" : "Online reputation",
+            "OPINIONS" : "Opinions",
+            "CHART" : "Chart"
+        },
+        "INFLUENCE_METER" : "Influence meter",
+        "PROFILE" : "Profile",
+        "LOGOUT" : "Log out",
+        "COLLAPSE" : "Collapse"
+    },
+
     "ERROR" : {
         "LOGIN" : "Wrong username or password!",
         "REGISTER_1" : "Username and password are required!",

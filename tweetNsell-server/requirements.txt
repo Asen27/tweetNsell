@@ -8,9 +8,8 @@ djangorestframework==3.10.1
 python_twitter==3.5
 vaderSentiment==3.2.1
 scholarmetrics==0.2.1
-
-#psycopg2==2.8.3
-#pytz==2019.1
-#sqlparse==0.3.0
-#django-cors-headers==2.5.2
-#twitter==1.18.0
+psycopg2==2.8.3
+pytz==2019.1
+sqlparse==0.3.0
+django-cors-headers==2.5.2
+twitter==1.18.0

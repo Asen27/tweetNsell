@@ -1,0 +1,66 @@
+﻿<div class="login-page" [@routerTransition]>
+        <div class="row justify-content-md-center">
+            <div class="col-md-4">
+                <img class="user-avatar" src="../../../assets/img/logo.png" width="250px" />
+                <h1>Tweet 'N' Sell</h1>
+<h2>{{ 'REGISTER.REGISTER' | translate}}</h2>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-content">
+    <div class="form-group">
+        <input type="text" formControlName="username" class="form-control input-underline input-lg" placeholder="{{ 'REGISTER.USERNAME' | translate}}" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+        <div *ngIf="submitted && !!f.username.errors" class="invalid-feedback">
+            <div *ngIf="!!f.username.errors.required">{{ 'REGISTER.USERNAME_ERROR' | translate}}</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="password" formControlName="password" class="form-control input-underline input-lg" placeholder="{{ 'REGISTER.PASSWORD' | translate}}" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        <div *ngIf="submitted && !!f.password.errors" class="invalid-feedback">
+            <div *ngIf="!!f.password.errors.required">{{ 'REGISTER.PASSWORD_ERROR' | translate}}</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <input (paste)="$event.preventDefault();" type="password" formControlName="confirmPassword" class="form-control input-underline input-lg" placeholder="{{ 'REGISTER.CONFIRM_PASSWORD' | translate}}" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+        <div *ngIf="submitted && !!f.confirmPassword.errors" class="invalid-feedback">
+            <div *ngIf="!!f.confirmPassword.errors.required">{{ 'REGISTER.CONFIRM_PASSWORD_ERROR' | translate}}</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="email" formControlName="email" class="form-control input-underline input-lg" placeholder="{{ 'REGISTER.EMAIL' | translate}}" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+        <div *ngIf="submitted && !!f.email.errors" class="invalid-feedback">
+            <div *ngIf="!!f.email.errors.email">{{ 'REGISTER.EMAIL_ERROR' | translate}}</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <select formControlName="serviceIndustry" class="form-control rounded-btn">
+            <option selected value=''> {{ 'REGISTER.SERVICE_INDUSTRY' | translate}} </option>
+            <option *ngFor="let industry of serviceIndustriesOptions" value="{{industry.name_en}}">
+              <span *ngIf="language=='en'">{{ industry.name_en }}</span>
+              <span *ngIf="language=='es'">{{ industry.name_es }}</span>
+            </option>
+          </select>
+    </div>
+        </div>
+
+        <button [disabled]="loading" class="btn rounded-btn">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            {{ 'REGISTER.REGISTER' | translate}}
+        </button>&nbsp;
+        <a routerLink="/login" class="btn rounded-btn">{{ 'REGISTER.CANCEL' | translate}}</a>
+    </form>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label> {{ 'SETTINGS.APP_LANGUAGE' | translate}}: &nbsp;</label>
+                    <select (change)="changeLanguage($event.target.value)" class="btn rounded-btn">
+                            <option [selected]="language == 'en'" value="en">{{ 'LANGUAGE.ENGLISH' | translate}}</option>
+                            <option [selected]="language == 'es'" value="es">{{ 'LANGUAGE.SPANISH' | translate}}</option>
+                          </select>
+                </div>
+
+            </div>
+
+</div>
+</div>
+
+

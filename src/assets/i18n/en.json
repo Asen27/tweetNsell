@@ -1,40 +1,50 @@
 {
-    "Dashboard": "Dashboard",
-    "Charts": "Charts",
-    "Tables": "Tables",
-    "Forms": "Forms",
-    "Bootstrap Element": "Bootstrap Element",
-    "Bootstrap Grid": "Bootstrap Grid",
-    "Component": "Component",
-    "Menu": "Menu",
-    "Submenu": "Submenu",
-    "Blank Page": "Blank Page",
-    "More Theme": "More Themes",
-    "Download Now": "Download Now",
-    "Language": "Language",
-    "English": "English",
-    "French": "French",
-    "Urdu": "Urdu",
-    "Spanish": "Spanish",
-    "Italian": "Italian",
-    "Farsi": "Farsi",
-    "German": "German",
-    "Simplified Chinese": "Simplified Chinese",
-    "Search" : "Search",
-    "Settings" : "Settings",
-    "Profile" : "Profile",
-    "Inbox" : "Inbox",
-    "Log Out" : "Log Out",
-    "Pending Task" : "Pending Task",
-    "In queue" : "In queue",
-    "Mail" : "Mail",
-    "View All" : "View All",
-    "More Themes" : "More Themes",
-    "Collapse Sidebar" : "Collapse Sidebar",
-    "Full Name": "Full Name",
-    "Email": "Email",
-    "Password": "Password",
-    "Repeat Password": "Repeat Password",
-    "Register": "Register",
-    "Log in": "Log in"
+    "SETTINGS" : {
+        "APP_LANGUAGE" : "Language"
+    },
+
+    "LANGUAGE" : {
+        "ENGLISH" : "English",
+        "SPANISH" : "Spanish"
+    },
+
+
+    "LOGIN" : {
+        "LOGIN" : "Login",
+        "USERNAME" : "Username",
+        "USERNAME_ERROR": "Username is requiered",
+        "PASSWORD" : "Password",
+        "PASSWORD_ERROR" : "Password is required",
+        "REGISTER" : "Sign up"
+    },
+
+    "ERROR" : {
+        "LOGIN" : "Wrong username or password!",
+        "REGISTER_1" : "Username and password are required!",
+        "REGISTER_2" : "The password you introduced is too weak! Please introduce a strong password. A strong password has at least 8 characters and contains at least one uppercase letter, one digit and one special character.",
+        "REGISTER_3" : "Passwords don't match!",
+        "REGISTER_4" : "The username you introduced doesn't belong to any public Twitter accout. Make sure that you introduce a valid Twitter username and that the account is not protected.",
+        "REGISTER_5" : "An account with this username already exists!"
+    },
+
+    "SUCCESS" : {
+        "REGISTER": "Registration successful!"
+    },
+
+    "REGISTER": {
+        "REGISTER" : "Sign up",
+        "USERNAME" : "Username",
+        "USERNAME_ERROR" : "Username is required",
+        "PASSWORD" : "Password",
+        "PASSWORD_ERROR" : "Password is required",
+        "CONFIRM_PASSWORD" : "Confirm password",
+        "CONFIRM_PASSWORD_ERROR" : "You have to confirm your password",
+        "EMAIL" : "Email",
+        "EMAIL_ERROR" : "Invalid email address",
+        "SERVICE_INDUSTRY" : "Service Industry",
+        "SERVICE_INDUSTRY_SELECTED" : "Choose one",
+        "CANCEL" : "Cancel"
+    }
+
+
 }

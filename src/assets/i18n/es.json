@@ -1,40 +1,49 @@
 {
-    "Dashboard": "Principal",
-    "Charts": "Caracteres",
-    "Tables": "Tablas",
-    "Forms": "Formularios",
-    "Bootstrap Element": "Elementos Bootstrap",
-    "Bootstrap Grid": "Rejilla Bootstrap",
-    "Component": "Componentes",
-    "Menu": "Menú",
-    "Submenu": "Submenú",
-    "Blank Page": "Página en Blanco",
-    "More Theme": "Más temas",
-    "Download Now": "Descarga Ahora",
-    "Language": "Idioma",
-    "English": "Inglés",
-    "French": "Francés",
-    "Urdu": "Urdu",
-    "Spanish": "Español",
-    "Italian": "Italiano",
-    "Farsi": "Farsi",
-    "German": "Alemán",
-    "Simplified Chinese": "Chino simplificado",
-    "Search" : "Búsqueda",
-    "Settings" : "Ajustes",
-    "Profile" : "Profile",
-    "Inbox" : "Bandeja de entrada",
-    "Log Out" : "Cerrar Sesión",
-    "Pending Task" : "Tarea pendiente",
-    "In queue" : "En cola",
-    "Mail" : "Correo",
-    "View All" : "Ver todo",
-    "More Themes" : "Más temas",
-    "Collapse Sidebar" : "Contraer barra lateral",
-    "Full Name": "Nombre Completo",
-    "Email": "Correo Electrónico",
-    "Password": "Contraseña",
-    "Repeat Password": "Repetir Contraseña",
-    "Register": "Registrarse",
-    "Log in": "Entrar"
+    "SETTINGS" : {
+        "APP_LANGUAGE" : "Idioma"
+    },
+
+    "LANGUAGE" : {
+        "ENGLISH" : "Inglés",
+        "SPANISH" : "Español"
+    },
+
+    "LOGIN" : {
+        "LOGIN" : "Iniciar sesión",
+        "USERNAME" : "Nombre de usuario",
+        "USERNAME_ERROR": "Introduzca un nombre de usuario",
+        "PASSWORD" : "Contraseña",
+        "PASSWORD_ERROR" : "Introduzca una contraseña",
+        "REGISTER" : "Registrarse"
+    },
+
+    "ERROR" : {
+        "LOGIN" : "¡El nombre de usuario o la contraseña no son correctos!",
+        "REGISTER_1" : "¡Introduzca un nombre de usuario y una contraseña!",
+        "REGISTER_2" : "¡La contraseña que ha introducido es demasiado débil! Por favor, introduzca una contraseña más fuerte. Una contraseña fuerte consta de al menos 8 caracteres y contiene al menos una letra en mayúscula, un dígito y un carácter especial.",
+        "REGISTER_3" : "¡Las contraseñas no coinciden!",
+        "REGISTER_4" : "El nombre de usuario que ha introducido no pertenece a ninguna cuenta de Twitter. Asegúrese de que introduzca un nombre de usuario perteneciente a una cuenta de Twitter válida y no protegida.",
+        "REGISTER_5" : "¡Ya existe una cuenta con este nombre de usuario!"
+    },
+
+    "SUCCESS" : {
+        "REGISTER": "¡Se ha registrado con éxito!"
+    },
+
+    "REGISTER": {
+        "REGISTER" : "Registrarse",
+        "USERNAME" : "Nombre de usuario",
+        "USERNAME_ERROR" : "Introduzca un nombre de usuario",
+        "PASSWORD" : "Contraseña",
+        "PASSWORD_ERROR" : "Introduzca una contraseña",
+        "CONFIRM_PASSWORD" : "Confirmar la contraseña",
+        "CONFIRM_PASSWORD_ERROR" : "Vuelva a introducir la contraseña",
+        "EMAIL" : "Correo electrónico",
+        "EMAIL_ERROR" : "El correo electrónico es inválido",
+        "SERVICE_INDUSTRY" : "Industria de servicios",
+        "SERVICE_INDUSTRY_SELECTED" : "Escoja una",
+        "CANCEL" : "Cancelar"
+    }
+
+
 }

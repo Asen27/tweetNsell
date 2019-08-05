@@ -1,0 +1,9 @@
+﻿<h1>Hi Asen </h1>
+<p>You're logged in with Angular 8!!</p>
+<h3>All registered users:</h3>
+
+<h1 *ngIf="currentUser != null"><strong>{{ currentUser.user_profile.username }}</strong>
+    <strong>{{ currentUser.location }}</strong>
+    <strong>{{ currentUser.social_rating }}</strong>
+
+</h1>

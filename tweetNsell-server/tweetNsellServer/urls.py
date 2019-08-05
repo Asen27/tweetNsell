@@ -50,4 +50,5 @@ urlpatterns = [
     path('followers/evaluate/<int:id>/', views.EvaluateFollower.as_view(), name='evaluate_follower'),
     path('followers/evaluate/all/', views.EvaluateAllFollowers.as_view(), name='evaluate_all_followers'),
     path('followers/delete/<int:id>/', views.DeleteFollower.as_view(), name='delete_follower'),
+    path('backend-wakeup/', views.backendWakeUp, name='backend_wakeup')
 ]

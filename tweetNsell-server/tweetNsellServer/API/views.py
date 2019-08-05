@@ -38,40 +38,40 @@ import regex
 
 
 def oauth_login():
-    
+
     CONSUMER_KEY = os.getenv('CONSUMER_KEY')
     CONSUMER_SECRET = os.getenv('CONSUMER_SECRET')
     OAUTH_TOKEN = os.getenv('OAUTH_TOKEN')
     OAUTH_TOKEN_SECRET = os.getenv('OAUTH_TOKEN_SECRET')
-    
+
     auth = twitter.oauth.OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,
                                CONSUMER_KEY, CONSUMER_SECRET)
-    
+
     twitter_api = twitter.Twitter(auth=auth)
     return twitter_api
 
 #THE FOLLOWING FUNCTION IS COPIED FROM THE BOOK "Mining the Social Web, 3rd Edition" by Matthew A. Russell and Mikhail Klassen
 #It serves as a general-purpose API wrapper and provides abstracted logic for handling various HTTP error codes in meaningful ways
-def make_twitter_request(twitter_api_func, max_errors=10, *args, **kw): 
-    
+def make_twitter_request(twitter_api_func, max_errors=10, *args, **kw):
+
     # A nested helper function that handles common HTTPErrors. Return an updated
     # value for wait_period if the problem is a 500 level error. Block until the
     # rate limit is reset if it's a rate limiting issue (429 error). Returns None
     # for 401 and 404 errors, which requires special handling by the caller.
     def handle_twitter_http_error(e, wait_period=2, sleep_when_rate_limited=False):
-    
+
         if wait_period > 3600: # Seconds
             print('Too many retries. Quitting.', file=sys.stderr)
             raise e
-    
-    
+
+
         if e.e.code == 401:
             print('Encountered 401 Error (Not Authorized)', file=sys.stderr)
             return None
         elif e.e.code == 404:
             print('Encountered 404 Error (Not Found)', file=sys.stderr)
             return None
-        elif e.e.code == 429: 
+        elif e.e.code == 429:
             print('Encountered 429 Error (Rate Limit Exceeded)', file=sys.stderr)
             if sleep_when_rate_limited:
                 print("Retrying in 15 minutes...ZzZ...", file=sys.stderr)
@@ -91,15 +91,15 @@ def make_twitter_request(twitter_api_func, max_errors=10, *args, **kw):
             raise e
 
     # End of nested helper function
-    
-    wait_period = 2 
-    error_count = 0 
+
+    wait_period = 2
+    error_count = 0
 
     while True:
         try:
             return twitter_api_func(*args, **kw)
         except twitter.api.TwitterHTTPError as e:
-            error_count = 0 
+            error_count = 0
             wait_period = handle_twitter_http_error(e, wait_period)
             if wait_period is None:
                 return
@@ -123,11 +123,11 @@ def make_twitter_request(twitter_api_func, max_errors=10, *args, **kw):
 
 
 def get_brand_profile(twitter_api, username):
-   
+
     # Must have either screen_name or user_id (logical xor)
     assert (username != None), \
     "username is obligatory"
-    
+
     brand_info = {}
 
     try:
@@ -148,7 +148,7 @@ def get_brand_profile(twitter_api, username):
     brand_info['location'] = html.unescape(response['location'])
     brand_info['is_verified'] = response['verified']
 
-    
+
     try:
         brand_info['language'] = response['status']['lang']
 
@@ -190,10 +190,10 @@ def get_user_by_token(request):
 
     if (user_profile.is_staff):
         user = Administrator.objects.get(user_profile=user_profile)
-        
+
     else:
         user = Brand.objects.get(user_profile=user_profile)
-    
+
     return user
 
 
@@ -201,26 +201,26 @@ def spanish_sentiment_analyzer(opinion):
     opinion_without_whitespaces = opinion.strip()
     opinion_without_mentions = re.sub(r'@\S+', '', opinion_without_whitespaces)
     opinion_without_hashtags = opinion_without_mentions.replace("#", "")
-    
-   
+
+
     emoji_list = []
     emojis = regex.findall(r'\X', opinion_without_hashtags)
-    
+
     for element in emojis:
         if any(char in emoji.UNICODE_EMOJI for char in element):
             emoji_list.append(element)
-        
+
     if len(emoji_list) > 0:
 
         acceptable_characters = "abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789áéíóúÁÉÍÓÚñÑ.,¿?¡!;:-()"
         opinion_without_emojis = ''.join([char if char in acceptable_characters else " " for char in list(opinion_without_hashtags)])
-    
+
     else:
         opinion_without_emojis = opinion_without_hashtags
 
 
     opinion_to_lowercase = opinion_without_emojis.lower()
-    
+
 
     translator = Translator()
     try:
@@ -248,16 +248,16 @@ def english_sentiment_analyzer(opinion):
     opinion_without_whitespaces = opinion.strip()
     opinion_without_mentions = re.sub(r'@\S+', '', opinion_without_whitespaces)
     opinion_without_hashtags = opinion_without_mentions.replace("#", "")
-    
-   
+
+
     emoji_list = []
     emojis = regex.findall(r'\X', opinion_without_hashtags)
 
-        
+
     for element in emojis:
         if any(char in emoji.UNICODE_EMOJI for char in element):
             emoji_list.append(element)
-        
+
     if len(emoji_list) > 0:
         acceptable_characters = "abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789áéíóúÁÉÍÓÚñÑ.,¿?¡!;:-()+='$%&<>€/"
         opinion_without_emojis = ''.join([char if char in acceptable_characters else " " for char in list(opinion_without_hashtags)])
@@ -297,10 +297,12 @@ def calculate_influence(k, k_tweet_publication_moment, k_retweets, number_follow
                 oom_number_followers = floor(log10(number_followers))
             else:
                 oom_number_followers = 0
-            
+
             return tweets_creation_rate * average_retweets_per_tweet * (h_index + oom_number_followers)
 
 
+def backendWakeUp(request):
+    return JsonResponse({'message':'Waking up backend'}, status=200)
 
 
 class GetUserView(APIView):
@@ -324,7 +326,7 @@ class RegisterBrand(APIView):
         service_industry = request.data.get('service_industry')
 
         if username == '' or password == '':
-            return JsonResponse({'error':'Missing credentials!'}, status=500)
+            return JsonResponse({'error':'Missing credentials!'}, status=400)
 
 
         length_error = len(password) < 8
@@ -334,10 +336,10 @@ class RegisterBrand(APIView):
         symbol_error = re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~<>"+r'"]', password) is None
         is_password_invalid = length_error or digit_error or uppercase_error or lowercase_error or symbol_error
         if is_password_invalid:
-            return JsonResponse({'error':'Invalid password!'}, status=500)
+            return JsonResponse({'error':'Invalid password!'}, status=452)
 
         if password != confirm_password:
-            return JsonResponse({'error': 'Passwords do not match!'}, status=500)
+            return JsonResponse({'error': 'Passwords do not match!'}, status=453)
 
 
         twitter_api = oauth_login()
@@ -349,10 +351,10 @@ class RegisterBrand(APIView):
 
         encrypted_password = make_password(password)
 
-    
+
         social_rating = {}
         social_rating['positive'] = 0
-        social_rating['negative'] = 0 
+        social_rating['negative'] = 0
         social_rating['neutral'] = 0
 
         if (service_industry == ''):
@@ -371,8 +373,8 @@ class RegisterBrand(APIView):
             return JsonResponse({'error': 'This brand already exists!'}, status=500)
 
         brand = Brand(
-            user_profile = user_profile, 
-            id = brand_info['id'], 
+            user_profile = user_profile,
+            id = brand_info['id'],
             name = brand_info['name'],
             location = brand_info['location'],
             description = brand_info['description'],
@@ -392,9 +394,6 @@ class RegisterBrand(APIView):
 
 
 class ServiceIndustriesList(ListAPIView):
-    
-    permission_classes = (IsAdminUser, )
-    authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = ServiceIndustrySerializer
 
@@ -421,7 +420,7 @@ class CreateServiceIndustry(APIView):
 
         else:
             return JsonResponse({'message':'Service industry created successfuly'}, status=201)
-        
+
 
 class DeleteServiceIndustry(DestroyAPIView):
     permission_classes = (IsAdminUser, )
@@ -446,7 +445,7 @@ class DeleteServiceIndustry(DestroyAPIView):
             else:
                 self.perform_destroy(instance)
                 return JsonResponse({'message':'The service industry has been deleted successfuly'}, status=201)
-        
+
 
 
 class LoadOpinions(APIView):
@@ -456,36 +455,36 @@ class LoadOpinions(APIView):
     def search_for_opinions(self, twitter_api, username, language, last_tweet_id=None, max_results=200):
 
         q = '@%s -filter:retweets AND filter:safe' % username
-        
+
         try:
             search_results = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=100, tweet_mode='extended', include_entities=True, since_id=last_tweet_id)
-        
+
         except Exception as e:
             print(str(e))
-            return None  
-        
+            return None
+
         opinions = search_results['statuses']
 
         max_results = min(500, max_results)
         stop = False
-        for _ in range(5): 
+        for _ in range(5):
             if len(search_results['statuses']) < 100:
                 stop = True
-            
+
             if stop is False:
                 max_id = search_results['statuses'][-1]['id_str']
                 try:
                     search_results = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=100, tweet_mode='extended', include_entities=True, max_id=max_id, since_id=last_tweet_id)
                 except Exception:
                     return None
-               
+
                 opinions += search_results['statuses'][1:]
             else:
                 break
-            
-            if len(opinions) > max_results: 
+
+            if len(opinions) > max_results:
                 break
-                
+
         return opinions
 
 
@@ -510,7 +509,7 @@ class LoadOpinions(APIView):
             last_tweet_id = None
 
         opinions = self.search_for_opinions(twitter_api, brand.user_profile.username, language, last_tweet_id=last_tweet_id)
-       
+
 
         if opinions is None:
             return JsonResponse({'error':'A problem occurred while searching the opinions!'}, status=500)
@@ -520,13 +519,13 @@ class LoadOpinions(APIView):
         for opinion in opinions:
             if (opinion['lang'] == brand.language and len(opinion['entities']['user_mentions']) == 1 and len(opinion['entities']['urls']) == 0):
                 id = opinion['id_str']
-                text = html.unescape(opinion['full_text'])   
-                text = re.sub(r'https?:\/\/.*[\r\n]*', ' ', text, flags=re.MULTILINE) 
+                text = html.unescape(opinion['full_text'])
+                text = re.sub(r'https?:\/\/.*[\r\n]*', ' ', text, flags=re.MULTILINE)
                 language = opinion['lang']
                 publication_moment = parser.parse(opinion['created_at'])
                 number_favorites = opinion['favorite_count']
                 number_retweets = opinion['retweet_count']
-                author_id = opinion['user']['id_str'] 
+                author_id = opinion['user']['id_str']
                 author_name = html.unescape(opinion['user']['name'])
                 author_screen_name = opinion['user']['screen_name']
                 try:
@@ -539,24 +538,24 @@ class LoadOpinions(APIView):
                     is_first = False
                 else:
                     is_latest = False
-            
+
                 try:
                     author = Customer(
-                    id = author_id, 
-                    screen_name = author_screen_name, 
+                    id = author_id,
+                    screen_name = author_screen_name,
                     name = author_name,
                     url =author_url,
                     number_followers = author_number_followers)
                     author.save()
-                
+
                 except Exception:
                     if Customer.objects.filter(id = author_id).exists():
                         author = Customer.objects.get(pk = author_id)
                     else:
                         print('ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR!!!!!!!')
                         author = Customer(
-                        id = '7857353745384753875', 
-                        screen_name = "senranbay", 
+                        id = '7857353745384753875',
+                        screen_name = "senranbay",
                         name = "Asen",
                         url = '',
                         number_followers = 3)
@@ -565,9 +564,9 @@ class LoadOpinions(APIView):
                 try:
 
                     new_opinion = Opinion(
-                    id = id, 
+                    id = id,
                     text = text,
-                    language = language, 
+                    language = language,
                     publication_moment = publication_moment,
                     number_favorites = number_favorites,
                     number_retweets = number_retweets,
@@ -594,20 +593,20 @@ class LoadOpinions(APIView):
             return JsonResponse({'message':'There are no new tweets'}, status=201)
         else:
             brand.number_new_opinions += num_results
-            brand.save()  
+            brand.save()
             return JsonResponse({'message':'Tweets loaded successfuly'}, status=201)
 
-                
-        
+
+
 class AllOpinionsList(ListAPIView):
-    
+
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = OpinionSerializer
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -619,14 +618,14 @@ class AllOpinionsList(ListAPIView):
         return Opinion.objects.filter(brand__user_profile = self.request.user).order_by('-publication_moment')
 
 class NewOpinionsList(ListAPIView):
-    
+
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = OpinionSerializer
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -639,14 +638,14 @@ class NewOpinionsList(ListAPIView):
 
 
 class EvaluatedOpinionsList(ListAPIView):
-    
+
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = OpinionSerializer
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -659,14 +658,14 @@ class EvaluatedOpinionsList(ListAPIView):
 
 
 class PinnedOpinionsList(ListAPIView):
-    
+
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = OpinionSerializer
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -678,14 +677,14 @@ class PinnedOpinionsList(ListAPIView):
         return Opinion.objects.filter(brand__user_profile = self.request.user, is_Pinned = True).order_by('-publication_moment')
 
 class PositiveOpinionsList(ListAPIView):
-    
+
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = OpinionSerializer
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -697,14 +696,14 @@ class PositiveOpinionsList(ListAPIView):
         return Opinion.objects.filter(brand__user_profile = self.request.user, attitude = 'pos').order_by('-publication_moment')
 
 class NegativeOpinionsList(ListAPIView):
-    
+
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = OpinionSerializer
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -716,14 +715,14 @@ class NegativeOpinionsList(ListAPIView):
         return Opinion.objects.filter(brand__user_profile = self.request.user, attitude = 'neg').order_by('-publication_moment')
 
 class NeutralOpinionsList(ListAPIView):
-    
+
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = OpinionSerializer
-    
+
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -734,7 +733,7 @@ class NeutralOpinionsList(ListAPIView):
     def get_queryset(self):
         return Opinion.objects.filter(brand__user_profile = self.request.user, attitude = 'neu').order_by('-publication_moment')
 
-    
+
 class PinOpinion(UpdateAPIView):
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
@@ -743,7 +742,7 @@ class PinOpinion(UpdateAPIView):
     lookup_field = 'id'
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -777,7 +776,7 @@ class UnpinOpinion(UpdateAPIView):
     lookup_field = 'id'
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -785,7 +784,7 @@ class UnpinOpinion(UpdateAPIView):
         if self.request.user.is_staff:
             self.permission_denied(request)
 
-            
+
     def get_queryset(self):
         return Opinion.objects.filter(brand__user_profile = self.request.user)
 
@@ -811,7 +810,7 @@ class EvaluateOpinion(UpdateAPIView):
     lookup_field = 'id'
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -819,7 +818,7 @@ class EvaluateOpinion(UpdateAPIView):
         if self.request.user.is_staff:
             self.permission_denied(request)
 
-            
+
     def get_queryset(self):
         return Opinion.objects.filter(brand__user_profile = self.request.user)
 
@@ -848,8 +847,8 @@ class EvaluateOpinion(UpdateAPIView):
                 else:
                     brand.social_rating['negative'] += 1
                 brand.save()
-                
-                return JsonResponse({'message':'The opinion has been evaluated successfuly'}, status=201)  
+
+                return JsonResponse({'message':'The opinion has been evaluated successfuly'}, status=201)
 
 
 class EvaluateAllOpinions(APIView):
@@ -864,7 +863,7 @@ class EvaluateAllOpinions(APIView):
             return JsonResponse({'error':'Only brands can evaluate opinions!'}, status=500)
 
         opinions = Opinion.objects.filter(brand = brand, attitude = 'unc')
-    
+
         if len(opinions) == 0:
             return JsonResponse({'error':'There are no unevaluated opinions!'}, status=201)
         else:
@@ -883,7 +882,7 @@ class EvaluateAllOpinions(APIView):
                     brand.social_rating['neutral'] += 1
                 else:
                     brand.social_rating['negative'] += 1
-            
+
             brand.number_new_opinions -= len(opinions)
             brand.save()
 
@@ -899,7 +898,7 @@ class DeleteOpinion(DestroyAPIView):
 
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -907,7 +906,7 @@ class DeleteOpinion(DestroyAPIView):
         if self.request.user.is_staff:
             self.permission_denied(request)
 
-            
+
     def get_queryset(self):
         return Opinion.objects.filter(brand__user_profile = self.request.user)
 
@@ -926,7 +925,7 @@ class DeleteOpinion(DestroyAPIView):
                 else:
                     brand.social_rating['negative'] -= 1
                 brand.save()
-            
+
             else:
                 brand.number_new_opinions -= 1
                 brand.save()
@@ -939,7 +938,7 @@ class DeleteOpinion(DestroyAPIView):
                 else:
                     new_latest_tweet.is_latest = True
                     new_latest_tweet.save()
-            
+
             author_id = instance.author.id
             self.perform_destroy(instance)
             are_there_other_opinions_same_author = Opinion.objects.filter(author__id = author_id).exists()
@@ -957,13 +956,13 @@ class LoadFollowers(APIView):
 
 
     def get_followers(self, twitter_api, user_id, cursor = None, limit = 500):
-    
+
         assert (user_id != None), \
         "user_id argument is obligatory!"
-        
+
         if cursor is None or cursor == '0':
             cursor = -1
-        
+
         try:
             followers_ids = make_twitter_request(twitter_api.followers.ids, user_id = user_id, count = limit, cursor = cursor, stringify_ids = True)
         except Exception:
@@ -1001,21 +1000,21 @@ class LoadFollowers(APIView):
                     return followers_ids['next_cursor_str'], followers
 
 
-        
+
 
     def check_latest_activity(self, twitter_api, user_id):
 
         assert (user_id != None), \
-        "user_id argument is obligatory!"    
-        
+        "user_id argument is obligatory!"
+
         kw = {
-            'user_id': user_id, 
+            'user_id': user_id,
             'count': 200,
             'trim_user': 'true',
             'exclude_replies': 'true',
             'include_rts' : 'false',
             }
-        
+
         try:
             tweets = make_twitter_request(twitter_api.statuses.user_timeline, **kw)
 
@@ -1037,9 +1036,9 @@ class LoadFollowers(APIView):
                     publication_moment = "Wed Oct 10 20:19:24 +0000 2018"
                 else:
                     publication_moment = tweets[-1]['created_at']
-        
 
-                return number_tweets, number_retweets, publication_moment 
+
+                return number_tweets, number_retweets, publication_moment
 
     def post(self, request):
 
@@ -1050,7 +1049,7 @@ class LoadFollowers(APIView):
 
         twitter_api = oauth_login()
 
-        
+
         if brand.followers_cursor is '0':
             cursor = None
         else:
@@ -1058,8 +1057,8 @@ class LoadFollowers(APIView):
 
 
         next_cursor, followers = self.get_followers(twitter_api, brand.id, cursor)
-        
-    
+
+
         if followers is None or next_cursor is None:
             return JsonResponse({'error':'A problem occurred while loading the followers!'}, status=500)
 
@@ -1073,11 +1072,11 @@ class LoadFollowers(APIView):
 
                 except Follower.DoesNotExist:
                     create_new = True
-                
+
                 else:
                     if brand.follower_set.filter(pk=existing_follower.pk).exists():
                         continue
-                    
+
                     else:
 
                         existing_follower.brands.add(brand)
@@ -1085,7 +1084,7 @@ class LoadFollowers(APIView):
                         number_results += 1
                         continue
 
-                    
+
                 if create_new is True:
 
                     screen_name = follower['screen_name']
@@ -1107,13 +1106,13 @@ class LoadFollowers(APIView):
 
                     except Exception:
                         description = html.unescape(follower['description'])
-        
+
                     else:
                         description = html.unescape(follower['description'])
                         if has_links_in_description:
                             for link in follower['entities']['description']['urls']:
                                 description = description.replace(link['url'], link['display_url'])
-                  
+
 
                     k, k_retweets, k_tweet_publication_moment = self.check_latest_activity(twitter_api, id)
 
@@ -1125,8 +1124,8 @@ class LoadFollowers(APIView):
                         try:
 
                             new_follower = Follower(
-                            id = id, 
-                            screen_name = screen_name, 
+                            id = id,
+                            screen_name = screen_name,
                             name = name,
                             url = url,
                             location = location,
@@ -1140,12 +1139,12 @@ class LoadFollowers(APIView):
                             )
                             new_follower.save()
 
-                
-                        
+
+
                         except Exception as e:
                             print(str(e))
                             continue
-                    
+
 
                         else:
                             number_results += 1
@@ -1161,17 +1160,17 @@ class LoadFollowers(APIView):
         else:
             return JsonResponse({'message':'Followers loaded successfuly'}, status=201)
 
-                
+
 
 class AllFollowersList(ListAPIView):
-    
+
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = FollowerSerializer
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -1185,14 +1184,14 @@ class AllFollowersList(ListAPIView):
 
 
 class NewFollowersList(ListAPIView):
-    
+
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = FollowerSerializer
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -1205,14 +1204,14 @@ class NewFollowersList(ListAPIView):
         return  brand.follower_set.all().exclude(influence__isnull = False).order_by('number_followers')
 
 class EvaluatedFollowersList(ListAPIView):
-    
+
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = FollowerSerializer
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -1234,7 +1233,7 @@ class EvaluateFollower(UpdateAPIView):
     lookup_field = 'id'
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -1257,7 +1256,7 @@ class EvaluateFollower(UpdateAPIView):
             else:
                 try:
                     influence = calculate_influence(instance.k, instance.k_tweet_publication_moment, instance.k_retweets, instance.number_followers)
-                
+
                 except Exception as e:
                     print(str(e))
                     return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=500)
@@ -1269,7 +1268,7 @@ class EvaluateFollower(UpdateAPIView):
                     brand.number_new_followers -= 1
                     brand.save()
 
-                    return JsonResponse({'message':'The influence of the follower has been calculated successfuly'}, status=201)  
+                    return JsonResponse({'message':'The influence of the follower has been calculated successfuly'}, status=201)
 
 class EvaluateAllFollowers(APIView):
     permission_classes = (IsAuthenticated, )
@@ -1291,7 +1290,7 @@ class EvaluateAllFollowers(APIView):
             for follower in followers:
                 try:
                     influence = calculate_influence(follower.k, follower.k_tweet_publication_moment, follower.k_retweets, follower.number_followers)
-                
+
                 except Exception as e:
                     print(str(e))
                     return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=500)
@@ -1312,10 +1311,10 @@ class DeleteFollower(DestroyAPIView):
 
     serializer_class = FollowerSerializer
     lookup_field = 'id'
-    
+
 
     def check_permissions(self, request):
-       
+
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
                 self.permission_denied(request)
@@ -1323,7 +1322,7 @@ class DeleteFollower(DestroyAPIView):
         if self.request.user.is_staff:
             self.permission_denied(request)
 
-            
+
     def get_queryset(self):
         brand = Brand.objects.get(pk = self.request.user)
         return  brand.follower_set.all()

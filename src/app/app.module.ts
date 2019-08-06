@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {
     HttpClientModule,
     HttpClient,
@@ -10,10 +10,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { ConfigService } from '../config/configService';
 import { DataManagement } from './services/dataManagement';
 import { RestWS } from './services/restService';
-
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
 import { AppRoutingModule } from './app.routing';
 import { HomeRoutingModule } from './components/home/home.routing';
 import { ErrorInterceptor } from './helpers/error.interceptor';
@@ -29,6 +27,8 @@ import { InfoComponent } from './components/home/info/info.component';
 import { DashboardComponent } from './components/home/dashboard/dashboard.component';
 import { IndustryComponent } from './components/home/industry/industry.component';
 import { ProfileComponent } from './components/home/profile/profile.component';
+import { OpinionComponent } from './components/home/opinion/opinion.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
     return new TranslateHttpLoader(httpClient, '../assets/i18n/', '.json');
@@ -50,7 +50,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
                 deps: [HttpClient]
             }
         }),
-        NgbDropdownModule
+        NgbDropdownModule,
+        NgbModule,
+        FormsModule
     ],
     declarations: [
         AppComponent,
@@ -61,7 +63,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         InfoComponent,
         DashboardComponent,
         IndustryComponent,
-        ProfileComponent
+        ProfileComponent,
+        OpinionComponent
     ],
     providers: [CookieService,
         DataManagement,

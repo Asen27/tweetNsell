@@ -68,7 +68,20 @@
         "SERVICE_INDUSTRY" : "Service Industry",
         "SERVICE_INDUSTRY_SELECTED" : "Choose one",
         "CANCEL" : "Cancel"
-    }
+    },
 
+    "OPINION" : {
+        "ONLINE_REPUTATION" : "Online reputation",
+        "OPINIONS" : "Opinions",
+        "ABOUT" : "Opinions about",
+        "ALL": "All",
+        "NEW": "New",
+        "EVALUATED": "Evaluated",
+        "PINNED": "Pinned",
+        "POSITIVE": "Positive",
+        "NEUTRAL": "Neutral",
+        "NEGATIVE": "Negative",
+        "EMPTY" : "There are no opinions!"
+    }
 
 }

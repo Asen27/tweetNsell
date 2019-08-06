@@ -28,6 +28,17 @@ export class DataManagement {
       });
   }
 
+  public listOpinions(selector: string, page: Number): Promise<any> {
+    return this.restService
+      .listOpinions(selector, page)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
 
   public register(
     username: string,

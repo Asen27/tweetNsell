@@ -12,6 +12,14 @@ export class Brand {
     followers_cursor: string;
     social_rating;
     service_industry: ServiceIndustry;
+    competitor: Competitor[];
+  }
+
+  export class Competitor {
+      user_profile: UserProfile;
+      name: string;
+      is_verified: boolean;
+      social_rating;
   }
 
   export class Administrator {
@@ -31,3 +39,25 @@ export class Brand {
     password: string;
     is_staff: boolean;
 }
+
+ export class Customer {
+    screen_name: string;
+    name: string;
+    url: string;
+    number_followers: Number;
+ }
+
+ export class Opinion {
+    id: Number;
+    text: string;
+    language: string;
+    publication_moment: Date;
+    number_favorites: Number;
+    number_retweets: Number;
+    is_latest: boolean;
+    is_pinned: boolean;
+    attitude: string;
+    brand: string;
+    author: Customer;
+ }
+

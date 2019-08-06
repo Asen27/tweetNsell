@@ -1,0 +1,74 @@
+<div [@routerTransition]>
+<h2 class="text-muted"> {{ 'OPINION.ONLINE_REPUTATION' | translate }} => <small>{{ 'OPINION.OPINIONS' | translate }}</small></h2>
+
+<div class="row mb-3">
+        <div class="col col-sm-12">
+            <div class="card">
+                <div class="card-header" *ngIf="brand != null">
+                    <span>{{ 'OPINION.ABOUT' | translate }}  </span> <strong> {{ brand.name }}</strong>
+                </div>
+                <div class="card-body">
+
+                                <div class="row mb-3 justify-content-md-center">
+                                        <div class="btn-group btn-group-toggle mb-3" ngbRadioGroup name="toolbar" [(ngModel)]="selector">
+                            <label ngbButtonLabel class="btn btn-outline-default" style="border-color: black;">
+                                <input ngbButton type="radio" value="all"> {{ 'OPINION.ALL' | translate }}
+                            </label>
+                            <label ngbButtonLabel class="btn btn-outline-primary">
+                                <input ngbButton type="radio" value="new"> {{ 'OPINION.NEW' | translate }}
+                            </label>
+                            <label ngbButtonLabel class="btn btn-outline-secondary">
+                                <input ngbButton type="radio" value="evaluated"> {{ 'OPINION.EVALUATED' | translate }}
+                            </label>
+                            <label ngbButtonLabel class="btn btn-outline-warning">
+                                    <input ngbButton type="radio" value="pinned"> {{ 'OPINION.PINNED' | translate }}
+                                </label>
+                                <label ngbButtonLabel class="btn btn-outline-success">
+                                    <input ngbButton type="radio" value="positive"> {{ 'OPINION.POSITIVE' | translate }}
+                                </label>
+                                <label ngbButtonLabel class="btn btn-outline-danger">
+                                    <input ngbButton type="radio" value="negative"> {{ 'OPINION.NEGATIVE' | translate }}
+                                </label>
+                                <label ngbButtonLabel class="btn btn-outline-info">
+                                        <input ngbButton type="radio" value="neutral"> {{ 'OPINION.NEUTRAL' | translate }}
+                                    </label>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 justify-content-md-center table-responsive">
+
+                                <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Username</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr *ngIf="!(opinions?.length > 0)">
+                                                <td colspan="3">{{ 'OPINION.EMPTY' | translate }}</td>
+                                        </tr>
+                                        <tr *ngFor="let opinion of opinions">
+                                                <th>{{opinion.id}} Name</th>
+                                                <th>{{opinion.author.name}}</th>
+                                                <th>{{opinion.brand}}</th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+</div>
+

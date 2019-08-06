@@ -15,9 +15,9 @@ export class HomeComponent implements OnInit {
     public loggedUser;
     public isUserAdmin: boolean;
     public pushRightClass: string;
-    isActive: boolean;
-    collapsed: boolean;
-    showMenu: string;
+    public isActive: boolean;
+    public collapsed: boolean;
+    public showMenu: string;
 
     @Output() collapsedEvent = new EventEmitter<boolean>();
 
@@ -58,7 +58,7 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.loggedUser = JSON.parse(localStorage.getItem('user:logged'));
+        // this.loggedUser = JSON.parse(localStorage.getItem('user:logged'));
         this.pushRightClass = 'push-right';
         this.isActive = false;
         this.collapsed = false;

@@ -46,6 +46,18 @@ export class RestWS extends AbstractWS {
       });
   }
 
+  public listOpinions(selector: string, page: Number): Promise<any> {
+    const token = this.cookieService.get('token');
+    return this.makeGetRequest(this.path + 'opinions/' + selector + '/', {'page' : page}, token)
+      .then(res => {
+        return Promise.resolve(res);
+      })
+      .catch(error => {
+        console.log('Error: ' + error);
+        return Promise.reject(error);
+      });
+  }
+
 
 
   public register(

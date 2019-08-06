@@ -2,11 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../../helpers/auth.guard';
 import { AdminGuard } from '../../helpers/admin.guard';
+import { BrandGuard } from '../../helpers/brand.guard';
 import { HomeComponent } from './home.component';
 import { InfoComponent } from './info/info.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { IndustryComponent } from './industry/industry.component';
 import { ProfileComponent } from './profile/profile.component';
+import { OpinionComponent } from './opinion/opinion.component';
 
 const routes: Routes = [
     {
@@ -17,8 +19,8 @@ const routes: Routes = [
             { path: 'info', component: InfoComponent, canActivate: [AuthGuard]},
             { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard]},
             { path: 'service-industries', component: IndustryComponent, canActivate: [AdminGuard]},
-            { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] }
-
+            { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+            { path: 'online-reputation', component: OpinionComponent, canActivate: [BrandGuard] }
 
         ]
     }

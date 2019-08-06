@@ -68,7 +68,20 @@
         "SERVICE_INDUSTRY" : "Industria de servicios",
         "SERVICE_INDUSTRY_SELECTED" : "Escoja una",
         "CANCEL" : "Cancelar"
-    }
+    },
 
+    "OPINION" : {
+        "ONLINE_REPUTATION" : "Reputación online",
+        "OPINIONS" : "Opiniones",
+        "ABOUT" : "Opiniones sobre",
+        "ALL": "Todos",
+        "NEW": "Nuevos",
+        "EVALUATED": "Evaluados",
+        "PINNED": "Destacados",
+        "POSITIVE": "Positivos",
+        "NEUTRAL": "Neutrales",
+        "NEGATIVE": "Negativos",
+        "EMPTY" : "¡No hay opiniones!"
+    }
 
 }

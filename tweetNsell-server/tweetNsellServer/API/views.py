@@ -494,7 +494,7 @@ class LoadOpinions(APIView):
         brand = get_user_by_token(request)
 
         if not (isinstance(brand, Brand)):
-            return JsonResponse({'error':'Only brands can search for opinions!'}, status=500)
+            return JsonResponse({'error':'Only brands can search for opinions!'}, status=403)
 
         twitter_api = oauth_login()
 
@@ -512,7 +512,7 @@ class LoadOpinions(APIView):
 
 
         if opinions is None:
-            return JsonResponse({'error':'A problem occurred while searching the opinions!'}, status=500)
+            return JsonResponse({'error':'A problem occurred while searching the opinions!'}, status=429)
 
         num_results = 0
         is_first = True;
@@ -590,11 +590,11 @@ class LoadOpinions(APIView):
 
 
         if num_results == 0:
-            return JsonResponse({'message':'There are no new tweets'}, status=201)
+            return JsonResponse({'message':'There are no new tweets', 'status': 200}, status=200)
         else:
             brand.number_new_opinions += num_results
             brand.save()
-            return JsonResponse({'message':'Tweets loaded successfuly'}, status=201)
+            return JsonResponse({'message':'Tweets loaded successfuly', 'status': 201, 'number_results': num_results}, status=201)
 
 
 
@@ -674,7 +674,7 @@ class PinnedOpinionsList(ListAPIView):
             self.permission_denied(request)
 
     def get_queryset(self):
-        return Opinion.objects.filter(brand__user_profile = self.request.user, is_Pinned = True).order_by('-publication_moment')
+        return Opinion.objects.filter(brand__user_profile = self.request.user, is_pinned = True).order_by('-publication_moment')
 
 class PositiveOpinionsList(ListAPIView):
 
@@ -758,14 +758,14 @@ class PinOpinion(UpdateAPIView):
         try:
             instance = self.get_object()
         except Exception:
-            return JsonResponse({'error': "This opinion doesn't exists!"}, status=500)
+            return JsonResponse({'error': "This opinion doesn't exists!"}, status=404)
         else:
             if instance.is_pinned:
-                return JsonResponse({'error': "This opinion is already pinned!"}, status=500)
+                return JsonResponse({'error': "This opinion is already pinned!"}, status=409)
             else:
                 instance.is_pinned = True
                 instance.save()
-                return JsonResponse({'message':'The opinion has been pinned successfuly'}, status=201)
+                return JsonResponse({'message':'The opinion has been pinned successfuly'}, status=202)
 
 
 class UnpinOpinion(UpdateAPIView):
@@ -792,14 +792,14 @@ class UnpinOpinion(UpdateAPIView):
         try:
             instance = self.get_object()
         except Exception:
-            return JsonResponse({'error': "This opinion doesn't exists!"}, status=500)
+            return JsonResponse({'error': "This opinion doesn't exists!"}, status=404)
         else:
             if not instance.is_pinned:
-                return JsonResponse({'error': "This opinion is not pinned!"}, status=500)
+                return JsonResponse({'error': "This opinion is not pinned!"}, status=409)
             else:
                 instance.is_pinned = False
                 instance.save()
-                return JsonResponse({'message':'The opinion has been unpinned successfuly'}, status=201)
+                return JsonResponse({'message':'The opinion has been unpinned successfuly'}, status=202)
 
 
 class EvaluateOpinion(UpdateAPIView):
@@ -826,10 +826,10 @@ class EvaluateOpinion(UpdateAPIView):
         try:
             instance = self.get_object()
         except Exception:
-            return JsonResponse({'error': "This opinion doesn't exists!"}, status=500)
+            return JsonResponse({'error': "This opinion doesn't exists!"}, status=404)
         else:
             if not instance.attitude == 'unc':
-                return JsonResponse({'error': "This opinion has been evaluated already!"}, status=500)
+                return JsonResponse({'error': "This opinion has been evaluated already!"}, status=409)
             else:
                 opinion = instance.text
                 if instance.language == 'en':
@@ -848,7 +848,7 @@ class EvaluateOpinion(UpdateAPIView):
                     brand.social_rating['negative'] += 1
                 brand.save()
 
-                return JsonResponse({'message':'The opinion has been evaluated successfuly'}, status=201)
+                return JsonResponse({'message':'The opinion has been evaluated successfuly'}, status=202)
 
 
 class EvaluateAllOpinions(APIView):
@@ -860,12 +860,12 @@ class EvaluateAllOpinions(APIView):
         brand = get_user_by_token(request)
 
         if not (isinstance(brand, Brand)):
-            return JsonResponse({'error':'Only brands can evaluate opinions!'}, status=500)
+            return JsonResponse({'error':'Only brands can evaluate opinions!'}, status=403)
 
         opinions = Opinion.objects.filter(brand = brand, attitude = 'unc')
 
         if len(opinions) == 0:
-            return JsonResponse({'error':'There are no unevaluated opinions!'}, status=201)
+            return JsonResponse({'error':'There are no unevaluated opinions!'}, status=404)
         else:
             for opinion in opinions:
 
@@ -886,7 +886,7 @@ class EvaluateAllOpinions(APIView):
             brand.number_new_opinions -= len(opinions)
             brand.save()
 
-            return JsonResponse({'message':'Opinions evaluated successfuly'}, status=201)
+            return JsonResponse({'message':'Opinions evaluated successfuly', 'number_results': len(opinions)}, status=201)
 
 
 class DeleteOpinion(DestroyAPIView):
@@ -914,7 +914,7 @@ class DeleteOpinion(DestroyAPIView):
         try:
             instance = self.get_object()
         except Exception:
-            return JsonResponse({'error': "This opinion doesn't exists!"}, status=500)
+            return JsonResponse({'error': "This opinion doesn't exists!"}, status=404)
         else:
             brand = instance.brand
             if instance.attitude != 'unc':
@@ -945,7 +945,7 @@ class DeleteOpinion(DestroyAPIView):
             if not are_there_other_opinions_same_author:
                 Customer.objects.filter(pk = author_id).delete()
 
-            return JsonResponse({'message':'The opinion has been deleted successfuly'}, status=201)
+            return JsonResponse({'message':'The opinion has been deleted successfuly'}, status=202)
 
 
 

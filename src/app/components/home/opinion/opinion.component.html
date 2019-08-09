@@ -1,63 +1,184 @@
 <div [@routerTransition]>
 <h2 class="text-muted"> {{ 'OPINION.ONLINE_REPUTATION' | translate }} => <small>{{ 'OPINION.OPINIONS' | translate }}</small></h2>
 
-<div class="row mb-3">
-        <div class="col col-sm-12">
-            <div class="card">
-                <div class="card-header" *ngIf="brand != null">
-                    <span>{{ 'OPINION.ABOUT' | translate }}  </span> <strong> {{ brand.name }}</strong>
-                </div>
-                <div class="card-body">
+            <div class="card ">
+                <div class="card-header " *ngIf="brand != null" >
+                        <div class="row" style="text-align: center;" >
+                        <div class="col col-xl-12 ">
+                    <h3 >  <span> {{ 'OPINION.ABOUT' | translate }} </span>  <strong> {{ brand.name }}</strong> </h3>
 
-                                <div class="row mb-3 justify-content-md-center">
-                                        <div class="btn-group btn-group-toggle mb-3" ngbRadioGroup name="toolbar" [(ngModel)]="selector">
-                            <label ngbButtonLabel class="btn btn-outline-default" style="border-color: black;">
-                                <input ngbButton type="radio" value="all"> {{ 'OPINION.ALL' | translate }}
-                            </label>
-                            <label ngbButtonLabel class="btn btn-outline-primary">
-                                <input ngbButton type="radio" value="new"> {{ 'OPINION.NEW' | translate }}
-                            </label>
-                            <label ngbButtonLabel class="btn btn-outline-secondary">
-                                <input ngbButton type="radio" value="evaluated"> {{ 'OPINION.EVALUATED' | translate }}
-                            </label>
-                            <label ngbButtonLabel class="btn btn-outline-warning">
-                                    <input ngbButton type="radio" value="pinned"> {{ 'OPINION.PINNED' | translate }}
-                                </label>
-                                <label ngbButtonLabel class="btn btn-outline-success">
-                                    <input ngbButton type="radio" value="positive"> {{ 'OPINION.POSITIVE' | translate }}
-                                </label>
-                                <label ngbButtonLabel class="btn btn-outline-danger">
-                                    <input ngbButton type="radio" value="negative"> {{ 'OPINION.NEGATIVE' | translate }}
-                                </label>
-                                <label ngbButtonLabel class="btn btn-outline-info">
-                                        <input ngbButton type="radio" value="neutral"> {{ 'OPINION.NEUTRAL' | translate }}
-                                    </label>
+
+
+                        <div class="row btn-group btn-group-toggle mb-3" ngbRadioGroup name="toolbar" (change)="onToolbarClick();" [(ngModel)]="selector">
+                            <label ngbButtonLabel class="btn btn-outline-dark">
+                    <input ngbButton type="radio" value="all"> {{ 'OPINION.ALL' | translate }}
+                </label>
+                <label ngbButtonLabel class="btn btn-outline-primary">
+                    <input ngbButton type="radio" value="new"> {{ 'OPINION.NEW' | translate }}
+                </label>
+                <label ngbButtonLabel class="btn btn-outline-secondary" >
+                    <input ngbButton type="radio" value="evaluated"> {{ 'OPINION.EVALUATED' | translate }}
+                </label>
+                <label ngbButtonLabel class="btn btn-outline-warning">
+                        <input ngbButton type="radio" value="pinned"> {{ 'OPINION.PINNED' | translate }}
+                    </label>
+                    <label ngbButtonLabel class="btn btn-outline-success">
+                        <input ngbButton type="radio" value="positive"> {{ 'OPINION.POSITIVE' | translate }}
+                    </label>
+                    <label ngbButtonLabel class="btn btn-outline-danger">
+                        <input ngbButton type="radio" value="negative"> {{ 'OPINION.NEGATIVE' | translate }}
+                    </label>
+                    <label ngbButtonLabel class="btn btn-outline-info">
+                            <input ngbButton type="radio" value="neutral"> {{ 'OPINION.NEUTRAL' | translate }}
+                        </label>
+                </div>
+
                             </div>
+                    </div>
+            </div>
+
+                <div class="card-body">
+                        <div class="row" style="text-align: center;" >
+                            <div class="col col-xl-6 ">
+                                <button  class="btn btn-primary btn-lg btn-block" (click)="onLoadOpinionsEvent()">
+                                    {{ 'OPINION.LOAD' | translate }}
+                                </button>
+
+                            </div>
+                            <div class="col col-xl-6 ">
+                                <button *ngIf="brand?.number_new_opinions > 0" class="btn btn-success btn-lg btn-block" (click)="onEvaluateOpinionsEvent()">
+                                    {{ 'OPINION.EVALUATE_ALL' | translate }}
+                                </button>
+
+                            </div>
+
+
                         </div>
 
-                        <div class="row mb-3 justify-content-md-center table-responsive">
+                            <div class="row" style="text-align: center;" >
+                                <div class="col col-xl-12 ">
+                        <div class="table-responsive">
 
-                                <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr *ngIf="!(opinions?.length > 0)">
-                                                <td colspan="3">{{ 'OPINION.EMPTY' | translate }}</td>
-                                        </tr>
-                                        <tr *ngFor="let opinion of opinions">
-                                                <th>{{opinion.id}} Name</th>
-                                                <th>{{opinion.author.name}}</th>
-                                                <th>{{opinion.brand}}</th>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                <ngx-table
+                                #opinions
+                                [configuration]="configuration"
+                                [data]="data"
+                                [columns]="columns"
+                                [pagination]="pagination"
+                                [noResultsTemplate]="noResultsTemplate"
+                                [summaryTemplate]="summaryTemplateRef"
+                                (event)="eventEmitted($event)"
+                              >
+                              <ng-template let-row >
+
+                                    <td>
+                                        <div>
+                                            <span><i class="fa fa-calendar"></i>&nbsp; {{row.publication_moment | date:'dd/MM/yyyy'}} </span>
+                                        </div>
+                                        <div>
+                                            <span><i class="fa fa-clock-o"></i>&nbsp; {{row.publication_moment | date:'HH:mm:ss'}} </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a target="_blank" href="https://twitter.com/{{row.author.screen_name}}"> {{ row.author.name }}</a>
+                                        </div>
+                                         <div >
+                                            <span> {{ 'CUSTOMER.NUMBER_FOLLOWERS' | translate }}:</span>
+                                        </div>
+                                        <div>
+                                            <span><i class="fa fa-users"></i>&nbsp; {{row.author.number_followers | number}} </span>
+                                            </div>
+                                    </td>
+                                    <td>
+                                            <div style="text-align: center;">
+                                                    <span> {{ (row.text.length>50)? (row.text | slice:0:50)+'...':(row.text) }} </span>
+                                                </div>
+                                                <div style ="text-align: center;" *ngIf="row.text.length>50">
+                                                        <span> <button class="btn btn-success" (click)="open(content)">{{ 'OPINION.TEXT_SEE' | translate }}</button> </span>
+                                                    </div>
+
+                                    </td>
+
+                                    <td>
+                                        <div style="text-align: center;">
+                                        <span> {{row.number_favorites | number}} </span>
+                                    </div>
+                                    </td>
+                                    <td>
+                                        <div style="text-align: center;">
+                                            <span> {{row.number_retweets | number}} </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="text-align: center;">
+                                    <img *ngIf="(language == 'en' && row.attitude == 'pos')" src="../../../../assets/img/positive.png" width="150px" alt="positive" />
+                                    <img *ngIf="(language == 'es' && row.attitude == 'pos')" src="../../../../assets/img/positiva.png" width="150px" alt="positiva" />
+                                    <img *ngIf="(language == 'en' && row.attitude == 'neg')" src="../../../../assets/img/negative.png" width="150px" alt="negative" />
+                                    <img *ngIf="(language == 'es' && row.attitude == 'neg')" src="../../../../assets/img/negativa.png" width="150px" alt="negativa" />
+                                    <img *ngIf="(language == 'en' && row.attitude == 'unc')" src="../../../../assets/img/unknown.png" width="150px" alt="unknown" />
+                                    <img *ngIf="(language == 'es' && row.attitude == 'unc')" src="../../../../assets/img/no conocida.png" width="150px" alt="no conocida" />
+                                    <img *ngIf="row.attitude == 'neu'" src="../../../../assets/img/neutral.png" width="150px" alt="neutral" />
+                                </div>
+                                        </td>
+                                        <td>
+                                            <div style="text-align: center;">
+
+                                    <button *ngIf="!row.is_pinned" class="btn btn-warning" (click)="onPinEvent(row.id)" placement="left" ngbTooltip="{{ 'OPINION.PIN' | translate }}">
+                                        <i class="fa fa-thumb-tack fa-lg"></i>
+                                    </button><span *ngIf="!row.is_pinned">&nbsp;</span>
+                                     <button *ngIf="row.is_pinned" class="btn btn-outline-warning" (click)="onUnpinEvent(row.id)" placement="left" ngbTooltip="{{ 'OPINION.UNPIN' | translate }}">
+                                     <i class="fa fa-thumb-tack fa-lg fa-rotate-180"></i>
+                                     </button><span *ngIf="row.is_pinned">&nbsp;</span>
+                                     <button *ngIf="row.attitude=='unc'" class="btn btn-info" (click)="onEvaluateEvent(row.id)" placement="top" ngbTooltip="{{ 'OPINION.EVALUATE' | translate }}">
+                                     <i class="fa fa-meh-o fa-lg" ></i>
+                                    </button><span *ngIf="row.attitude=='unc'">&nbsp;</span>
+                                    <button  class="btn btn-danger" (click)="onDeleteEvent(row.id)" placement="bottom" ngbTooltip="{{ 'OPINION.DELETE' | translate }}">
+                                        <i class="fa fa-trash-o fa-lg"></i>
+                                    </button>
+                                    </div>
+                                    </td>
+
+                                </ng-template>
 
 
+                              </ngx-table>
+
+
+                              <ng-template #noResultsTemplate>
+                                    <td [attr.colspan]="7" class="no-results">
+                                      {{ 'OPINION.EMPTY' | translate }}
+                                    </td>
+                                  </ng-template>
+
+
+                                  <ng-template #content let-c="close('c')" let-d="dismiss()">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">{{ 'OPINION.TEXT' | translate }}</h4>
+                                            <button type="button" class="close" aria-label="Close" (click)="d">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p style="text-align: justify;">{{selected}}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" (click)="c">{{ 'OPINION.CLOSE' | translate }}</button>
+                                        </div>
+                                    </ng-template>
+
+                                    <ng-template #summaryTemplateRef let-total="total">
+                                            <th colspan=7 style="text-align: center;">
+                                              {{ 'OPINION.TOTAL' | translate }}: <strong>{{ pagination.count }}</strong>
+                                            </th>
+                                          </ng-template>
+
+
+
+
+
+                        </div>
+                        </div>
                         </div>
 
 
@@ -65,10 +186,6 @@
 
                     </div>
                 </div>
-            </div>
-        </div>
+                </div>
 
-
-
-</div>
 

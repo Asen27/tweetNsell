@@ -43,16 +43,32 @@
 
 
     "ERROR" : {
+        "GLOBAL" : "¡No tiene permiso para realizar esta operación!",
+        "PIN_1" : "¡Esta opinión no existe!",
+        "PIN_2" : "Esta opinión ya ha sido marcada como destacada!",
         "LOGIN" : "¡El nombre de usuario o la contraseña no son correctos!",
         "REGISTER_1" : "¡Introduzca un nombre de usuario y una contraseña!",
         "REGISTER_2" : "¡La contraseña que ha introducido es demasiado débil! Por favor, introduzca una contraseña más fuerte. Una contraseña fuerte consta de al menos 8 caracteres y contiene al menos una letra en mayúscula, un dígito y un carácter especial.",
         "REGISTER_3" : "¡Las contraseñas no coinciden!",
         "REGISTER_4" : "El nombre de usuario que ha introducido no pertenece a ninguna cuenta de Twitter. Asegúrese de que introduzca un nombre de usuario perteneciente a una cuenta de Twitter válida y no protegida.",
-        "REGISTER_5" : "¡Ya existe una cuenta con este nombre de usuario!"
+        "REGISTER_5" : "¡Ya existe una cuenta con este nombre de usuario!",
+        "UNPIN_1" : "¡Esta opinión no existe!",
+        "UNPIN_2" : "¡Esta opinión no ha sido marcada como destacada!",
+        "EVALUATE" : "¡Esta opinión ya ha sido evaluada!",
+        "LOAD" : "Se ha producido un error inesperado al cargar las opiniones. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",
+        "EVALUATE_ALL" : "¡No hay opiniones a evaluar!"
+
     },
 
     "SUCCESS" : {
-        "REGISTER": "¡Se ha registrado con éxito!"
+        "REGISTER": "¡Se ha registrado con éxito!",
+        "PIN" : "¡La opinión ha sido marcada como destacada!",
+        "UNPIN" : "¡La opinión ha sido desmarcada!",
+        "DELETE_OPINION" : "¡La opinión ha sido eliminada con éxito!",
+        "EVALUATE": "¡La opinión ha sido evaluada con éxito!",
+        "LOAD": " nuevas opiniones cargadas!",
+        "LOAD_NO_RESULTS": "No hay nuevas opiniones. Vuelva a comprobar más tarde.",
+        "EVALUATE_ALL" : " opiniones evaluadas!"
     },
 
     "REGISTER": {
@@ -74,14 +90,33 @@
         "ONLINE_REPUTATION" : "Reputación online",
         "OPINIONS" : "Opiniones",
         "ABOUT" : "Opiniones sobre",
-        "ALL": "Todos",
-        "NEW": "Nuevos",
-        "EVALUATED": "Evaluados",
-        "PINNED": "Destacados",
-        "POSITIVE": "Positivos",
+        "ALL": "Todas",
+        "NEW": "Nuevas",
+        "EVALUATED": "Evaluadas",
+        "PINNED": "Destacadas",
+        "POSITIVE": "Positivas",
         "NEUTRAL": "Neutrales",
-        "NEGATIVE": "Negativos",
-        "EMPTY" : "¡No hay opiniones!"
+        "NEGATIVE": "Negativas",
+        "EMPTY" : "¡No hay opiniones!",
+        "PUBLICATION_MOMENT" : "Publicada",
+        "AUTHOR" : "Autor",
+        "TEXT" : "Texto",
+        "NUMBER_FAVORITES" : "№ de 'Me gusta'",
+        "NUMBER_RETWEETS" : "№ de retuits",
+        "ATTITUDE" : "Actitud",
+        "TEXT_SEE" : "Texto completo",
+        "CLOSE" : "Cerrar",
+        "TOTAL": "Número total de opiniones",
+        "LOAD" : "Cargar más opiniones",
+        "EVALUATE_ALL" : "Evaluar todas las opiniones",
+        "PIN" : "Marcar como destacada ",
+        "UNPIN" : "Desmarcar como destacada",
+        "DELETE" : "Borrar",
+        "EVALUATE" : "Evaluar"
+    },
+
+    "CUSTOMER" : {
+        "NUMBER_FOLLOWERS" : "№ de seguidores"
     }
 
 }

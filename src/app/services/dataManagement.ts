@@ -40,6 +40,74 @@ export class DataManagement {
   }
 
 
+  public pinOpinion(id: Number): Promise<any> {
+    return this.restService
+      .pinOpinion(id)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+
+  public unpinOpinion(id: Number): Promise<any> {
+    return this.restService
+      .unpinOpinion(id)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public deleteOpinion(id: Number): Promise<any> {
+    return this.restService
+      .deleteOpinion(id)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public evaluateOpinion(id: Number): Promise<any> {
+    return this.restService
+      .evaluateOpinion(id)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public loadOpinions(): Promise<any> {
+    return this.restService
+      .loadOpinions()
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public evaluateAllOpinions(): Promise<any> {
+    return this.restService
+      .evaluateAllOpinions()
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+
   public register(
     username: string,
     password: string,

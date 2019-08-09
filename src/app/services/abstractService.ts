@@ -80,4 +80,47 @@ export class AbstractWS {
     });
   }
 
+  protected makeUpdateRequest(
+    path: string,
+    paramsRequest: any,
+    data: any,
+    token?: string
+  ): Promise<any> {
+    if (!paramsRequest) {
+        paramsRequest = {};
+      }
+    return this.getHeaders(token).then(headers => {
+      return this.http
+        .put(path, data, { headers: headers, params: paramsRequest })
+        .toPromise()
+        .then((response: HttpResponse<any>) => {
+          return Promise.resolve(response);
+        })
+        .catch(function (error) {
+          return Promise.reject(error);
+        });
+    });
+  }
+
+  protected makeDeleteRequest(
+    path: string,
+    paramsRequest: any,
+    token?: string
+  ): Promise<any> {
+    if (!paramsRequest) {
+        paramsRequest = {};
+      }
+    return this.getHeaders(token).then(headers => {
+      return this.http
+        .delete(path, { headers: headers, params: paramsRequest })
+        .toPromise()
+        .then((response: HttpResponse<any>) => {
+          return Promise.resolve(response);
+        })
+        .catch(function (error) {
+          return Promise.reject(error);
+        });
+    });
+  }
+
 }

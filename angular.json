@@ -22,7 +22,9 @@
             ],
             "styles": [
               "node_modules/font-awesome/css/font-awesome.css",
-              "src/styles/app.scss"
+              "src/styles/app.scss",
+              "node_modules/ngx-easy-table/style.css",
+              "node_modules/typeface-montserrat/index.css"
             ],
             "scripts": [
               "node_modules/chart.js/dist/Chart.js"
@@ -84,7 +86,9 @@
             ],
             "styles": [
               "node_modules/font-awesome/css/font-awesome.css",
-              "src/styles/app.scss"
+              "src/styles/app.scss",
+              "node_modules/ngx-easy-table/style.css",
+                "node_modules/typeface-montserrat/index.css"
             ],
             "assets": [
               "src/assets",

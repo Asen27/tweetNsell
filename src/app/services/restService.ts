@@ -58,6 +58,82 @@ export class RestWS extends AbstractWS {
       });
   }
 
+  public pinOpinion(id: Number): Promise<any> {
+    const token = this.cookieService.get('token');
+    const fd = new FormData();
+    return this.makeUpdateRequest(this.path + 'opinions/pin/' + id + '/', false, fd, token)
+      .then(res => {
+        return Promise.resolve(res);
+      })
+      .catch(error => {
+        console.log('Error: ' + error);
+        return Promise.reject(error);
+      });
+  }
+
+  public unpinOpinion(id: Number): Promise<any> {
+    const token = this.cookieService.get('token');
+    const fd = new FormData();
+    return this.makeUpdateRequest(this.path + 'opinions/unpin/' + id + '/', false, fd, token)
+      .then(res => {
+        return Promise.resolve(res);
+      })
+      .catch(error => {
+        console.log('Error: ' + error);
+        return Promise.reject(error);
+      });
+  }
+
+  public deleteOpinion(id: Number): Promise<any> {
+    const token = this.cookieService.get('token');
+    return this.makeDeleteRequest(this.path + 'opinions/delete/' + id + '/', false, token)
+      .then(res => {
+        return Promise.resolve(res);
+      })
+      .catch(error => {
+        console.log('Error: ' + error);
+        return Promise.reject(error);
+      });
+  }
+
+  public evaluateOpinion(id: Number): Promise<any> {
+    const token = this.cookieService.get('token');
+    const fd = new FormData();
+    return this.makeUpdateRequest(this.path + 'opinions/evaluate/' + id + '/', false, fd, token)
+      .then(res => {
+        return Promise.resolve(res);
+      })
+      .catch(error => {
+        console.log('Error: ' + error);
+        return Promise.reject(error);
+      });
+  }
+
+  public loadOpinions(
+  ) {
+    const token = this.cookieService.get('token');
+    const fd = new FormData();
+    return this.makePostRequest(this.path + 'opinions/load/', fd, token)
+      .then(res => {
+        return Promise.resolve(res);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public evaluateAllOpinions(
+    ) {
+      const token = this.cookieService.get('token');
+      const fd = new FormData();
+      return this.makePostRequest(this.path + 'opinions/evaluate/all/', fd, token)
+        .then(res => {
+          return Promise.resolve(res);
+        })
+        .catch(error => {
+          return Promise.reject(error);
+        });
+    }
 
 
   public register(

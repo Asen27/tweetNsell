@@ -43,16 +43,31 @@
     },
 
     "ERROR" : {
+        "GLOBAL" : "You don't have permission to perform this action!",
+        "PIN_1" : "This opinion doesn´t exist!",
+        "PIN_2" : "This opinion has already been pinned!",
         "LOGIN" : "Wrong username or password!",
         "REGISTER_1" : "Username and password are required!",
         "REGISTER_2" : "The password you introduced is too weak! Please introduce a strong password. A strong password has at least 8 characters and contains at least one uppercase letter, one digit and one special character.",
         "REGISTER_3" : "Passwords don't match!",
         "REGISTER_4" : "The username you introduced doesn't belong to any public Twitter accout. Make sure that you introduce a valid Twitter username and that the account is not protected.",
-        "REGISTER_5" : "An account with this username already exists!"
+        "REGISTER_5" : "An account with this username already exists!",
+        "UNPIN_1" : "This opinion doesn't exist!",
+        "UNPIN_2" : "This opinion has not been pinned!",
+        "EVALUATE" : "This opinion has already been evaluated!",
+        "LOAD" : "An unexpected error occurred while loading the opinions! Remember that this applications consumes the Twitter Search API, which, unforunately, have rate limits. Please, retry loading the opinions in 15 minutes.",
+        "EVALUATE_ALL" : "There are no opinions to evaluate!"
     },
 
     "SUCCESS" : {
-        "REGISTER": "Registration successful!"
+        "REGISTER": "Registration successful!",
+        "PIN" : "The opinion has been pinned successfully!",
+        "UNPIN" : "The opinion has been unpinned!",
+        "DELETE_OPINION" : "The opinion has been deleted successfully!",
+        "EVALUATE": "The opinion has been evaluated successfully!",
+        "LOAD": " new opinions loaded!",
+        "LOAD_NO_RESULTS": "There aren't any new opinions. Please, try again later!",
+        "EVALUATE_ALL" : " opinions evaluated!"
     },
 
     "REGISTER": {
@@ -81,7 +96,27 @@
         "POSITIVE": "Positive",
         "NEUTRAL": "Neutral",
         "NEGATIVE": "Negative",
-        "EMPTY" : "There are no opinions!"
+        "EMPTY" : "There are no opinions!",
+        "PUBLICATION_MOMENT" : "Created at",
+        "AUTHOR" : "Author",
+        "TEXT" : "Text",
+        "NUMBER_FAVORITES" : "№ of favorites",
+        "NUMBER_RETWEETS" : "№ of retweets",
+        "ATTITUDE" : "Attitude",
+        "TEXT_SEE" : "Full text",
+        "CLOSE" : "Close",
+        "TOTAL": "Total number of opinions",
+        "LOAD" : "Load more opinions",
+        "EVALUATE_ALL" : "Evaluate all opinions",
+        "PIN" : "Pin this opinion",
+        "UNPIN" : "Unpin this opinion",
+        "DELETE" : "Delete this opinion",
+        "EVALUATE" : "Evaluate this opinion"
+
+    },
+
+    "CUSTOMER" : {
+        "NUMBER_FOLLOWERS" : "№ of followers"
     }
 
 }

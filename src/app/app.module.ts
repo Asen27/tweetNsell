@@ -29,6 +29,7 @@ import { IndustryComponent } from './components/home/industry/industry.component
 import { ProfileComponent } from './components/home/profile/profile.component';
 import { OpinionComponent } from './components/home/opinion/opinion.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TableModule } from 'ngx-easy-table';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
     return new TranslateHttpLoader(httpClient, '../assets/i18n/', '.json');
@@ -52,7 +53,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         }),
         NgbDropdownModule,
         NgbModule,
-        FormsModule
+        FormsModule,
+        TableModule
     ],
     declarations: [
         AppComponent,

@@ -1,0 +1,41 @@
+<div [@routerTransition]>
+    <h2 class="text-muted"> {{ 'OPINION.ONLINE_REPUTATION' | translate }} => <small>{{ 'OPINION.CHART' | translate }}</small></h2>
+    <div class="row mb-5" style="text-align: center;">
+        <div class="col col-xl-12" >
+            <span> {{ 'OPINION.TOTAL_NUMBER' | translate }} : </span>
+                <div>
+            <ng2-odometer [number]="totalNumberOpinions" [config]="config" style="font-size: 75px; "></ng2-odometer>
+                </div>
+        </div>
+        </div>
+
+    <div class="row" style="text-align: center;">
+        <div class="col col-xl-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    {{ 'OPINION.CHART_ALL' | translate }}
+                </div>
+                <div class="card-body" *ngIf="pieChartLabels && pieChartData && pieChartColors">
+                    <canvas baseChart height="150px" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" [colors]="pieChartColors">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col col-xl-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    {{ 'OPINION.CHART_EVALUATED' | translate }}
+                </div>
+                <div class="card-body" *ngIf="doughnutChartLabels && doughnutChartData && doughnutChartColors">
+                    <canvas baseChart height="150px" [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"  [colors]="doughnutChartColors">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+</div>

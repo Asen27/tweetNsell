@@ -1,3 +1,25 @@
 <div [@routerTransition]>
-        <h2 class="text-muted">Info <small>Info Overview</small></h2>
+        <h2 class="text-muted"> {{ 'INFO.INFO' | translate }}</h2>
+
+        <div class="row">
+                <div class="col-xl-12">
+                    <ngb-carousel>
+                        <ng-template ngbSlide *ngFor="let slider of sliders">
+                            <img class="img-fluid mx-auto d-block" [src]="slider.imagePath" width="100%" style="opacity: 0.5;">
+                            <div class="carousel-caption">
+                                <h3>{{slider.label}}</h3>
+                                <p>{{slider.text}}</p>
+                            </div>
+                        </ng-template>
+                    </ngb-carousel>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-xl-12">
+                        <div class="alert alert-info">
+                    <span> {{ 'INFO.NOTE_1' | translate }} <strong>Asen Rangelov Baykushev</strong> {{ 'INFO.NOTE_2' | translate }} </span>
+                    </div>
+                    </div>
+                    </div>
         </div>

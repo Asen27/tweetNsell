@@ -100,6 +100,22 @@ export class ErrorInterceptor implements HttpInterceptor {
                      } else {
                         error = err.statusText;
                     }
+                } else if (request.url.includes('service-industries/delete/')) {
+                    if (err.status === 404) {
+                        error = this.translateService.instant('ERROR.SERVICE_INDUSTRY_1');
+                    } else if (err.status === 412) {
+                        error = this.translateService.instant('ERROR.SERVICE_INDUSTRY_2');
+                    } else {
+                        error = err.statusText;
+                    }
+                } else if (request.url.endsWith('service-industries/create/')) {
+                    if (err.status === 412) {
+                        error = this.translateService.instant('ERROR.SERVICE_INDUSTRY_3');
+                     } else if (err.status === 409) {
+                        error = this.translateService.instant('ERROR.SERVICE_INDUSTRY_4');
+                     } else {
+                        error = err.statusText;
+                    }
                 } else {
                     error = err.statusText;
                 }

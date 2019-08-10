@@ -12,12 +12,8 @@ from rest_framework.authentication import TokenAuthentication, SessionAuthentica
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from googletrans import Translator
 from django.db.models import F
-#from dateutil.relativedelta import relativedelta
-#from django.db.models import Q, Count, StdDev, Avg, Sum, Case, When, IntegerField, Value
-#from django.utils.datastructures import MultiValueDictKeyError
 from django.http.response import JsonResponse
 #from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
-#from collections import namedtuple
 from dateutil import parser
 from datetime import datetime, timezone
 from scholarmetrics import hindex
@@ -34,7 +30,6 @@ import time
 import sys
 import emoji
 import regex
-
 
 
 def oauth_login():
@@ -410,13 +405,16 @@ class CreateServiceIndustry(APIView):
         name_en = request.data.get('name_en')
         name_es = request.data.get('name_es')
 
+        if ServiceIndustry.objects.count() == 15:
+            return JsonResponse({'error': "There can't be more than 15 service industries!"}, status=412)
+
 
         try:
             service_industry = ServiceIndustry(name_en = name_en, name_es = name_es)
             service_industry.save()
 
         except Exception:
-            return JsonResponse({'error': 'This service industry already exists!'}, status=500)
+            return JsonResponse({'error': 'This service industry already exists!'}, status=409)
 
         else:
             return JsonResponse({'message':'Service industry created successfuly'}, status=201)
@@ -427,7 +425,7 @@ class DeleteServiceIndustry(DestroyAPIView):
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     serializer_class = ServiceIndustrySerializer
-    lookup_field = 'id'
+    lookup_field = 'name_en'
 
 
     def get_queryset(self):
@@ -438,13 +436,49 @@ class DeleteServiceIndustry(DestroyAPIView):
         try:
             instance = self.get_object()
         except Exception:
-            return JsonResponse({'error': "This service industry doesn't exists!"}, status=500)
+            return JsonResponse({'error': "This service industry doesn't exists!"}, status=404)
         else:
             if instance.name_en == 'Unspecified':
-                return JsonResponse({'error': "The default service industry can't be deleted!"}, status=500)
+                return JsonResponse({'error': "The default service industry can't be deleted!"}, status=412)
             else:
                 self.perform_destroy(instance)
-                return JsonResponse({'message':'The service industry has been deleted successfuly'}, status=201)
+                return JsonResponse({'message':'The service industry has been deleted successfuly'}, status=200)
+
+
+class BrandsList(ListAPIView):
+
+    permission_classes = (IsAdminUser, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = BrandSerializer
+
+    def get_queryset(self):
+        return Brand.objects.order_by('user_profile__username')
+
+
+class DeleteBrand(DestroyAPIView):
+    permission_classes = (IsAdminUser, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = UserSerializer
+    lookup_field = 'username'
+
+    def get_queryset(self):
+            return User.objects.all()
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Exception:
+            return JsonResponse({'error': "This brand doesn't exists!"}, status=404)
+        else:
+            brand = Brand.objects.get(pk=instance)
+            Opinion.objects.filter(brand = brand).delete()
+            Customer.objects.filter(opinion__isnull = True).distinct().delete()
+            brand.delete()
+            Follower.objects.filter(brands = None).delete()
+            self.perform_destroy(instance)
+            return JsonResponse({'message':'The brand has been deleted successfuly'}, status=202)
 
 
 

@@ -22,14 +22,18 @@ import { RegisterComponent } from './components/register/register.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { InfoComponent } from './components/home/info/info.component';
 import { DashboardComponent } from './components/home/dashboard/dashboard.component';
 import { IndustryComponent } from './components/home/industry/industry.component';
 import { ProfileComponent } from './components/home/profile/profile.component';
 import { OpinionComponent } from './components/home/opinion/opinion.component';
+import { ChartComponent } from './components/home/chart/chart.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TableModule } from 'ngx-easy-table';
+import { ChartsModule  } from 'ng2-charts';
+import { Ng2OdometerModule } from 'ng2-odometer';
+import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
     return new TranslateHttpLoader(httpClient, '../assets/i18n/', '.json');
@@ -54,7 +58,14 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         NgbDropdownModule,
         NgbModule,
         FormsModule,
-        TableModule
+        TableModule,
+        ChartsModule,
+        Ng2OdometerModule,
+        NgbCarouselModule,
+        ConfirmationPopoverModule.forRoot({
+            confirmButtonType: 'danger',
+            cancelButtonType: 'default'
+          })
     ],
     declarations: [
         AppComponent,
@@ -66,7 +77,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         DashboardComponent,
         IndustryComponent,
         ProfileComponent,
-        OpinionComponent
+        OpinionComponent,
+        ChartComponent
     ],
     providers: [CookieService,
         DataManagement,

@@ -1,3 +1,95 @@
 <div [@routerTransition]>
-        <h2 class="text-muted">Service industries <small>Industries Overview</small></h2>
+        <h2 class="text-muted">
+            {{ "INDUSTRY.DATA_MANAGEMENT" | translate }} =>
+            <small>{{ "INDUSTRY.SERVICE_INDUSTRIES" | translate }}</small>
+        </h2>
+
+        <div class="card ">
+            <div class="card-body">
+                <div class="row" style="text-align: center;">
+                    <div class="col col-xl-12 ">
+                        <div class="table-responsive">
+
+                                <ngx-table
+                                #opinions
+                                [configuration]="configuration"
+                                [data]="data"
+                                [columns]="columns"
+                                [summaryTemplate]="summaryTemplateRef"
+                              >
+                              <ng-template let-row let-index="index">
+
+                                    <td>
+                                            <div *ngIf="index !== data.length-1">
+                                                <span> {{ row.name_en }} </span>
+                                            </div>
+                                            <div *ngIf="index === data.length-1">
+                                                    <input type="text"
+
+                                                         placeholder="{{ 'INDUSTRY.PLACEHOLDER_1' | translate}}"
+                                                            class="form-label"
+                                                            [(ngModel)]="name_en">
+                                                </div>
+
+                                        </td>
+                                        <td>
+                                                <div *ngIf="index !== data.length-1">
+                                                    <span> {{ row.name_es }} </span>
+                                            </div>
+                                            <div *ngIf="index === data.length-1">
+                                                    <input type="text"
+
+                                                        placeholder="{{ 'INDUSTRY.PLACEHOLDER_2' | translate}}"
+                                                            class="form-label"
+                                                            [(ngModel)]="name_es">
+                                                </div>
+
+                                        </td>
+
+                                            <td>
+                                                <div *ngIf="index !== data.length-1" style="text-align: center;">
+
+
+                                        <button *ngIf="row.name_en !== 'Unspecified'" class="btn btn-danger"  placement="left" ngbTooltip="{{ 'INDUSTRY.DELETE' | translate }}"
+                                        mwlConfirmationPopover
+                                        popoverTitle="{{ 'CONFIRM.TITLE' | translate }}"
+                                        popoverMessage="{{ 'CONFIRM.DELETE_INDUSTRY' | translate }}"
+                                        confirmText="{{ 'CONFIRM.DELETE' | translate }}"
+                                        cancelText="{{ 'CONFIRM.CANCEL' | translate }}"
+                                        placement="left"
+                                        (confirm)="onDeleteEvent(row.name_en)"
+                                        [appendToBody]="true">
+                                            <i class="fa fa-trash-o fa-lg"></i>
+                                        </button>
+                                        </div>
+                                        <div *ngIf="index === data.length-1" style="text-align: center;">
+                                                <button  class="btn btn-success" placement="left" ngbTooltip="{{ 'INDUSTRY.CREATE' | translate }}"
+                                                mwlConfirmationPopover
+                                                popoverTitle="{{ 'CONFIRM.TITLE' | translate }}"
+                                                popoverMessage="{{ 'CONFIRM.CREATE_INDUSTRY' | translate }}  {{ 'INDUSTRY.PLACEHOLDER_1' | translate }} : '{{ name_en }}';  {{ 'INDUSTRY.PLACEHOLDER_2' | translate }} : '{{ name_es }}'?"
+                                                confirmText="{{ 'CONFIRM.CREATE' | translate }}"
+                                                cancelText="{{ 'CONFIRM.CANCEL' | translate }}"
+                                                placement="left"
+                                                (confirm)="onCreateEvent()"
+                                                [appendToBody]="true">
+                                                    <i class="fa fa fa-floppy-o fa-lg"></i>
+                                                </button>
+                                        </div>
+                                        </td>
+
+                            </ng-template>
+                        </ngx-table>
+
+                            <ng-template #summaryTemplateRef let-total="total">
+                                    <th colspan=3 style="text-align: center;">
+                                      {{ 'INDUSTRY.TOTAL' | translate }}: <strong>{{ data.length-1 }}</strong>
+                                    </th>
+                                  </ng-template>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>

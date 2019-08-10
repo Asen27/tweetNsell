@@ -46,6 +46,34 @@ export class RestWS extends AbstractWS {
       });
   }
 
+  public deleteServiceIndustry(name_en: string): Promise<any> {
+    const token = this.cookieService.get('token');
+    return this.makeDeleteRequest(this.path + 'service-industries/delete/' + name_en + '/', false, token)
+      .then(res => {
+        return Promise.resolve(res);
+      })
+      .catch(error => {
+        console.log('Error: ' + error);
+        return Promise.reject(error);
+      });
+  }
+
+  public createServiceIndustry(
+      name_en: string, name_es: string
+    ) {
+      const token = this.cookieService.get('token');
+      const fd = new FormData();
+      fd.append('name_en', name_en);
+      fd.append('name_es', name_es);
+      return this.makePostRequest(this.path + 'service-industries/create/', fd, token)
+        .then(res => {
+          return Promise.resolve(res);
+        })
+        .catch(error => {
+          return Promise.reject(error);
+        });
+    }
+
   public listOpinions(selector: string, page: Number): Promise<any> {
     const token = this.cookieService.get('token');
     return this.makeGetRequest(this.path + 'opinions/' + selector + '/', {'page' : page}, token)
@@ -95,6 +123,8 @@ export class RestWS extends AbstractWS {
         return Promise.reject(error);
       });
   }
+
+
 
   public evaluateOpinion(id: Number): Promise<any> {
     const token = this.cookieService.get('token');

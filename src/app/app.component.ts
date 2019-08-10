@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 // import { DataManagement } from './services/dataManagement';
 // import { StorageService } from './services/storageService';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-root',
@@ -21,6 +21,13 @@ export class AppComponent {
     private translateService: TranslateService,
     // public dm: DataManagement
   ) {
+
+/*
+    this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+        this.cookieService.set('lang', event.lang);
+        this.translateService.use(event.lang);
+    });
+    */
 
     this.translateService.setDefaultLang('en');
     if (this.cookieService.check('lang')) {

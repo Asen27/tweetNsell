@@ -28,6 +28,34 @@ export class DataManagement {
       });
   }
 
+  public deleteServiceIndustry(name_en: string): Promise<any> {
+    return this.restService
+      .deleteServiceIndustry(name_en)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public createServiceIndustry(
+    name_en: string,
+    name_es: string
+  ): Promise<any> {
+    return this.restService
+      .createServiceIndustry(
+        name_en,
+        name_es
+      )
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
   public listOpinions(selector: string, page: Number): Promise<any> {
     return this.restService
       .listOpinions(selector, page)
@@ -73,6 +101,9 @@ export class DataManagement {
         return Promise.reject(error);
       });
   }
+
+
+
 
   public evaluateOpinion(id: Number): Promise<any> {
     return this.restService

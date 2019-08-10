@@ -1,95 +1,100 @@
 {
-    "SETTINGS" : {
-        "APP_LANGUAGE" : "Idioma"
+    "SETTINGS": {
+        "APP_LANGUAGE": "Idioma"
     },
 
-    "LANGUAGE" : {
-        "ENGLISH" : "Inglés",
-        "SPANISH" : "Español"
+    "LANGUAGE": {
+        "ENGLISH": "Inglés",
+        "SPANISH": "Español"
     },
 
-    "LOGIN" : {
-        "LOGIN" : "Iniciar sesión",
-        "USERNAME" : "Nombre de usuario",
+    "LOGIN": {
+        "LOGIN": "Iniciar sesión",
+        "USERNAME": "Nombre de usuario",
         "USERNAME_ERROR": "Introduzca un nombre de usuario",
-        "PASSWORD" : "Contraseña",
-        "PASSWORD_ERROR" : "Introduzca una contraseña",
-        "REGISTER" : "Registrarse"
+        "PASSWORD": "Contraseña",
+        "PASSWORD_ERROR": "Introduzca una contraseña",
+        "REGISTER": "Registrarse"
     },
 
-    "HEADER" : {
-        "PROFILE" : "Perfil",
-        "LOGOUT" : "Cerrar sesión"
+    "HEADER": {
+        "PROFILE": "Perfil",
+        "LOGOUT": "Cerrar sesión"
     },
 
-    "SIDEBAR" : {
-        "INFO" : "Info",
-        "DASHBOARD" : "Panel de control",
+    "SIDEBAR": {
+        "INFO": "Info",
+        "DASHBOARD": "Panel de control",
         "DATA_MANAGEMENT": {
-            "MAIN" : "Gestión de datos",
-            "USERS" : "Usuarios",
-            "SERVICE_INDUSTRIES" : "Industrias"
+            "MAIN": "Gestión de datos",
+            "USERS": "Usuarios",
+            "SERVICE_INDUSTRIES": "Industrias"
         },
         "ONLINE_REPUTATION": {
-            "MAIN" : "Reputación online",
-            "OPINIONS" : "Opiniones",
-            "CHART" : "Gráfico"
+            "MAIN": "Reputación online",
+            "OPINIONS": "Opiniones",
+            "CHART": "Gráficos"
         },
-        "INFLUENCE_METER" : "Medidor de influencia",
-        "PROFILE" : "Perfil",
-        "LOGOUT" : "Cerrar sesión",
-        "COLLAPSE" : "Plegar"
+        "INFLUENCE_METER": "Medidor de influencia",
+        "PROFILE": "Perfil",
+        "LOGOUT": "Cerrar sesión",
+        "COLLAPSE": "Plegar"
     },
 
-
-    "ERROR" : {
-        "GLOBAL" : "¡No tiene permiso para realizar esta operación!",
-        "PIN_1" : "¡Esta opinión no existe!",
-        "PIN_2" : "Esta opinión ya ha sido marcada como destacada!",
-        "LOGIN" : "¡El nombre de usuario o la contraseña no son correctos!",
-        "REGISTER_1" : "¡Introduzca un nombre de usuario y una contraseña!",
-        "REGISTER_2" : "¡La contraseña que ha introducido es demasiado débil! Por favor, introduzca una contraseña más fuerte. Una contraseña fuerte consta de al menos 8 caracteres y contiene al menos una letra en mayúscula, un dígito y un carácter especial.",
-        "REGISTER_3" : "¡Las contraseñas no coinciden!",
-        "REGISTER_4" : "El nombre de usuario que ha introducido no pertenece a ninguna cuenta de Twitter. Asegúrese de que introduzca un nombre de usuario perteneciente a una cuenta de Twitter válida y no protegida.",
-        "REGISTER_5" : "¡Ya existe una cuenta con este nombre de usuario!",
-        "UNPIN_1" : "¡Esta opinión no existe!",
-        "UNPIN_2" : "¡Esta opinión no ha sido marcada como destacada!",
-        "EVALUATE" : "¡Esta opinión ya ha sido evaluada!",
-        "LOAD" : "Se ha producido un error inesperado al cargar las opiniones. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",
-        "EVALUATE_ALL" : "¡No hay opiniones a evaluar!"
+    "ERROR": {
+        "GLOBAL": "¡No tiene permiso para realizar esta operación!",
+        "PIN_1": "¡Esta opinión no existe!",
+        "PIN_2": "Esta opinión ya ha sido marcada como destacada!",
+        "LOGIN": "¡El nombre de usuario o la contraseña no son correctos!",
+        "REGISTER_1": "¡Introduzca un nombre de usuario y una contraseña!",
+        "REGISTER_2": "¡La contraseña que ha introducido es demasiado débil! Por favor, introduzca una contraseña más fuerte. Una contraseña fuerte consta de al menos 8 caracteres y contiene al menos una letra en mayúscula, un dígito y un carácter especial.",
+        "REGISTER_3": "¡Las contraseñas no coinciden!",
+        "REGISTER_4": "El nombre de usuario que ha introducido no pertenece a ninguna cuenta de Twitter. Asegúrese de que introduzca un nombre de usuario perteneciente a una cuenta de Twitter válida y no protegida.",
+        "REGISTER_5": "¡Ya existe una cuenta con este nombre de usuario!",
+        "UNPIN_1": "¡Esta opinión no existe!",
+        "UNPIN_2": "¡Esta opinión no ha sido marcada como destacada!",
+        "EVALUATE": "¡Esta opinión ya ha sido evaluada!",
+        "LOAD": "Se ha producido un error inesperado al cargar las opiniones. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",
+        "EVALUATE_ALL": "¡No hay opiniones a evaluar!",
+        "SERVICE_INDUSTRY_1" : "¡La industria no existe! ",
+        "SERVICE_INDUSTRY_2" : "¡La industria por defecto no se puede eliminar! ",
+        "SERVICE_INDUSTRY_3" : "¡No es posible crear más de 15 industrias! ",
+        "SERVICE_INDUSTRY_4" : "¡Esta industria ya existe!"
 
     },
 
-    "SUCCESS" : {
+    "SUCCESS": {
         "REGISTER": "¡Se ha registrado con éxito!",
-        "PIN" : "¡La opinión ha sido marcada como destacada!",
-        "UNPIN" : "¡La opinión ha sido desmarcada!",
-        "DELETE_OPINION" : "¡La opinión ha sido eliminada con éxito!",
+        "PIN": "¡La opinión ha sido marcada como destacada!",
+        "UNPIN": "¡La opinión ha sido desmarcada!",
+        "DELETE_OPINION": "¡La opinión ha sido eliminada con éxito!",
         "EVALUATE": "¡La opinión ha sido evaluada con éxito!",
         "LOAD": " nuevas opiniones cargadas!",
         "LOAD_NO_RESULTS": "No hay nuevas opiniones. Vuelva a comprobar más tarde.",
-        "EVALUATE_ALL" : " opiniones evaluadas!"
+        "EVALUATE_ALL": " opiniones evaluadas!",
+        "DELETE_INDUSTRY" : "¡La industria ha sido eliminada con éxito!",
+        "CREATE_INDUSTRY" : "¡La industria ha sido creada con éxito!"
     },
 
     "REGISTER": {
-        "REGISTER" : "Registrarse",
-        "USERNAME" : "Nombre de usuario",
-        "USERNAME_ERROR" : "Introduzca un nombre de usuario",
-        "PASSWORD" : "Contraseña",
-        "PASSWORD_ERROR" : "Introduzca una contraseña",
-        "CONFIRM_PASSWORD" : "Confirmar la contraseña",
-        "CONFIRM_PASSWORD_ERROR" : "Vuelva a introducir la contraseña",
-        "EMAIL" : "Correo electrónico",
-        "EMAIL_ERROR" : "El correo electrónico es inválido",
-        "SERVICE_INDUSTRY" : "Industria de servicios",
-        "SERVICE_INDUSTRY_SELECTED" : "Escoja una",
-        "CANCEL" : "Cancelar"
+        "REGISTER": "Registrarse",
+        "USERNAME": "Nombre de usuario",
+        "USERNAME_ERROR": "Introduzca un nombre de usuario",
+        "PASSWORD": "Contraseña",
+        "PASSWORD_ERROR": "Introduzca una contraseña",
+        "CONFIRM_PASSWORD": "Confirmar la contraseña",
+        "CONFIRM_PASSWORD_ERROR": "Vuelva a introducir la contraseña",
+        "EMAIL": "Correo electrónico",
+        "EMAIL_ERROR": "El correo electrónico es inválido",
+        "SERVICE_INDUSTRY": "Industria de servicios",
+        "SERVICE_INDUSTRY_SELECTED": "Escoja una",
+        "CANCEL": "Cancelar"
     },
 
-    "OPINION" : {
-        "ONLINE_REPUTATION" : "Reputación online",
-        "OPINIONS" : "Opiniones",
-        "ABOUT" : "Opiniones sobre",
+    "OPINION": {
+        "ONLINE_REPUTATION": "Reputación online",
+        "OPINIONS": "Opiniones",
+        "ABOUT": "Opiniones sobre",
         "ALL": "Todas",
         "NEW": "Nuevas",
         "EVALUATED": "Evaluadas",
@@ -97,26 +102,54 @@
         "POSITIVE": "Positivas",
         "NEUTRAL": "Neutrales",
         "NEGATIVE": "Negativas",
-        "EMPTY" : "¡No hay opiniones!",
-        "PUBLICATION_MOMENT" : "Publicada",
-        "AUTHOR" : "Autor",
-        "TEXT" : "Texto",
-        "NUMBER_FAVORITES" : "№ de 'Me gusta'",
-        "NUMBER_RETWEETS" : "№ de retuits",
-        "ATTITUDE" : "Actitud",
-        "TEXT_SEE" : "Texto completo",
-        "CLOSE" : "Cerrar",
+        "EMPTY": "¡No hay opiniones!",
+        "PUBLICATION_MOMENT": "Publicada",
+        "AUTHOR": "Autor",
+        "TEXT": "Texto",
+        "NUMBER_FAVORITES": "№ de 'Me gusta'",
+        "NUMBER_RETWEETS": "№ de retuits",
+        "ATTITUDE": "Actitud",
+        "TEXT_SEE": "Texto completo",
+        "CLOSE": "Cerrar",
         "TOTAL": "Número total de opiniones",
-        "LOAD" : "Cargar más opiniones",
-        "EVALUATE_ALL" : "Evaluar todas las opiniones",
-        "PIN" : "Marcar como destacada ",
-        "UNPIN" : "Desmarcar como destacada",
-        "DELETE" : "Borrar",
-        "EVALUATE" : "Evaluar"
+        "LOAD": "Cargar más opiniones",
+        "EVALUATE_ALL": "Evaluar todas las opiniones",
+        "PIN": "Marcar como destacada ",
+        "UNPIN": "Desmarcar como destacada",
+        "DELETE": "Borrar",
+        "EVALUATE": "Evaluar",
+        "CHART": "Gráficos",
+        "CHART_ALL": "Todas las opiniones",
+        "CHART_EVALUATED": "Opiniones evaluadas",
+        "TOTAL_NUMBER": "Número total de opiniones"
     },
 
-    "CUSTOMER" : {
-        "NUMBER_FOLLOWERS" : "№ de seguidores"
-    }
+    "INFO": {
+        "INFO": "Información",
+        "NOTE_1": "Esta aplicación web ha sido desarrollada ",
+        "NOTE_2": " para su Trabajo Fin de Grado en Ingeniería del Software de la Universidad de Sevilla."
+    },
 
+    "CUSTOMER": {
+        "NUMBER_FOLLOWERS": "№ de seguidores"
+    },
+
+    "INDUSTRY": {
+        "DATA_MANAGEMENT": "Gestión de datos",
+        "SERVICE_INDUSTRIES": "Industrias",
+        "DELETE": "Eliminar esta industria",
+        "TOTAL": "Número total de industrias",
+        "CREATE" : "Crear nueva industria",
+        "PLACEHOLDER_1" : "Nombre (Inglés)",
+        "PLACEHOLDER_2" : "Nombre (Español)"
+    },
+
+    "CONFIRM": {
+        "DELETE": "Eliminar",
+        "DELETE_INDUSTRY": "¿Estás seguro de que quieres eliminar esta industria?",
+        "TITLE": "¿Estás seguro?",
+        "CANCEL": "Cancelar",
+        "CREATE_INDUSTRY" : "¿Estás seguro de que quieres crear una nueva industria con:",
+        "CREATE" : "Create"
+    }
 }

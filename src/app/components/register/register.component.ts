@@ -5,7 +5,7 @@ import { DataManagement } from '../../services/dataManagement';
 import { CookieService } from 'ngx-cookie-service';
 import { AlertService  } from '../../services/alertService';
 import { ServiceIndustry } from '../../app.data.model';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { routerTransition } from '../../router.animations';
 
 @Component({
@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
     private translateService: TranslateService
   ) {
 
-    this.language = this.cookieService.get('lang');
+    this.language = this.cookieService.check('lang') ? this.cookieService.get('lang') : 'en';
     this.listServiceIndustries();
 
     // redirect to home if already logged in
@@ -46,6 +46,10 @@ export class RegisterComponent implements OnInit {
       confirmPassword: ['', Validators.required],
       email: ['', Validators.email],
       serviceIndustry: ['']
+    });
+
+    this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+        this.language = event.lang;
     });
   }
 

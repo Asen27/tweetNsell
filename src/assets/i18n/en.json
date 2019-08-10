@@ -34,7 +34,7 @@
         "ONLINE_REPUTATION": {
             "MAIN" : "Online reputation",
             "OPINIONS" : "Opinions",
-            "CHART" : "Chart"
+            "CHART" : "Charts"
         },
         "INFLUENCE_METER" : "Influence meter",
         "PROFILE" : "Profile",
@@ -56,7 +56,11 @@
         "UNPIN_2" : "This opinion has not been pinned!",
         "EVALUATE" : "This opinion has already been evaluated!",
         "LOAD" : "An unexpected error occurred while loading the opinions! Remember that this applications consumes the Twitter Search API, which, unforunately, have rate limits. Please, retry loading the opinions in 15 minutes.",
-        "EVALUATE_ALL" : "There are no opinions to evaluate!"
+        "EVALUATE_ALL" : "There are no opinions to evaluate!",
+        "SERVICE_INDUSTRY_1" : "This service industry doesn't exist! ",
+        "SERVICE_INDUSTRY_2" : "The default service industry can't be deleted! ",
+        "SERVICE_INDUSTRY_3" : "You can't create more than 15 service industries! ",
+        "SERVICE_INDUSTRY_4" : "This service industry already exists!"
     },
 
     "SUCCESS" : {
@@ -67,7 +71,9 @@
         "EVALUATE": "The opinion has been evaluated successfully!",
         "LOAD": " new opinions loaded!",
         "LOAD_NO_RESULTS": "There aren't any new opinions. Please, try again later!",
-        "EVALUATE_ALL" : " opinions evaluated!"
+        "EVALUATE_ALL" : " opinions evaluated!",
+        "DELETE_INDUSTRY" : "The service industry has been deleted successfully!",
+        "CREATE_INDUSTRY" : "The service industry has been created successfully!"
     },
 
     "REGISTER": {
@@ -111,12 +117,42 @@
         "PIN" : "Pin this opinion",
         "UNPIN" : "Unpin this opinion",
         "DELETE" : "Delete this opinion",
-        "EVALUATE" : "Evaluate this opinion"
+        "EVALUATE" : "Evaluate this opinion",
+        "CHART" : "Charts",
+        "CHART_ALL" : "All opinions",
+        "CHART_EVALUATED": "Evaluated opinions",
+        "TOTAL_NUMBER": "Total number of opinions"
 
+    },
+
+    "INFO" : {
+        "INFO" : "Information",
+        "NOTE_1": "This web application was developed by ",
+        "NOTE_2": " as a final year project for his Bachelor's degree in Software Engineering at the University of Seville."
+
+    },
+
+    "INDUSTRY" : {
+        "DATA_MANAGEMENT" : "Data management",
+        "SERVICE_INDUSTRIES" : "Service industries",
+        "DELETE" : "Delete this industry",
+        "TOTAL" : "Total number of industries",
+        "CREATE" : "Create new industry",
+        "PLACEHOLDER_1" : "Name (English)",
+        "PLACEHOLDER_2" : "Name (Spanish)"
     },
 
     "CUSTOMER" : {
         "NUMBER_FOLLOWERS" : "№ of followers"
+    },
+
+    "CONFIRM" : {
+        "DELETE":"Delete",
+        "DELETE_INDUSTRY": "Are you sure you want to delete this service industry?",
+        "TITLE": "Are you sure?",
+        "CANCEL": "Cancel",
+        "CREATE_INDUSTRY" : "Are you sure you want to create a new service industry with:",
+        "CREATE" : "Create"
     }
 
 }

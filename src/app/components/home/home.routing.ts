@@ -9,6 +9,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { IndustryComponent } from './industry/industry.component';
 import { ProfileComponent } from './profile/profile.component';
 import { OpinionComponent } from './opinion/opinion.component';
+import { ChartComponent } from './chart/chart.component';
 
 const routes: Routes = [
     {
@@ -20,7 +21,8 @@ const routes: Routes = [
             { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard]},
             { path: 'service-industries', component: IndustryComponent, canActivate: [AdminGuard]},
             { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-            { path: 'online-reputation', component: OpinionComponent, canActivate: [BrandGuard] }
+            { path: 'online-reputation', component: OpinionComponent, canActivate: [BrandGuard] },
+            { path: 'online-reputation/charts', component: ChartComponent, canActivate: [BrandGuard] }
 
         ]
     }

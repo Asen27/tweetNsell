@@ -29,7 +29,7 @@ urlpatterns = [
     path('register/', views.RegisterBrand.as_view(), name='register_brand'),
     path('service-industries/create/', views.CreateServiceIndustry.as_view(), name='create_service_industry'),
     path('service-industries/', views.ServiceIndustriesList.as_view(), name='service_industries_list'),
-    path('service-industries/delete/<int:id>/', views.DeleteServiceIndustry.as_view(), name='delete_service_industry'),
+    path('service-industries/delete/<str:name_en>/', views.DeleteServiceIndustry.as_view(), name='delete_service_industry'),
     path('opinions/load/', views.LoadOpinions.as_view(), name='load_opinions'),
     path('opinions/all/', views.AllOpinionsList.as_view(), name='opinions_list_all'),
     path('opinions/new/', views.NewOpinionsList.as_view(), name='opinions_list_new'),
@@ -50,5 +50,7 @@ urlpatterns = [
     path('followers/evaluate/<int:id>/', views.EvaluateFollower.as_view(), name='evaluate_follower'),
     path('followers/evaluate/all/', views.EvaluateAllFollowers.as_view(), name='evaluate_all_followers'),
     path('followers/delete/<int:id>/', views.DeleteFollower.as_view(), name='delete_follower'),
+    path('brands/', views.BrandsList.as_view(), name='brands_list'),
+    path('brands/delete/<str:username>/', views.DeleteBrand.as_view(), name='delete_brand'),
     path('backend-wakeup/', views.backendWakeUp, name='backend_wakeup')
 ]

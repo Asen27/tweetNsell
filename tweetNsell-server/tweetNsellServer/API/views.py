@@ -405,8 +405,8 @@ class CreateServiceIndustry(APIView):
         name_en = request.data.get('name_en')
         name_es = request.data.get('name_es')
 
-        if ServiceIndustry.objects.count() == 15:
-            return JsonResponse({'error': "There can't be more than 15 service industries!"}, status=412)
+        if ServiceIndustry.objects.count() == 10:
+            return JsonResponse({'error': "There can't be more than 10 service industries!"}, status=412)
 
 
         try:
@@ -474,6 +474,7 @@ class DeleteBrand(DestroyAPIView):
         else:
             brand = Brand.objects.get(pk=instance)
             Opinion.objects.filter(brand = brand).delete()
+            # PROVERI GO------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             Customer.objects.filter(opinion__isnull = True).distinct().delete()
             brand.delete()
             Follower.objects.filter(brands = None).delete()

@@ -28,6 +28,7 @@ import { DashboardComponent } from './components/home/dashboard/dashboard.compon
 import { IndustryComponent } from './components/home/industry/industry.component';
 import { ProfileComponent } from './components/home/profile/profile.component';
 import { OpinionComponent } from './components/home/opinion/opinion.component';
+import { BrandComponent } from './components/home/brand/brand.component';
 import { ChartComponent } from './components/home/chart/chart.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TableModule } from 'ngx-easy-table';
@@ -78,7 +79,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         IndustryComponent,
         ProfileComponent,
         OpinionComponent,
-        ChartComponent
+        ChartComponent,
+        BrandComponent
     ],
     providers: [CookieService,
         DataManagement,

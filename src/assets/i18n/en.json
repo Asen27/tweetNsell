@@ -59,8 +59,9 @@
         "EVALUATE_ALL" : "There are no opinions to evaluate!",
         "SERVICE_INDUSTRY_1" : "This service industry doesn't exist! ",
         "SERVICE_INDUSTRY_2" : "The default service industry can't be deleted! ",
-        "SERVICE_INDUSTRY_3" : "You can't create more than 15 service industries! ",
-        "SERVICE_INDUSTRY_4" : "This service industry already exists!"
+        "SERVICE_INDUSTRY_3" : "You can't create more than 10 service industries! ",
+        "SERVICE_INDUSTRY_4" : "This service industry already exists!",
+        "BRAND" : "This brand doesn't exist!"
     },
 
     "SUCCESS" : {
@@ -73,7 +74,8 @@
         "LOAD_NO_RESULTS": "There aren't any new opinions. Please, try again later!",
         "EVALUATE_ALL" : " opinions evaluated!",
         "DELETE_INDUSTRY" : "The service industry has been deleted successfully!",
-        "CREATE_INDUSTRY" : "The service industry has been created successfully!"
+        "CREATE_INDUSTRY" : "The service industry has been created successfully!",
+        "BRAND" : "The brand was deleted successfully!"
     },
 
     "REGISTER": {
@@ -125,6 +127,19 @@
 
     },
 
+    "BRAND" : {
+        "DATA_MANAGEMENT" : "Data management",
+        "USERS" : "Users",
+        "BRANDS" : "All registered brands:",
+        "DELETE": "Delete this brand",
+        "EXPAND" : "Expand",
+        "EMPTY" : "There are no brands!",
+        "TOTAL": "Total number of brands",
+        "VERIFIED" : "This Twitter account is verified.",
+        "EMPTY_LOCATION" : "Unknown location",
+        "EMPTY_DESCRIPTION" : "Unkwown description"
+        },
+
     "INFO" : {
         "INFO" : "Information",
         "NOTE_1": "This web application was developed by ",
@@ -139,7 +154,8 @@
         "TOTAL" : "Total number of industries",
         "CREATE" : "Create new industry",
         "PLACEHOLDER_1" : "Name (English)",
-        "PLACEHOLDER_2" : "Name (Spanish)"
+        "PLACEHOLDER_2" : "Name (Spanish)",
+        "DEFAULT" : "The default service industry can't be deleted."
     },
 
     "CUSTOMER" : {
@@ -152,7 +168,8 @@
         "TITLE": "Are you sure?",
         "CANCEL": "Cancel",
         "CREATE_INDUSTRY" : "Are you sure you want to create a new service industry with:",
-        "CREATE" : "Create"
+        "CREATE" : "Create",
+        "DELETE_BRAND": "Are you sure you want to delete this brand?"
     }
 
 }

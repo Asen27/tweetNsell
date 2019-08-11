@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild  } from '@angular/core';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { routerTransition } from '../../../router.animations';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { AlertService } from '../../../services/alertService';
@@ -18,7 +18,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 
 export class IndustryComponent implements OnInit {
-    @ViewChild('service-industries', { static: true }) table: APIDefinition;
+    @ViewChild('serviceindustries', { static: true }) table: APIDefinition;
     public columns: Columns[];
 
     data = [];
@@ -30,7 +30,6 @@ export class IndustryComponent implements OnInit {
         private translateService: TranslateService,
         private alertService: AlertService,
         private dm: DataManagement,
-        private readonly cdr: ChangeDetectorRef,
         private cookieService: CookieService
     ) {
 
@@ -80,10 +79,9 @@ export class IndustryComponent implements OnInit {
         this.configuration = ConfigService.config;
         this.configuration.isLoading = true;
         this.dm.listServiceIndustries().then((data: any) => {
-            data['results'].push({'name_en': 'be', 'name_es': ''});
+            data['results'].push({'name_en': '', 'name_es': ''});
             this.data = data['results'];
           this.configuration.isLoading = false;
-          this.cdr.detectChanges();
           window.scroll(0, 0);
         }).catch(error => {
             this.alertService.error(error);
@@ -97,8 +95,7 @@ export class IndustryComponent implements OnInit {
         this.configuration.isLoading = true;
         this.dm.deleteServiceIndustry(name_en).then((data: any) => {
         this.configuration.isLoading = false;
-       // this.cdr.detectChanges();
-       this.getServiceIndustries();
+        this.getServiceIndustries();
         const message = this.translateService.instant('SUCCESS.DELETE_INDUSTRY');
         this.alertService.success(message, false);
         window.scroll(0, 0);
@@ -116,13 +113,15 @@ export class IndustryComponent implements OnInit {
         this.configuration.isLoading = true;
         this.dm.createServiceIndustry(this.name_en, this.name_es).then((data: any) => {
             this.configuration.isLoading = false;
-           // this.cdr.detectChanges();
-           this.getServiceIndustries();
+            this.getServiceIndustries();
+            this.name_en = '';
+            this.name_es = '';
             const message = this.translateService.instant('SUCCESS.CREATE_INDUSTRY');
             this.alertService.success(message, false);
             window.scroll(0, 0);
         }).catch(error => {
             this.configuration.isLoading = false;
+            this.getServiceIndustries();
             this.alertService.error(error);
             window.scroll(0, 0);
         });

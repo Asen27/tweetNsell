@@ -56,6 +56,28 @@ export class DataManagement {
       });
   }
 
+  public listBrands(page: Number): Promise<any> {
+    return this.restService
+      .listBrands(page)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public deleteBrand(username: string): Promise<any> {
+    return this.restService
+      .deleteBrand(username)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
   public listOpinions(selector: string, page: Number): Promise<any> {
     return this.restService
       .listOpinions(selector, page)

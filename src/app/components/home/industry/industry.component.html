@@ -11,7 +11,7 @@
                         <div class="table-responsive">
 
                                 <ngx-table
-                                #opinions
+                                #serviceindustries
                                 [configuration]="configuration"
                                 [data]="data"
                                 [columns]="columns"
@@ -59,6 +59,9 @@
                                         placement="left"
                                         (confirm)="onDeleteEvent(row.name_en)"
                                         [appendToBody]="true">
+                                            <i class="fa fa-trash-o fa-lg"></i>
+                                        </button>
+                                        <button *ngIf="row.name_en === 'Unspecified'" class="btn btn-secondary"  placement="left" ngbTooltip="{{ 'INDUSTRY.DEFAULT' | translate }}">
                                             <i class="fa fa-trash-o fa-lg"></i>
                                         </button>
                                         </div>

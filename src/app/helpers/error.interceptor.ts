@@ -116,6 +116,12 @@ export class ErrorInterceptor implements HttpInterceptor {
                      } else {
                         error = err.statusText;
                     }
+                } else if (request.url.includes('brands/delete/')) {
+                    if (err.status === 404) {
+                        error = this.translateService.instant('ERROR.BRAND');
+                    } else {
+                        error = err.statusText;
+                    }
                 } else {
                     error = err.statusText;
                 }

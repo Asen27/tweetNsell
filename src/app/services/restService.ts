@@ -221,6 +221,84 @@ export class RestWS extends AbstractWS {
             });
     }
 
+    public listFollowers(selector: string, page: Number): Promise<any> {
+        const token = this.cookieService.get('token');
+        return this.makeGetRequest(
+            this.path + 'followers/' + selector + '/',
+            { page: page },
+            token
+        )
+            .then(res => {
+                return Promise.resolve(res);
+            })
+            .catch(error => {
+                console.log('Error: ' + error);
+                return Promise.reject(error);
+            });
+    }
+
+    public loadFollowers() {
+        const token = this.cookieService.get('token');
+        const fd = new FormData();
+        return this.makePostRequest(this.path + 'followers/load/', fd, token)
+            .then(res => {
+                return Promise.resolve(res);
+            })
+            .catch(error => {
+                return Promise.reject(error);
+            });
+    }
+
+    public evaluateFollower(id: Number): Promise<any> {
+        const token = this.cookieService.get('token');
+        const fd = new FormData();
+        return this.makeUpdateRequest(
+            this.path + 'followers/evaluate/' + id + '/',
+            false,
+            fd,
+            token
+        )
+            .then(res => {
+                return Promise.resolve(res);
+            })
+            .catch(error => {
+                console.log('Error: ' + error);
+                return Promise.reject(error);
+            });
+    }
+
+    public evaluateAllFollowers() {
+        const token = this.cookieService.get('token');
+        const fd = new FormData();
+        return this.makePostRequest(
+            this.path + 'followers/evaluate/all/',
+            fd,
+            token
+        )
+            .then(res => {
+                return Promise.resolve(res);
+            })
+            .catch(error => {
+                return Promise.reject(error);
+            });
+    }
+
+    public deleteFollower(id: Number): Promise<any> {
+        const token = this.cookieService.get('token');
+        return this.makeDeleteRequest(
+            this.path + 'followers/delete/' + id + '/',
+            false,
+            token
+        )
+            .then(res => {
+                return Promise.resolve(res);
+            })
+            .catch(error => {
+                console.log('Error: ' + error);
+                return Promise.reject(error);
+            });
+    }
+
     public register(
         username: string,
         password: string,

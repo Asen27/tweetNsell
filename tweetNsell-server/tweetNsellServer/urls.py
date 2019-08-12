@@ -47,10 +47,13 @@ urlpatterns = [
     path('followers/all/', views.AllFollowersList.as_view(), name='followers_list_all'),
     path('followers/new/', views.NewFollowersList.as_view(), name='followers_list_new'),
     path('followers/evaluated/', views.EvaluatedFollowersList.as_view(), name='followers_list_evaluated'),
+    path('followers/influencers/', views.InfluencersList.as_view(), name='followers_list_influencers'),
     path('followers/evaluate/<int:id>/', views.EvaluateFollower.as_view(), name='evaluate_follower'),
     path('followers/evaluate/all/', views.EvaluateAllFollowers.as_view(), name='evaluate_all_followers'),
     path('followers/delete/<int:id>/', views.DeleteFollower.as_view(), name='delete_follower'),
     path('brands/', views.BrandsList.as_view(), name='brands_list'),
     path('brands/delete/<str:username>/', views.DeleteBrand.as_view(), name='delete_brand'),
+    path('brand/update/', views.UpdateBrand.as_view(), name='update_brand'),
+    path('dashboard/', views.DashboardData.as_view(), name='dashboard'),
     path('backend-wakeup/', views.backendWakeUp, name='backend_wakeup')
 ]

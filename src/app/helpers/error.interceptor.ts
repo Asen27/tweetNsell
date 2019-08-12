@@ -122,6 +122,36 @@ export class ErrorInterceptor implements HttpInterceptor {
                     } else {
                         error = err.statusText;
                     }
+                } else if (request.url.endsWith('followers/load/')) {
+                    if (err.status === 500) {
+                        error = this.translateService.instant('ERROR.LOAD_2');
+                    } else {
+                        error = err.statusText;
+                    }
+                } else if (request.url.includes('followers/evaluate/') && (!request.url.includes('evaluate/all/'))) {
+                    if (err.status === 404) {
+                        error = this.translateService.instant('ERROR.EVALUATE_FOLLOWER_1');
+                    } else if (err.status === 409) {
+                        error = this.translateService.instant('ERROR.EVALUATE_FOLLOWER_2');
+                    } else if (err.status === 500) {
+                        error = this.translateService.instant('ERROR.EVALUATE_FOLLOWER_3');
+                    } else {
+                        error = err.statusText;
+                    }
+                } else if (request.url.endsWith('followers/evaluate/all/')) {
+                    if (err.status === 404) {
+                        error = this.translateService.instant('ERROR.EVALUATE_ALL_2');
+                     } else if (err.status === 500) {
+                        error = this.translateService.instant('ERROR.EVALUATE_ALL_3');
+                     } else {
+                        error = err.statusText;
+                    }
+                } else if (request.url.includes('followers/delete/')) {
+                        if (err.status === 404) {
+                            error = this.translateService.instant('ERROR.EVALUATE_FOLLOWER_1');
+                        } else {
+                            error = err.statusText;
+                        }
                 } else {
                     error = err.statusText;
                 }

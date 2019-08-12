@@ -11,7 +11,9 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from googletrans import Translator
-from django.db.models import F
+from django.db.models import Func, F, IntegerField, Sum
+from django.db.models.expressions import Value
+from django.db.models.functions import Cast
 from django.http.response import JsonResponse
 #from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from dateutil import parser
@@ -19,7 +21,6 @@ from datetime import datetime, timezone
 from scholarmetrics import hindex
 from math import floor, log10
 from django.contrib.auth.hashers import make_password
-#from urllib.parse import unquote
 from urllib.error import URLError
 from http.client import BadStatusLine
 import re
@@ -365,7 +366,7 @@ class RegisterBrand(APIView):
             user_profile.save()
 
         except Exception:
-            return JsonResponse({'error': 'This brand already exists!'}, status=500)
+            return JsonResponse({'error': 'This brand already exists!'}, status=409)
 
         brand = Brand(
             user_profile = user_profile,
@@ -474,7 +475,6 @@ class DeleteBrand(DestroyAPIView):
         else:
             brand = Brand.objects.get(pk=instance)
             Opinion.objects.filter(brand = brand).delete()
-            # PROVERI GO------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             Customer.objects.filter(opinion__isnull = True).distinct().delete()
             brand.delete()
             Follower.objects.filter(brands = None).delete()
@@ -587,13 +587,13 @@ class LoadOpinions(APIView):
                     if Customer.objects.filter(id = author_id).exists():
                         author = Customer.objects.get(pk = author_id)
                     else:
-                        print('ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR!!!!!!!')
+                        print('ERROR!')
                         author = Customer(
                         id = '7857353745384753875',
-                        screen_name = "senranbay",
-                        name = "Asen",
+                        screen_name = "fictitiousCustomer",
+                        name = "Fictitious Customer",
                         url = '',
-                        number_followers = 3)
+                        number_followers = 0)
                         author.save()
 
                 try:
@@ -1080,7 +1080,7 @@ class LoadFollowers(APIView):
         brand = get_user_by_token(request)
 
         if not (isinstance(brand, Brand)):
-            return JsonResponse({'error':'Only brands can search for influencers!'}, status=500)
+            return JsonResponse({'error':'Only brands can search for influencers!'}, status=403)
 
         twitter_api = oauth_login()
 
@@ -1191,9 +1191,9 @@ class LoadFollowers(APIView):
         brand.number_new_followers += number_results
         brand.save()
         if number_results == 0:
-            return JsonResponse({'message':'There are no new followers'}, status=201)
+            return JsonResponse({'message':'There are no new followers', 'status':200}, status=200)
         else:
-            return JsonResponse({'message':'Followers loaded successfuly'}, status=201)
+            return JsonResponse({'message':'Followers loaded successfuly', 'status':201, 'number_results' : number_results}, status=201)
 
 
 
@@ -1215,7 +1215,7 @@ class AllFollowersList(ListAPIView):
 
     def get_queryset(self):
         brand = Brand.objects.get(pk = self.request.user)
-        return  brand.follower_set.all().order_by(F('influence').desc(nulls_last=True))
+        return  brand.follower_set.all()
 
 
 class NewFollowersList(ListAPIView):
@@ -1236,7 +1236,7 @@ class NewFollowersList(ListAPIView):
 
     def get_queryset(self):
         brand = Brand.objects.get(pk = self.request.user)
-        return  brand.follower_set.all().exclude(influence__isnull = False).order_by('number_followers')
+        return  brand.follower_set.all().exclude(influence__isnull = False)
 
 class EvaluatedFollowersList(ListAPIView):
 
@@ -1256,7 +1256,28 @@ class EvaluatedFollowersList(ListAPIView):
 
     def get_queryset(self):
         brand = Brand.objects.get(pk = self.request.user)
-        return  brand.follower_set.all().exclude(influence__isnull = True).order_by('-influence')
+        return  brand.follower_set.all().exclude(influence__isnull = True)
+
+
+class InfluencersList(ListAPIView):
+
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = FollowerSerializer
+
+    def check_permissions(self, request):
+
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        brand = Brand.objects.get(pk = self.request.user)
+        return  brand.follower_set.all().exclude(influence__isnull = True).order_by('-influence')[:10]
 
 
 
@@ -1284,10 +1305,10 @@ class EvaluateFollower(UpdateAPIView):
         try:
             instance = self.get_object()
         except Exception:
-            return JsonResponse({'error': "This follower doesn't exists!"}, status=500)
+            return JsonResponse({'error': "This follower doesn't exists!"}, status=404)
         else:
             if not instance.influence is None:
-                return JsonResponse({'error': "This follower already has influence!"}, status=500)
+                return JsonResponse({'error': "This follower already has influence!"}, status=409)
             else:
                 try:
                     influence = calculate_influence(instance.k, instance.k_tweet_publication_moment, instance.k_retweets, instance.number_followers)
@@ -1303,7 +1324,7 @@ class EvaluateFollower(UpdateAPIView):
                     brand.number_new_followers -= 1
                     brand.save()
 
-                    return JsonResponse({'message':'The influence of the follower has been calculated successfuly'}, status=201)
+                    return JsonResponse({'message':'The influence of the follower has been calculated successfuly'}, status=200)
 
 class EvaluateAllFollowers(APIView):
     permission_classes = (IsAuthenticated, )
@@ -1314,13 +1335,13 @@ class EvaluateAllFollowers(APIView):
         brand = get_user_by_token(request)
 
         if not (isinstance(brand, Brand)):
-            return JsonResponse({'error':'Only brands can calculate the influence of their followers!'}, status=500)
+            return JsonResponse({'error':'Only brands can calculate the influence of their followers!'}, status=403)
 
         followers = brand.follower_set.all().exclude(influence__isnull = False)
 
 
         if len(followers) == 0:
-            return JsonResponse({'message':'All of the followers already have influence!'}, status=201)
+            return JsonResponse({'error':'There are not any unevaluated followers!'}, status=404)
         else:
             for follower in followers:
                 try:
@@ -1337,7 +1358,7 @@ class EvaluateAllFollowers(APIView):
             brand.number_new_followers -= len(followers)
             brand.save()
 
-            return JsonResponse({'message':'Influence calculated successfuly'}, status=201)
+            return JsonResponse({'message':'Influence calculated successfuly', 'number_results': len(followers)}, status=200)
 
 
 class DeleteFollower(DestroyAPIView):
@@ -1367,7 +1388,7 @@ class DeleteFollower(DestroyAPIView):
         try:
             instance = self.get_object()
         except Exception:
-            return JsonResponse({'error': "This follower doesn't exists!"}, status=500)
+            return JsonResponse({'error': "This follower doesn't exists!"}, status=404)
         else:
             brand = Brand.objects.get(pk = self.request.user)
             instance.brands.remove(brand)
@@ -1377,4 +1398,93 @@ class DeleteFollower(DestroyAPIView):
             if instance.brands.all().count() == 0:
                 self.perform_destroy(instance)
 
-            return JsonResponse({'message':'The follower has been deleted successfuly'}, status=201)
+            return JsonResponse({'message':'The follower has been deleted successfuly'}, status=202)
+
+
+class UpdateBrand(UpdateAPIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    serializer_class = BrandSerializer
+
+    def check_permissions(self, request):
+
+        for permission in self.get_permissions():
+            if not permission.has_permission(request, self):
+                self.permission_denied(request)
+
+        if self.request.user.is_staff:
+            self.permission_denied(request)
+
+    def get_queryset(self):
+        return Brand.objects.filter(user_profile = self.request.user)
+
+    def get_object(self):
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        obj = get_object_or_404(queryset)
+
+        self.check_object_permissions(self.request, obj)
+
+        return obj
+
+
+    def update(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Exception:
+            return JsonResponse({'error': "This brand doesn't exists!"}, status=404)
+        else:
+
+            twitter_api = oauth_login()
+            brand_info = get_brand_profile(twitter_api, instance.user_profile.username)
+
+            if brand_info is None:
+                return JsonResponse({'error': 'Invalid Twitter account!'}, status=500)
+
+            else:
+                instance.name = brand_info['name']
+                instance.location = brand_info['location']
+                instance.description = brand_info['description']
+                instance.language = brand_info['language']
+                instance.url = brand_info['url']
+                instance.is_verified = brand_info['is_verified']
+                instance.save()
+
+                return JsonResponse({'message':'The brand has been updated successfuly'}, status=201)
+
+
+class DashboardData(APIView):
+
+    permission_classes = (IsAdminUser, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+    def post(self, request):
+        stats = {}
+
+        service_industries = list(ServiceIndustry.objects.all())
+        num_positive_opinions = Func(F('social_rating'), Value('positive'), function='jsonb_extract_path_text')
+        num_positive_opinions = Cast(num_positive_opinions, IntegerField())
+
+        num_negative_opinions = Func(F('social_rating'), Value('negative'), function='jsonb_extract_path_text')
+        num_negative_opinions = Cast(num_negative_opinions, IntegerField())
+
+
+        for industry in service_industries:
+            query_set = Brand.objects.filter(service_industry = industry).annotate(total_rating=num_positive_opinions - num_negative_opinions).order_by('-total_rating')
+
+            stats[industry.name_en] = CompetitorSerializer(query_set, many=True).data
+
+
+        stats['top_influencers'] = list(Follower.objects.exclude(influence__isnull = True).order_by('-influence'))
+
+        stats['number_brands'] = Brand.objects.all().count()
+
+        number_opinions = Opinion.objects.all().count()
+        stats['opinions_per_brand'] = number_opinions / stats['number_brands']
+
+        total_rating = Brand.objects.annotate(total_rating=num_positive_opinions - num_negative_opinions).aggregate(Sum('total_rating')).get('total_rating__sum')
+        stats['total_rating_per_brand'] = total_rating / stats['number_brands']
+
+        return JsonResponse(stats, status = 200)

@@ -1,0 +1,248 @@
+<div [@routerTransition]>
+        <h2 class="text-muted"> {{ 'FOLLOWER.INFLUENCE_METER' | translate }} </h2>
+
+                    <div class="card ">
+                        <div class="card-header " *ngIf="brand != null" >
+                                <div class="row" style="text-align: center;" >
+                                <div class="col col-xl-12 ">
+                            <h3 >  <span> {{ 'FOLLOWER.ABOUT' | translate }} </span>  <strong> {{ brand.name }}</strong> </h3>
+
+
+
+                                <div class="row btn-group btn-group-toggle mb-3" ngbRadioGroup name="toolbar" (change)="onToolbarClick();" [(ngModel)]="selector">
+                                    <label ngbButtonLabel class="btn btn-outline-info">
+                            <input ngbButton type="radio" value="all"> {{ 'FOLLOWER.ALL' | translate }}
+                        </label>
+                        <label ngbButtonLabel class="btn btn-outline-primary">
+                            <input ngbButton type="radio" value="new"> {{ 'FOLLOWER.NEW' | translate }}
+                        </label>
+                        <label ngbButtonLabel class="btn btn-outline-secondary" >
+                            <input ngbButton type="radio" value="evaluated"> {{ 'FOLLOWER.EVALUATED' | translate }}
+                        </label>
+                        <label ngbButtonLabel class="btn btn-outline-warning">
+                                <input ngbButton type="radio" value="influencers"> {{ 'FOLLOWER.INFLUENCERS' | translate }}
+                            </label>
+                        </div>
+
+                                    </div>
+                            </div>
+                    </div>
+
+                        <div class="card-body">
+                                <div class="row" style="text-align: center;" >
+                                    <div class="col col-xl-6 ">
+                                        <button  class="btn btn-primary btn-lg btn-block"
+                                        mwlConfirmationPopover
+                                        popoverTitle="{{
+                                            'CONFIRM.TITLE' | translate
+                                        }}"
+                                        popoverMessage="{{
+                                            'CONFIRM.LOAD_FOLLOWERS'
+                                                | translate
+                                        }}"
+                                        confirmText="{{
+                                            'CONFIRM.PROCEED' | translate
+                                        }}"
+                                        cancelText="{{
+                                            'CONFIRM.CANCEL' | translate
+                                        }}"
+                                        placement="top"
+                                        (confirm)="
+                                        onLoadFollowersEvent()
+                                        "
+                                        confirmButtonType = 'primary'
+                                        cancelButtonType = 'danger'
+                                        [appendToBody]="true"
+                                        >
+                                            {{ 'FOLLOWER.LOAD' | translate }}
+                                        </button>
+
+                                    </div>
+                                    <div class="col col-xl-6 ">
+                                        <button *ngIf="brand?.number_new_followers > 0" class="btn btn-success btn-lg btn-block" (click)="onEvaluateFollowersEvent()">
+                                            {{ 'FOLLOWER.EVALUATE_ALL' | translate }}
+                                        </button>
+
+                                    </div>
+
+
+                                </div>
+
+                                    <div class="row" style="text-align: center;" >
+                                        <div class="col col-xl-12 ">
+                                <div class="table-responsive">
+
+                                        <ngx-table
+                                        #followers
+                                        [configuration]="configuration"
+                                        [data]="data"
+                                        [columns]="columns"
+                                        [pagination]="pagination"
+                                        [noResultsTemplate]="noResultsTemplate"
+                                        [summaryTemplate]="summaryTemplateRef"
+                                        [detailsTemplate]="detailsTemplate"
+                                        (event)="eventEmitted($event)"
+                                      >
+                                      <ng-template let-row >
+
+                                            <td>
+                                                    <div *ngIf="row.is_verified == true" style="text-align: center;">
+                                                            <img
+                                                                src="../../../../assets/icon/verified_user_icon.png"
+                                                                placement="top"
+                                                                ngbTooltip="{{
+                                                                    'FOLLOWER.VERIFIED' | translate
+                                                                }}"
+                                                            />
+                                                </div>
+                                                <div style="text-align: center;">
+                                                    <a
+                                                        target="_blank"
+                                                        href="https://twitter.com/{{
+                                                            row.screen_name
+                                                        }}"
+                                                    >
+                                                        {{ row.name }}</a
+                                                    >
+                                                </div>
+                                            </td>
+                                            <td>
+                                                    <div *ngIf="row.location == ''" style="text-align: center;">
+                                                                <span style = "color: black; font-style: italic;"> {{ 'FOLLOWER.EMPTY_LOCATION' | translate }} </span>
+                                                        </div>
+                                                    <div *ngIf="!(row.location == '')" style="text-align: center;">
+                                                        <span> {{ row.location }} </span>
+                                                    </div>
+                                                </td>
+
+
+                                                <td>
+                                                        <div *ngIf="row.description == ''" style="text-align: center;">
+                                                                <span style = "color: black; font-style: italic;"> {{ 'FOLLOWER.EMPTY_DESCRIPTION' | translate }} </span>
+                                                        </div>
+
+                                                    <div *ngIf="!(row.description == '')"  style="text-align: center;">
+                                                            <span> {{ (row.description.length>50)? (row.description | slice:0:50)+'...':(row.description) }} </span>
+
+                                                        <div style ="text-align: center;" *ngIf="row.description.length>50">
+                                                                <span> <button class="btn btn-success" (click)="open(content)">{{ 'FOLLOWER.DESCRIPTION_SEE' | translate }}</button> </span>
+                                                            </div>
+                                                </div>
+
+                                            </td>
+
+                                            <td>
+                                                <div style="text-align: center;">
+                                                <span> {{row.number_tweets | number}} </span>
+                                            </div>
+                                            </td>
+                                            <td>
+                                                <div style="text-align: center;">
+                                                    <span> {{row.number_followers | number}} </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                    <div style="text-align: center;">
+                                                        <span *ngIf="!(row.influence == null)"> {{row.influence | number: '1.0-2'}} </span>
+                                                        <span *ngIf="row.influence == null" style = "color: black; font-style: italic;"> {{ 'FOLLOWER.EMPTY_INFLUENCE' | translate }}  </span>
+                                                    </div>
+                                            </td>
+
+                                                <td>
+                                                    <div style="text-align: center;">
+
+
+                                             <button *ngIf="row.influence == null" class="btn btn-info" (click)="onEvaluateEvent(row.id)" placement="top" ngbTooltip="{{ 'FOLLOWER.EVALUATE' | translate }}">
+                                             <i class="fa fa-star-o fa-lg" ></i>
+                                            </button><span *ngIf="row.attitude == null">&nbsp;</span>
+                                            <button  class="btn btn-danger" placement="bottom" ngbTooltip="{{ 'FOLLOWER.DELETE' | translate }}"
+                                            mwlConfirmationPopover
+                                            popoverTitle="{{
+                                                'CONFIRM.TITLE' | translate
+                                            }}"
+                                            popoverMessage="{{
+                                                'CONFIRM.DELETE_FOLLOWER'
+                                                    | translate
+                                            }}"
+                                            confirmText="{{
+                                                'CONFIRM.DELETE' | translate
+                                            }}"
+                                            cancelText="{{
+                                                'CONFIRM.CANCEL' | translate
+                                            }}"
+                                            placement="left"
+                                            (confirm)="
+                                                onDeleteEvent(
+                                                    row.id
+                                                )
+                                            "
+                                            [appendToBody]="true">
+                                                <i class="fa fa-trash-o fa-lg"></i>
+                                            </button>
+                                            </div>
+                                            </td>
+
+                                        </ng-template>
+
+
+                                      </ngx-table>
+
+
+                                      <ng-template #noResultsTemplate>
+                                            <td [attr.colspan]="7" class="no-results">
+                                              {{ 'FOLLOWER.EMPTY' | translate }}
+                                            </td>
+                                          </ng-template>
+
+
+                                          <ng-template #content let-c="close('c')" let-d="dismiss()">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">{{ 'FOLLOWER.DESCRIPTION' | translate }}</h4>
+                                                    <button type="button" class="close" aria-label="Close" (click)="d">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p style="text-align: justify;">{{selected}}</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" (click)="c">{{ 'FOLLOWER.CLOSE' | translate }}</button>
+                                                </div>
+                                            </ng-template>
+
+                                            <ng-template #summaryTemplateRef let-total="total">
+                                                    <th colspan=7 style="text-align: center;">
+                                                      {{ 'FOLLOWER.TOTAL' | translate }}: <strong>{{ pagination.count }}</strong>
+                                                    </th>
+                                                  </ng-template>
+
+                                                  <ng-template #detailsTemplate let-row>
+                                                    <div style="text-align: center;">
+                                                      <h4> <strong>{{row.name }}</strong></h4>
+                                                      <span *ngIf="!(row.url == '')"> (
+                                                            <a
+                                                            target="_blank"
+                                                            href="http://{{ row.url }}"
+                                                        >
+                                                            {{ row.url }}</a
+                                                        >
+                                                           )</span>
+                                                    </div>
+                                            </ng-template>
+
+
+
+
+
+                                </div>
+                                </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                        </div>
+
+

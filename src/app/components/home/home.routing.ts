@@ -11,6 +11,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { OpinionComponent } from './opinion/opinion.component';
 import { ChartComponent } from './chart/chart.component';
 import { BrandComponent } from './brand/brand.component';
+import { FollowerComponent } from './follower/follower.component';
 
 const routes: Routes = [
     {
@@ -24,7 +25,8 @@ const routes: Routes = [
             { path: 'users', component: BrandComponent, canActivate: [AdminGuard]},
             { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
             { path: 'online-reputation', component: OpinionComponent, canActivate: [BrandGuard] },
-            { path: 'online-reputation/charts', component: ChartComponent, canActivate: [BrandGuard] }
+            { path: 'online-reputation/charts', component: ChartComponent, canActivate: [BrandGuard] },
+            { path: 'influence-meter', component: FollowerComponent, canActivate: [BrandGuard] }
         ]
     }
 ];

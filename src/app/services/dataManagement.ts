@@ -160,6 +160,60 @@ export class DataManagement {
       });
   }
 
+  public listFollowers(selector: string, page: Number): Promise<any> {
+    return this.restService
+      .listFollowers(selector, page)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public loadFollowers(): Promise<any> {
+    return this.restService
+      .loadFollowers()
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public evaluateFollower(id: Number): Promise<any> {
+    return this.restService
+      .evaluateFollower(id)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public evaluateAllFollowers(): Promise<any> {
+    return this.restService
+      .evaluateAllFollowers()
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  public deleteFollower(id: Number): Promise<any> {
+    return this.restService
+      .deleteFollower(id)
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
 
   public register(
     username: string,

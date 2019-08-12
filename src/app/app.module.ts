@@ -30,6 +30,7 @@ import { ProfileComponent } from './components/home/profile/profile.component';
 import { OpinionComponent } from './components/home/opinion/opinion.component';
 import { BrandComponent } from './components/home/brand/brand.component';
 import { ChartComponent } from './components/home/chart/chart.component';
+import { FollowerComponent } from './components/home/follower/follower.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TableModule } from 'ngx-easy-table';
 import { ChartsModule  } from 'ng2-charts';
@@ -80,7 +81,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         ProfileComponent,
         OpinionComponent,
         ChartComponent,
-        BrandComponent
+        BrandComponent,
+        FollowerComponent
     ],
     providers: [CookieService,
         DataManagement,

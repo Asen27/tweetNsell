@@ -54,13 +54,19 @@
         "UNPIN_1": "¡Esta opinión no existe!",
         "UNPIN_2": "¡Esta opinión no ha sido marcada como destacada!",
         "EVALUATE": "¡Esta opinión ya ha sido evaluada!",
-        "LOAD": "Se ha producido un error inesperado al cargar las opiniones. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",
+        "LOAD_1": "Se ha producido un error inesperado al cargar las opiniones. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",
         "EVALUATE_ALL": "¡No hay opiniones a evaluar!",
         "SERVICE_INDUSTRY_1" : "¡La industria no existe! ",
         "SERVICE_INDUSTRY_2" : "¡La industria por defecto no se puede eliminar! ",
         "SERVICE_INDUSTRY_3" : "¡No es posible crear más de 10 industrias! ",
         "SERVICE_INDUSTRY_4" : "¡Esta industria ya existe!",
-        "BRAND" : "¡Esta marca no existe!"
+        "BRAND" : "¡Esta marca no existe!",
+        "LOAD_2": "Se ha producido un error inesperado al cargar los seguidores. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",
+        "EVALUATE_FOLLOWER_1" : "¡Este seguidor no existe!",
+        "EVALUATE_FOLLOWER_3" : "Se ha producido un error inesperado al calcular la influencia del seguidor. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",
+        "EVALUATE_FOLLOWER_2" : "¡Este seguidor ya ha sido evaluado!",
+        "EVALUATE_ALL_2" : "¡No hay seguidores a evaluar!",
+        "EVALUATE_ALL_3" : "¡Se ha producido un error inesperado al calcular la influencia de los seguidores!"
 
     },
 
@@ -72,10 +78,15 @@
         "EVALUATE": "¡La opinión ha sido evaluada con éxito!",
         "LOAD": " nuevas opiniones cargadas!",
         "LOAD_NO_RESULTS": "No hay nuevas opiniones. Vuelva a comprobar más tarde.",
-        "EVALUATE_ALL": " opiniones evaluadas!",
+        "EVALUATE_ALL": " opiniones evaluadas",
         "DELETE_INDUSTRY" : "¡La industria ha sido eliminada con éxito!",
         "CREATE_INDUSTRY" : "¡La industria ha sido creada con éxito!",
-        "BRAND" : "¡La marca ha sido eliminada con éxito!"
+        "BRAND" : "¡La marca ha sido eliminada con éxito!",
+        "LOAD_2": " nuevos seguidores cargados!",
+        "LOAD_2_NO_RESULTS": "No hay nuevos seguidores. Vuelva a comprobar más tarde.",
+        "EVALUATE_2" : "¡La influencia del seguidor ha sido calculada con éxito!",
+        "EVALUATE_ALL_2" : " seguidores evaluados",
+        "DELETE_FOLLOWER": "¡El seguidor ha sido eliminado con éxito!"
     },
 
     "REGISTER": {
@@ -126,6 +137,29 @@
         "TOTAL_NUMBER": "Número total de opiniones"
     },
 
+    "FOLLOWER" : {
+        "INFLUENCE_METER" : "Medidor de influencia",
+        "ABOUT" : "Seguidores de",
+        "ALL" : "Todos",
+        "NEW" : "Nuevos",
+        "EVALUATED" : "Evaluados",
+        "INFLUENCERS" : "Influencers",
+        "LOAD" : "Cargar más seguidores",
+        "EVALUATE_ALL" : "Evaluar todos los seguidores",
+        "VERIFIED" : "Esta cuenta de Twitter está verificada",
+        "EMPTY_LOCATION" : "Ubicación desconocida",
+        "EMPTY_DESCRIPTION" : "Descripción desconocida",
+        "DESCRIPTION_SEE" : "Texto completo",
+        "EMPTY_INFLUENCE" : "Aún no calculada",
+        "EVALUATE" : "Evaluar",
+        "DELETE" : "Eliminar",
+        "EMPTY" : "No hay seguidores",
+        "DESCRIPTION" : "Descripción",
+        "CLOSE" : "Cerrar",
+        "TOTAL": "Número total de seguidores"
+
+    },
+
     "BRAND" : {
         "DATA_MANAGEMENT" : "Gestión de datos",
         "USERS" : "Usuarios",
@@ -167,6 +201,9 @@
         "CANCEL": "Cancelar",
         "CREATE_INDUSTRY" : "¿Estás seguro de que quieres crear una nueva industria con:",
         "CREATE" : "Create",
-        "DELETE_BRAND": "¿Estás seguro de que quieres eliminar esta marca?"
+        "DELETE_BRAND": "¿Estás seguro de que quieres eliminar esta marca?",
+        "DELETE_FOLLOWER": "¿Estás seguro de que quieres eliminar a este seguidor?",
+        "PROCEED" : "Continuar",
+        "LOAD_FOLLOWERS": "Esta operación puede tardar un rato. ¡Por favor, sea paciente!"
     }
 }

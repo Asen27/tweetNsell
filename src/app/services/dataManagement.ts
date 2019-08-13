@@ -215,6 +215,17 @@ export class DataManagement {
       });
   }
 
+  public updateFollower(): Promise<any> {
+    return this.restService
+      .updateBrand()
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
   public register(
     username: string,
     password: string,

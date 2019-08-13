@@ -1,3 +1,190 @@
-<div [@routerTransition]>
-        <h2 class="text-muted">Profile <small>Profile Overview</small></h2>
+<div *ngIf="loading" class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+</div>
+
+<div *ngIf="!loading" [@routerTransition]>
+    <h2 class="text-muted">{{ "PROFILE.PROFILE" | translate }}</h2>
+
+    <div class="row" style="text-align: center;">
+        <div class="col col-xl-12">
+            <h3>
+                {{ "PROFILE.ABOUT" | translate }}
+                <strong>
+                    <span *ngIf="!(brand == null)"> {{ brand.name }} </span>
+
+                </strong>
+            </h3>
         </div>
+    </div>
+
+    <div *ngIf="!(brand == null)" class="row">
+        <div class="col col-xl-6">
+            <div class="card card-default mb-3">
+                <div class="card-header">
+                        <i style="color:#007bff;" class="fa fa-twitter fa-fw"></i> <span> <a target="_blank" href="https://twitter.com/{{brand.user_profile.username}}">{{ brand.name }}</a></span>
+                        <img *ngIf="brand.is_verified" src="../../../../assets/icon/verified_user_icon.png"  class="float-right"  height="24px" placement="right" ngbTooltip="{{ 'PROFILE.VERIFIED' | translate }}"/>
+                </div>
+
+                <div class="card-body">
+                        <div class="list-group">
+                            <div class="list-group-item clearfix d-block" style="color:#007bff">
+                                <span class="align-middle"><i class="fa fa-map-marker fa-fw"></i> {{ 'PROFILE.LOCATION' | translate }}</span>
+                                <span class="float-right text-muted small"><em *ngIf="!(brand.location == '')">{{ brand.location}}</em>
+                                    <span *ngIf="brand.location == ''" style = "color: rgb(202, 30, 30); font-style: italic;"> {{ 'PROFILE.EMPTY_LOCATION' | translate }}</span>
+                                </span>
+                            </div>
+
+                            <div class="list-group-item clearfix d-block" style="color:#007bff">
+                                    <span class="align-middle"><i class="fa fa-id-card-o fa-fw"></i> {{ 'PROFILE.DESCRIPTION' | translate }}</span>
+                                    <span class="float-right text-muted small">
+                                            <span *ngIf="brand.description == ''" style = "color: rgb(202, 30, 30); font-style: italic;"> {{ 'PROFILE.EMPTY_DESCRIPTION' | translate }}</span>
+                                                <button *ngIf="!(brand.description == '')" class="btn btn-outline-primary btn-sm" (click)="open(content)">  <span >{{ 'PROFILE.DESCRIPTION_SEE' | translate }} </span></button>
+
+                                    </span>
+                            </div>
+
+                            <div class="list-group-item clearfix d-block" style="color:#007bff">
+                                    <span class="align-middle"><i class="fa fa-globe fa-fw"></i> {{ 'PROFILE.LANGUAGE' | translate }}</span>
+                                    <span class="float-right text-muted small">
+                                            <img
+                                            *ngIf="brand.language == 'en'"
+                                            src="../../../../assets/icon/en.png"
+                                            height="32px"
+                                            placement="right"
+                                                    ngbTooltip="{{
+                                                        'LANGUAGE.ENGLISH' | translate
+                                                    }}"
+                                        />
+                                        <img
+                                            *ngIf="brand.language == 'es'"
+                                            src="../../../../assets/icon/es.png"
+                                            height="32px"
+                                            placement="right"
+                                                    ngbTooltip="{{
+                                                        'LANGUAGE.SPANISH' | translate
+                                                    }}"
+                                        />
+                                    </span>
+                            </div>
+
+                            <div class="list-group-item clearfix d-block" style="color:#007bff">
+                                    <span class="align-middle"><i class="fa fa-at fa-fw"></i> {{ 'PROFILE.EMAIL' | translate }}</span>
+                                    <span class="float-right text-muted small"><em *ngIf="!(brand.user_profile.email == '')">{{ brand.user_profile.email}}</em>
+                                        <span *ngIf="brand.user_profile.email == ''" style = "color: rgb(202, 30, 30); font-style: italic;"> {{ 'PROFILE.EMPTY_EMAIL' | translate }}</span>
+                                    </span>
+                                </div>
+
+                                    <div class="list-group-item clearfix d-block" style="color:#007bff">
+                                            <span class="align-middle"><i class="fa fa-link fa-fw"></i> {{ 'PROFILE.URL' | translate }}</span>
+                                        <span class="float-right text-muted small"><a *ngIf="!(brand.url == '')" target="_blank" href="https://{{brand.url}}"><em> {{ brand.url }}  </em> </a>
+                                            <span *ngIf="brand.url == ''" style = "color: rgb(202, 30, 30); font-style: italic;"> {{ 'PROFILE.EMPTY_URL' | translate }}</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="list-group-item clearfix d-block" style="color:#007bff">
+                                            <span class="align-middle"><i class="fa fa-industry fa-fw"></i> {{ 'PROFILE.SERVICE_INDUSTRY' | translate }}</span>
+                                            <span class="float-right text-muted small"><em *ngIf="language == 'en'"> {{ brand.service_industry.name_en }} </em> <em *ngIf="language == 'es'"> {{ brand.service_industry.name_es }} </em>
+                                            </span>
+                                        </div>
+
+                        </div>
+                        <button class="btn btn-success btn-block" (click)="onUpdateEvent()"> {{ 'PROFILE.UPDATE' | translate }} </button>
+                    </div>
+        </div>
+
+        <ng-template #content let-c="close('c')" let-d="dismiss()">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'PROFILE.DESCRIPTION' | translate }}</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p style="text-align: justify;">{{ brand.description }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="c">{{ 'PROFILE.CLOSE' | translate }}</button>
+                </div>
+            </ng-template>
+
+        </div>
+
+        <div class="col col-xl-6 ">
+            <div class="card ">
+                <div class="card-header ">
+                    <h5  style="text-align: center;">
+                        <span> {{ "PROFILE.COMPETITORS" | translate }} </span>
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="row" style="text-align: center;">
+                        <div class="col col-xl-12 ">
+                            <div class="table-responsive">
+                                <ngx-table
+                                    #competitors
+                                    [configuration]="configuration"
+                                    [data]="data"
+                                    [columns]="columns"
+                                    [noResultsTemplate]="noResultsTemplate"
+                                >
+                                    <ng-template let-row let-index="index">
+                                        <td>
+                                            <div>
+                                                <span> {{ index+1 }} </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div *ngIf="row.is_verified == true" style="text-align: center;">
+                                                    <img
+                                                        src="../../../../assets/icon/verified_user_icon.png"
+                                                        placement="top"
+                                                        ngbTooltip="{{
+                                                            'PROFILE.VERIFIED' | translate
+                                                        }}"
+                                                    />
+                                        </div>
+                                        <div style="text-align: center;">
+                                            <a
+                                                target="_blank"
+                                                href="https://twitter.com/{{
+                                                    row.user_profile.username
+                                                }}"
+                                            >
+                                                {{ row.name }}</a
+                                            >
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div style="text-align: center;">
+                                            <span> {{ 'PROFILE.RATING' | translate }}</span>
+                                        </div>
+
+                                        <div style="text-align: center;">
+                                            <span style="color:#23A848;"> <i class="fa fa-fw fa-smile-o"></i>{{ 'PROFILE.POSITIVE_OPINIONS' | translate }}: {{ row.social_rating.positive | number }}</span>&nbsp;
+                                            <span style="color:#DF363F;"> <i class="fa fa-fw fa-frown-o"></i>{{ 'PROFILE.NEGATIVE_OPINIONS' | translate }}: {{ row.social_rating.negative | number }}</span>&nbsp;
+                                            <span style="color:#1B9DAB;"> <i class="fa fa-fw fa-meh-o"></i>{{ 'PROFILE.NEUTRAL_OPINIONS' | translate }}: {{ row.social_rating.neutral | number}}</span>
+                                    </div>
+                                    </td>
+                                    </ng-template>
+                                </ngx-table>
+
+                                <ng-template #noResultsTemplate>
+                                    <td [attr.colspan]="3" class="no-results">
+                                        {{ "PROFILE.EMPTY" | translate }}
+                                    </td>
+                                </ng-template>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -156,14 +156,18 @@
                         <ng-template #detailsTemplate let-row>
                                 <div style="text-align: center;">
                                   <h4> <strong>{{row.name }}</strong></h4>
-                                  <span *ngIf="!(row.url == '')"> (
+                                  <div *ngIf="!(row.url == '')"> (
                                         <a
                                         target="_blank"
                                         href="http://{{ row.url }}"
                                     >
                                         {{ row.url }}</a
                                     >
-                                       )</span>
+                                       )</div>
+                                       <div *ngIf="!(row.user_profile.email == '')">
+                                        <span> {{ row.user_profile.email }}</span>
+
+                                       </div>
                                 </div>
                         </ng-template>
                     </div>

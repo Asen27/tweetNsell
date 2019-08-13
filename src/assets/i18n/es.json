@@ -66,7 +66,9 @@
         "EVALUATE_FOLLOWER_3" : "Se ha producido un error inesperado al calcular la influencia del seguidor. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",
         "EVALUATE_FOLLOWER_2" : "¡Este seguidor ya ha sido evaluado!",
         "EVALUATE_ALL_2" : "¡No hay seguidores a evaluar!",
-        "EVALUATE_ALL_3" : "¡Se ha producido un error inesperado al calcular la influencia de los seguidores!"
+        "EVALUATE_ALL_3" : "¡Se ha producido un error inesperado al calcular la influencia de los seguidores!",
+        "UPDATE_1": "¡Esta cuenta no existe!",
+        "UPDATE_2" : "Se ha producido un error inesperado al actualizar el perfil. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos."
 
     },
 
@@ -86,7 +88,8 @@
         "LOAD_2_NO_RESULTS": "No hay nuevos seguidores. Vuelva a comprobar más tarde.",
         "EVALUATE_2" : "¡La influencia del seguidor ha sido calculada con éxito!",
         "EVALUATE_ALL_2" : " seguidores evaluados",
-        "DELETE_FOLLOWER": "¡El seguidor ha sido eliminado con éxito!"
+        "DELETE_FOLLOWER": "¡El seguidor ha sido eliminado con éxito!",
+        "UPDATE" : "¡Su cuenta de Tweet 'N' Sell ha sido sincronizada con su cuenta de Twitter!"
     },
 
     "REGISTER": {
@@ -194,6 +197,31 @@
         "DEFAULT" : "La industria por defecto no se puede eliminar."
     },
 
+    "PROFILE": {
+        "PROFILE" : "Perfil",
+        "ABOUT" : "Perfil de ",
+        "COMPETITORS" : "Los mejores competidores de la misma industria",
+        "EMPTY": "Actualmente no hay más marcas de tu industria",
+        "VERIFIED" : "Esta cuenta de Twitter está verificada",
+        "LOCATION": "Ubicación",
+        "EMPTY_LOCATION": "Desconocida",
+        "LANGUAGE": "Idioma",
+        "DESCRIPTION": "Descripción",
+        "EMPTY_DESCRIPTION": "Desconocida",
+        "DESCRIPTION_SEE": "Leer",
+        "URL": "Página web",
+        "EMPTY_URL": "Desconocida",
+        "SERVICE_INDUSTRY": "Industria",
+        "UPDATE": "Actualizar",
+        "CLOSE" : "Cerrar",
+        "RATING": "Número de opiniones:",
+        "POSITIVE_OPINIONS": "Positivas",
+        "NEGATIVE_OPINIONS": "Negativas",
+        "NEUTRAL_OPINIONS": "Neutrales",
+        "EMAIL": "Correo electrónico",
+        "EMPTY_EMAIL": "Desconocido"
+    },
+
     "CONFIRM": {
         "DELETE": "Eliminar",
         "DELETE_INDUSTRY": "¿Estás seguro de que quieres eliminar esta industria?",
@@ -204,6 +232,7 @@
         "DELETE_BRAND": "¿Estás seguro de que quieres eliminar esta marca?",
         "DELETE_FOLLOWER": "¿Estás seguro de que quieres eliminar a este seguidor?",
         "PROCEED" : "Continuar",
-        "LOAD_FOLLOWERS": "Esta operación puede tardar un rato. ¡Por favor, sea paciente!"
+        "LOAD_FOLLOWERS": "Esta operación puede tardar un rato. ¡Por favor, sea paciente!",
+        "DELETE_OPINION": "¿Estás seguro de que quieres eliminar esta opinión?"
     }
 }

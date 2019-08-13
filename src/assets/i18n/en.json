@@ -67,7 +67,9 @@
         "EVALUATE_FOLLOWER_3" : "An unexpected error occurred while calculating the influence of this follower! Remember that this applications consumes the Twitter Search API, which, unforunately, have rate limits. Please, retry loading the opinions in 15 minutes.",
         "EVALUATE_FOLLOWER_2" : "This follower has already been evaluated!",
         "EVALUATE_ALL_2" : "There are no followers to evaluate",
-        "EVALUATE_ALL_3" : "An unexpected error occurred while calculating the influence of the followers!"
+        "EVALUATE_ALL_3" : "An unexpected error occurred while calculating the influence of the followers!",
+        "UPDATE_1" : "This account doesn't exist!",
+        "UPDATE_2" : "An unexpected error occurred while updating the profile!  Remember that this applications consumes the Twitter Search API, which, unforunately, have rate limits. Please, retry loading the opinions in 15 minutes."
 
     },
 
@@ -87,7 +89,8 @@
         "LOAD_2_NO_RESULTS": "There aren't any new followers. Please, try again later!",
         "EVALUATE_2" : "The influence of the follower has been calculated successfully!",
         "EVALUATE_ALL_2" : " followers evaluated!",
-        "DELETE_FOLLOWER": "The follower has been deleted successfully!"
+        "DELETE_FOLLOWER": "The follower has been deleted successfully!",
+        "UPDATE": "Your Tweet 'N' Sell profile has been synced with your Twitter profile!"
     },
 
     "REGISTER": {
@@ -197,6 +200,31 @@
         "NUMBER_FOLLOWERS" : "№ of followers"
     },
 
+    "PROFILE": {
+        "PROFILE" : "Profile",
+        "ABOUT" : "Profile of ",
+        "COMPETITORS" : "Top competitors in the same industry",
+        "EMPTY": "Currently there are no other brands in your industry",
+        "VERIFIED" : "This Twitter accout is verified.",
+        "LOCATION": "Location",
+        "EMPTY_LOCATION": "Unknown",
+        "LANGUAGE": "Language",
+        "DESCRIPTION": "Description",
+        "EMPTY_DESCRIPTION": "Unknown",
+        "DESCRIPTION_SEE": "Read",
+        "URL": "Website",
+        "EMPTY_URL": "Unknown",
+        "SERVICE_INDUSTRY": "Industry",
+        "UPDATE": "Update",
+        "CLOSE" : "Close",
+        "RATING": "Number of opinions:",
+        "POSITIVE_OPINIONS": "Positive",
+        "NEGATIVE_OPINIONS": "Negative",
+        "NEUTRAL_OPINIONS": "Neutral",
+        "EMAIL": "Email",
+        "EMPTY_EMAIL": "Unknown"
+    },
+
     "CONFIRM" : {
         "DELETE":"Delete",
         "DELETE_INDUSTRY": "Are you sure you want to delete this service industry?",
@@ -207,7 +235,9 @@
         "DELETE_BRAND": "Are you sure you want to delete this brand?",
         "DELETE_FOLLOWER": "Are you sure you want to delete this follower?",
         "PROCEED": "Proceed",
-        "LOAD_FOLLOWERS": "This may take a while. Please, be patient!"
+        "LOAD_FOLLOWERS": "This may take a while. Please, be patient!",
+        "DELETE_OPINION": "Are you sure you want to delete this opinion?"
+
     }
 
 }

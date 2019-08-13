@@ -152,6 +152,14 @@ export class ErrorInterceptor implements HttpInterceptor {
                         } else {
                             error = err.statusText;
                         }
+                } else if (request.url.endsWith('brand/update/')) {
+                        if (err.status === 404) {
+                            error = this.translateService.instant('ERROR.UPDATE_1');
+                         } else if (err.status === 500) {
+                            error = this.translateService.instant('ERROR.UPDATE_2');
+                         } else {
+                            error = err.statusText;
+                        }
                 } else {
                     error = err.statusText;
                 }

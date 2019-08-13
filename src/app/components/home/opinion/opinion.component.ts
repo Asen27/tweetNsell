@@ -2,13 +2,11 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild  } from '@angular/core'
 import { routerTransition } from '../../../router.animations';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { AlertService } from '../../../services/alertService';
-import { Router, ActivatedRoute } from '@angular/router';
 import { DataManagement } from '../../../services/dataManagement';
 import { Brand } from 'src/app/app.data.model';
 import { ConfigService } from './configuration.service';
 import { API, APIDefinition, Columns } from 'ngx-easy-table';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { StorageService } from '../../../services/storageService';
 import { CookieService } from 'ngx-cookie-service';
 
 
@@ -25,14 +23,7 @@ export class OpinionComponent implements OnInit {
     public brand: Brand;
     public selector = 'all';
     @ViewChild('opinions', { static: true }) table: APIDefinition;
-    public columns: Columns[] = [
-    { key: 'publication_moment', title: '', width: '20%' },
-    { key: 'author.name', title: '', width: '15%'},
-    { key: 'text', title: '', width: '25%' },
-    { key: 'number_favorites', title: '', width: '5%' },
-    { key: 'number_retweets', title: '', width: '5%' },
-    { key: 'attitude', title: '', width: '15%' },
-    { key: '', title: '', width: '15%' } ];
+    public columns: Columns[];
 
     data = [];
     configuration;
@@ -50,11 +41,8 @@ export class OpinionComponent implements OnInit {
         private translateService: TranslateService,
         private alertService: AlertService,
         private dm: DataManagement,
-        private router: Router,
-        private route: ActivatedRoute,
         private readonly cdr: ChangeDetectorRef,
         private modalService: NgbModal,
-        private storageService: StorageService,
         private cookieService: CookieService
     ) {
 
@@ -63,12 +51,25 @@ export class OpinionComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getBrand();
-        this.getOpinions(1);
+
+        if (this.cookieService.get('lang') === 'en' || !(this.cookieService.check('lang'))) {
+            this.loadColumnsEn();
+        } else {
+            this.loadColumnsEs();
+        }
 
         this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
             this.language = event.lang;
+            if (event.lang === 'en') {
+                this.loadColumnsEn();
+            } else {
+                this.loadColumnsEs();
+            }
         });
+
+
+        this.getBrand();
+        this.getOpinions(1);
     }
 
     getBrand() {
@@ -78,6 +79,31 @@ export class OpinionComponent implements OnInit {
         this.brand = null;
         });
     }
+
+    loadColumnsEn(): void {
+        this.columns = [
+            { key: 'text', title: 'Text', width: '30%'},
+            { key: 'publication_moment', title: 'Created at', width: '15%' },
+            { key: 'author.name', title: 'Author', width: '15%'},
+            { key: 'number_favorites', title: 'Favorites', width: '5%'},
+            { key: 'number_retweets', title: 'Retweets', width: '5%' },
+            { key: 'attitude', title: 'Attitude', width: '15%' },
+            { key: '', title: 'Actions', width: '15%' }
+        ];
+    }
+
+    loadColumnsEs(): void {
+        this.columns = [
+            { key: 'text', title: 'Texto', width: '30%'},
+            { key: 'publication_moment', title: 'Publicado', width: '15%' },
+            { key: 'author.name', title: 'Autor', width: '15%'},
+            { key: 'number_favorites', title: 'Me gusta', width: '5%'},
+            { key: 'number_retweets', title: 'Retuits', width: '5%' },
+            { key: 'attitude', title: 'Actitud', width: '15%' },
+            { key: '', title: 'Acciones', width: '15%' }
+        ];
+    }
+
 
     eventEmitted($event) {
         this.parseEvent($event);

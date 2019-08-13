@@ -23,7 +23,7 @@ const routes: Routes = [
             { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard]},
             { path: 'service-industries', component: IndustryComponent, canActivate: [AdminGuard]},
             { path: 'users', component: BrandComponent, canActivate: [AdminGuard]},
-            { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+            { path: 'profile', component: ProfileComponent, canActivate: [BrandGuard] },
             { path: 'online-reputation', component: OpinionComponent, canActivate: [BrandGuard] },
             { path: 'online-reputation/charts', component: ChartComponent, canActivate: [BrandGuard] },
             { path: 'influence-meter', component: FollowerComponent, canActivate: [BrandGuard] }

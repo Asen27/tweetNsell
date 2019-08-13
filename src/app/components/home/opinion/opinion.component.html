@@ -46,7 +46,29 @@
 
                             </div>
                             <div class="col col-xl-6 ">
-                                <button *ngIf="brand?.number_new_opinions > 0" class="btn btn-success btn-lg btn-block" (click)="onEvaluateOpinionsEvent()">
+                                <button *ngIf="brand?.number_new_opinions > 0" class="btn btn-success btn-lg btn-block"
+                                        mwlConfirmationPopover
+                                        popoverTitle="{{
+                                            'CONFIRM.TITLE' | translate
+                                        }}"
+                                        popoverMessage="{{
+                                            'CONFIRM.LOAD_FOLLOWERS'
+                                                | translate
+                                        }}"
+                                        confirmText="{{
+                                            'CONFIRM.PROCEED' | translate
+                                        }}"
+                                        cancelText="{{
+                                            'CONFIRM.CANCEL' | translate
+                                        }}"
+                                        placement="top"
+                                        (confirm)="
+                                        onEvaluateOpinionsEvent()
+                                        "
+                                        confirmButtonType = 'primary'
+                                        cancelButtonType = 'danger'
+                                        [appendToBody]="true"
+                                    >
                                     {{ 'OPINION.EVALUATE_ALL' | translate }}
                                 </button>
 
@@ -70,7 +92,104 @@
                                 (event)="eventEmitted($event)"
                               >
                               <ng-template let-row >
+                                    <td>
+                                            <div *ngIf="row.attitude == 'pos'" class="card text-white bg-success">
+                                                    <div class="card-header">
+                                                        <div class="row" >
+                                                            <div class="col col-xs-3">
+                                                                <i class="fa fa-smile-o fa-3x"></i>
+                                                            </div>
+                                                            <div class="col col-xs-9" *ngIf="row.text.length>50">
 
+                                                                            <button class="btn btn-dark" (click)="open(content)">{{ 'OPINION.TEXT_SEE' | translate }}
+                                                                        </button>
+
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                        <div class="card-footer">
+                                                        <div class="row" style="text-align: center;">
+                                                            <div class="col col-xs-12">
+                                                                <div> {{ (row.text.length>50)? (row.text | slice:0:50)+'...':(row.text) }}</div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div *ngIf="row.attitude == 'neg'" class="card text-white bg-danger">
+                                                        <div class="card-header">
+                                                            <div class="row" >
+                                                                <div class="col col-xs-3">
+                                                                    <i class="fa fa-frown-o fa-3x"></i>
+                                                                </div>
+                                                                <div class="col col-xs-9" *ngIf="row.text.length>50">
+
+                                                                                <button class="btn btn-dark" (click)="open(content)">{{ 'OPINION.TEXT_SEE' | translate }}
+                                                                            </button>
+
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <div class="row" style="text-align: center;">
+                                                                <div class="col col-xs-12">
+                                                                    <div> {{ (row.text.length>50)? (row.text | slice:0:50)+'...':(row.text) }}</div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div *ngIf="row.attitude == 'neu'" class="card text-white bg-info">
+                                                            <div class="card-header">
+                                                                <div class="row">
+                                                                    <div class="col col-xs-3">
+                                                                        <i class="fa fa-meh-o fa-3x"></i>
+                                                                    </div>
+                                                                    <div class="col col-xs-9" *ngIf="row.text.length>50">
+
+                                                                                    <button class="btn btn-dark" (click)="open(content)">{{ 'OPINION.TEXT_SEE' | translate }}
+                                                                                </button>
+
+                                                                        </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-footer">
+                                                                <div class="row"  style="text-align: center;">
+                                                                    <div class="col col-xs-12">
+                                                                        <div> {{ (row.text.length>50)? (row.text | slice:0:50)+'...':(row.text) }}</div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                        <div *ngIf="row.attitude == 'unc'" class="card text-white bg-secondary">
+                                                                <div class="card-header">
+                                                                    <div class="row">
+                                                                        <div class="col col-xs-3">
+                                                                            <i class="fa fa-question fa-3x"></i>
+                                                                        </div>
+                                                                        <div class="col col-xs-9" *ngIf="row.text.length>50">
+
+                                                                                        <button class="btn btn-dark" (click)="open(content)">{{ 'OPINION.TEXT_SEE' | translate }}
+                                                                                    </button>
+
+                                                                            </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    <div class="row"  style="text-align: center;">
+                                                                        <div class="col col-xs-12">
+                                                                            <div> {{ (row.text.length>50)? (row.text | slice:0:50)+'...':(row.text) }}</div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                    </td>
                                     <td>
                                         <div>
                                             <span><i class="fa fa-calendar"></i>&nbsp; {{row.publication_moment | date:'dd/MM/yyyy'}} </span>
@@ -80,25 +199,17 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div>
+                                        <div style="text-align: center;">
                                             <a target="_blank" href="https://twitter.com/{{row.author.screen_name}}"> {{ row.author.name }}</a>
                                         </div>
                                          <div >
                                             <span> {{ 'CUSTOMER.NUMBER_FOLLOWERS' | translate }}:</span>
                                         </div>
-                                        <div>
+                                        <div style="text-align: center;">
                                             <span><i class="fa fa-users"></i>&nbsp; {{row.author.number_followers | number}} </span>
                                             </div>
                                     </td>
-                                    <td>
-                                            <div style="text-align: center;">
-                                                    <span> {{ (row.text.length>50)? (row.text | slice:0:50)+'...':(row.text) }} </span>
-                                                </div>
-                                                <div style ="text-align: center;" *ngIf="row.text.length>50">
-                                                        <span> <button class="btn btn-success" (click)="open(content)">{{ 'OPINION.TEXT_SEE' | translate }}</button> </span>
-                                                    </div>
 
-                                    </td>
 
                                     <td>
                                         <div style="text-align: center;">
@@ -133,7 +244,29 @@
                                      <button *ngIf="row.attitude=='unc'" class="btn btn-info" (click)="onEvaluateEvent(row.id)" placement="top" ngbTooltip="{{ 'OPINION.EVALUATE' | translate }}">
                                      <i class="fa fa-meh-o fa-lg" ></i>
                                     </button><span *ngIf="row.attitude=='unc'">&nbsp;</span>
-                                    <button  class="btn btn-danger" (click)="onDeleteEvent(row.id)" placement="bottom" ngbTooltip="{{ 'OPINION.DELETE' | translate }}">
+                                    <button  class="btn btn-danger" placement="bottom" ngbTooltip="{{ 'OPINION.DELETE' | translate }}"
+                                    mwlConfirmationPopover
+                                            popoverTitle="{{
+                                                'CONFIRM.TITLE' | translate
+                                            }}"
+                                            popoverMessage="{{
+                                                'CONFIRM.DELETE_OPINION'
+                                                    | translate
+                                            }}"
+                                            confirmText="{{
+                                                'CONFIRM.DELETE' | translate
+                                            }}"
+                                            cancelText="{{
+                                                'CONFIRM.CANCEL' | translate
+                                            }}"
+                                            placement="left"
+                                            (confirm)="
+                                                onDeleteEvent(
+                                                    row.id
+                                                )
+                                            "
+                                            [appendToBody]="true">
+
                                         <i class="fa fa-trash-o fa-lg"></i>
                                     </button>
                                     </div>

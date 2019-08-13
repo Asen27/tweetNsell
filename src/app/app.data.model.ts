@@ -7,12 +7,12 @@ export class Brand {
     language: string;
     url: string;
     is_verified: boolean;
-    number_new_opinions: Number;
-    number_new_followers: Number;
+    number_new_opinions: number;
+    number_new_followers: number;
     followers_cursor: string;
     social_rating;
     service_industry: ServiceIndustry;
-    competitor: Competitor[];
+    competitors: Competitor[];
   }
 
   export class Competitor {

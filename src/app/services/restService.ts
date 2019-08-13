@@ -299,6 +299,25 @@ export class RestWS extends AbstractWS {
             });
     }
 
+    public updateBrand(): Promise<any> {
+        const token = this.cookieService.get('token');
+        const fd = new FormData();
+        return this.makeUpdateRequest(
+            this.path + 'brand/update/',
+            false,
+            fd,
+            token
+        )
+            .then(res => {
+                return Promise.resolve(res);
+            })
+            .catch(error => {
+                console.log('Error: ' + error);
+                return Promise.reject(error);
+            });
+    }
+
+
     public register(
         username: string,
         password: string,

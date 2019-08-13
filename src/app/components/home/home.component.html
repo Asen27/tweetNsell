@@ -25,7 +25,7 @@
                         <i *ngIf="!isUserAdmin" class="fa fa-user" style="color:red;"></i><i *ngIf="isUserAdmin" class="fa fa-star" style="color:yellow;"></i> {{ loggedUser.user_profile.username }} <b class="caret"></b>
                     </a>
                     <div class="dropdown-menu-right" ngbDropdownMenu>
-                        <a class="dropdown-item" [routerLink]="['/profile']">
+                        <a *ngIf="!isUserAdmin" class="dropdown-item" [routerLink]="['/profile']">
                             <i class="fa fa-fw fa-user"></i> {{ 'HEADER.PROFILE' | translate }}
                         </a>
                         <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">

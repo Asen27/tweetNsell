@@ -78,9 +78,9 @@ export class FollowerComponent implements OnInit {
 
     loadColumnsEn(): void {
         this.columns = [
-            { key: 'screen_name', title: 'Name', width: '15%' },
-            { key: 'location', title: 'Location', width: '15%'},
-            { key: 'description', title: 'Description', width: '25%'},
+            { key: 'name', title: 'Name', width: '15%' },
+            { key: 'location', title: 'Location', width: '10%'},
+            { key: 'description', title: 'Description', width: '30%'},
             { key: 'number_tweets', title: 'Tweets', width: '10%'},
             { key: 'number_followers', title: 'Followers', width: '10%' },
             { key: 'influence', title: 'Influence', width: '10%' },
@@ -90,9 +90,9 @@ export class FollowerComponent implements OnInit {
 
     loadColumnsEs(): void {
         this.columns = [
-            { key: 'screen_name', title: 'Nombre', width: '15%' },
-            { key: 'location', title: 'Ubicación', width: '15%'},
-            { key: 'description', title: 'Descripción', width: '25%'},
+            { key: 'name', title: 'Nombre', width: '15%' },
+            { key: 'location', title: 'Ubicación', width: '10%'},
+            { key: 'description', title: 'Descripción', width: '30%'},
             { key: 'number_tweets', title: 'Tuits', width: '10%'},
             { key: 'number_followers', title: 'Seguidores', width: '10%' },
             { key: 'influence', title: 'Influencia', width: '10%' },

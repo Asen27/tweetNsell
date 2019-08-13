@@ -46,7 +46,7 @@ class BrandSerializer(serializers.ModelSerializer):
             num_negative_opinions = Func(F('social_rating'), Value('negative'), function='jsonb_extract_path_text')
             num_negative_opinions = Cast(num_negative_opinions, IntegerField())
 
-            query_set = Brand.objects.filter(service_industry = brand_service_industry).exclude(id = brand_id).annotate(
+            query_set = Brand.objects.filter(service_industry = brand_service_industry).exclude(id = brand_id).filter(language = obj.language).annotate(
                 total_rating=num_positive_opinions - num_negative_opinions).order_by('-total_rating')
         else:
             query_set = Brand.objects.none()

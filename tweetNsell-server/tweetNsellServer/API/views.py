@@ -1215,7 +1215,7 @@ class AllFollowersList(ListAPIView):
 
     def get_queryset(self):
         brand = Brand.objects.get(pk = self.request.user)
-        return  brand.follower_set.all()
+        return  brand.follower_set.all().order_by('screen_name')
 
 
 class NewFollowersList(ListAPIView):
@@ -1236,7 +1236,7 @@ class NewFollowersList(ListAPIView):
 
     def get_queryset(self):
         brand = Brand.objects.get(pk = self.request.user)
-        return  brand.follower_set.all().exclude(influence__isnull = False)
+        return  brand.follower_set.all().exclude(influence__isnull = False).order_by('screen_name')
 
 class EvaluatedFollowersList(ListAPIView):
 
@@ -1256,7 +1256,7 @@ class EvaluatedFollowersList(ListAPIView):
 
     def get_queryset(self):
         brand = Brand.objects.get(pk = self.request.user)
-        return  brand.follower_set.all().exclude(influence__isnull = True)
+        return  brand.follower_set.all().exclude(influence__isnull = True).order_by('screen_name')
 
 
 class InfluencersList(ListAPIView):

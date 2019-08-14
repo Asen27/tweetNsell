@@ -102,7 +102,7 @@
         "CONFIRM_PASSWORD_ERROR": "Vuelva a introducir la contraseña",
         "EMAIL": "Correo electrónico",
         "EMAIL_ERROR": "El correo electrónico es inválido",
-        "SERVICE_INDUSTRY": "Industria de servicios",
+        "SERVICE_INDUSTRY": "Elija una industria de servicios",
         "SERVICE_INDUSTRY_SELECTED": "Escoja una",
         "CANCEL": "Cancelar"
     },
@@ -173,12 +173,15 @@
         "TOTAL": "Número total de marcas",
         "VERIFIED" : "Esta cuenta de Twitter está verificada",
         "EMPTY_LOCATION" : "Ubicación desconocida",
-        "EMPTY_DESCRIPTION" : "Descripción desconocida"
+        "EMPTY_DESCRIPTION" : "Descripción desconocida",
+        "DESCRIPTION" : "Descripción",
+        "DESCRIPTION_SEE" : "Texto completo",
+        "CLOSE": "Cerrar"
     },
 
     "INFO": {
         "INFO": "Información",
-        "NOTE_1": "Esta aplicación web ha sido desarrollada ",
+        "NOTE_1": "Esta aplicación web ha sido desarrollada por ",
         "NOTE_2": " para su Trabajo Fin de Grado en Ingeniería del Software de la Universidad de Sevilla."
     },
 
@@ -195,6 +198,18 @@
         "PLACEHOLDER_1" : "Nombre (Inglés)",
         "PLACEHOLDER_2" : "Nombre (Español)",
         "DEFAULT" : "La industria por defecto no se puede eliminar."
+    },
+
+    "DASHBOARD": {
+        "DASHBOARD": "Panel de control",
+        "OPINIONS_PER_BRAND": "Número medio de opiniones por marca",
+        "NUMBER_BRANDS": "Número total de marcas",
+        "RATING_PER_BRAND": "Rating medio por marca",
+        "TOP_BRANDS": "Las 5 mejores marcas según su rating social",
+        "TOP_10_INFLUENCERS": "Los 10 mejores influencers",
+        "POSITIVE_OPINIONS" : "Opiniones positivas",
+        "NEGATIVE_OPINIONS" : "Opiniones negativas",
+        "NEUTRAL_OPINIONS" : "Opiniones neutrales"
     },
 
     "PROFILE": {
@@ -228,7 +243,7 @@
         "TITLE": "¿Estás seguro?",
         "CANCEL": "Cancelar",
         "CREATE_INDUSTRY" : "¿Estás seguro de que quieres crear una nueva industria con:",
-        "CREATE" : "Create",
+        "CREATE" : "Crear",
         "DELETE_BRAND": "¿Estás seguro de que quieres eliminar esta marca?",
         "DELETE_FOLLOWER": "¿Estás seguro de que quieres eliminar a este seguidor?",
         "PROCEED" : "Continuar",

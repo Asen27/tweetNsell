@@ -103,7 +103,7 @@
         "CONFIRM_PASSWORD_ERROR" : "You have to confirm your password",
         "EMAIL" : "Email",
         "EMAIL_ERROR" : "Invalid email address",
-        "SERVICE_INDUSTRY" : "Service Industry",
+        "SERVICE_INDUSTRY" : "Choose a service Industry",
         "SERVICE_INDUSTRY_SELECTED" : "Choose one",
         "CANCEL" : "Cancel"
     },
@@ -175,7 +175,10 @@
         "TOTAL": "Total number of brands",
         "VERIFIED" : "This Twitter account is verified.",
         "EMPTY_LOCATION" : "Unknown location",
-        "EMPTY_DESCRIPTION" : "Unkwown description"
+        "EMPTY_DESCRIPTION" : "Unkwown description",
+        "DESCRIPTION" : "Description",
+        "DESCRIPTION_SEE" : "Full text",
+        "CLOSE": "Close"
         },
 
     "INFO" : {
@@ -223,6 +226,18 @@
         "NEUTRAL_OPINIONS": "Neutral",
         "EMAIL": "Email",
         "EMPTY_EMAIL": "Unknown"
+    },
+
+    "DASHBOARD": {
+        "DASHBOARD": "Admin control panel",
+        "OPINIONS_PER_BRAND": "Average number of opinions per brand",
+        "NUMBER_BRANDS": "Total number of brands",
+        "RATING_PER_BRAND": "Average social rating per brand",
+        "TOP_BRANDS": "Top 5 brands based on their social rating",
+        "TOP_10_INFLUENCERS": "Top 10 influencers",
+        "POSITIVE_OPINIONS" : "Positive opinions",
+        "NEGATIVE_OPINIONS" : "Negative opinions",
+        "NEUTRAL_OPINIONS" : "Neutral opinions"
     },
 
     "CONFIRM" : {

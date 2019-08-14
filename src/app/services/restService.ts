@@ -317,6 +317,17 @@ export class RestWS extends AbstractWS {
             });
     }
 
+    public getDashboardData() {
+        const token = this.cookieService.get('token');
+        const fd = new FormData();
+        return this.makePostRequest(this.path + 'dashboard/', fd, token)
+            .then(res => {
+                return Promise.resolve(res);
+            })
+            .catch(err => {
+                return Promise.reject(err);
+            });
+    }
 
     public register(
         username: string,

@@ -2,10 +2,13 @@
     <h2 class="text-muted"> {{ 'OPINION.ONLINE_REPUTATION' | translate }} => <small>{{ 'OPINION.CHART' | translate }}</small></h2>
     <div class="row mb-5" style="text-align: center;">
         <div class="col col-xl-12" >
-            <span> {{ 'OPINION.TOTAL_NUMBER' | translate }} : </span>
-                <div>
-            <ng2-odometer [number]="totalNumberOpinions" [config]="config" style="font-size: 75px; "></ng2-odometer>
-                </div>
+                <div class="card bg-light mb-3">
+                        <div class="card-header"> {{ 'OPINION.TOTAL_NUMBER' | translate }} : </div>
+                        <div class="card-body">
+                            <div class="card-text"><ng2-odometer [number]="totalNumberOpinions" [config]="config" style="font-size: 4vw; "></ng2-odometer></div>
+                        </div>
+                    </div>
+
         </div>
         </div>
 

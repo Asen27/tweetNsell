@@ -1,4 +1,161 @@
 <div [@routerTransition]>
-    <h2 class="text-muted"> {{ 'INFO.INFO' | translate }}</h2>
+        <h2 class="text-muted"> {{ 'DASHBOARD.DASHBOARD' | translate }} </h2>
+        <div class="row mb-3" style="text-align: center;">
+            <div class="col col-xl-4" >
+                    <div class="card bg-light mb-3">
+                            <div class="card-header">{{ 'DASHBOARD.OPINIONS_PER_BRAND' | translate }} :</div>
+                            <div class="card-body">
+                                <div class="card-text"><ng2-odometer [number]="avgOpinionsPerBrand" [config]="config1" style="font-size: 3vw; "></ng2-odometer></div>
+                            </div>
+                        </div>
 
-</div>
+            </div>
+            <div class="col col-xl-4" >
+                    <div class="card bg-light mb-3">
+                            <div class="card-header">{{ 'DASHBOARD.NUMBER_BRANDS' | translate }} :</div>
+                            <div class="card-body">
+                                <div class="card-text"><ng2-odometer [number]="numBrands" [config]="config2" style="font-size: 3vw; "></ng2-odometer></div>
+                            </div>
+                        </div>
+
+            </div>
+            <div class="col col-xl-4" >
+                    <div class="card bg-light mb-3">
+                            <div class="card-header">{{ 'DASHBOARD.RATING_PER_BRAND' | translate }} :</div>
+                            <div class="card-body">
+                                <div class="card-text"><ng2-odometer [number]="avgRatingPerBrand" [config]="config1" style="font-size: 3vw; "></ng2-odometer></div>
+                            </div>
+                        </div>
+
+            </div>
+
+            </div>
+
+
+        <div class="row" style="text-align: center;">
+            <div class="col col-xl-12">
+                <div class="card mb-3">
+                    <div class="card-header">
+                            <h3 >  <span> <strong>  {{ 'DASHBOARD.TOP_BRANDS' | translate }} </strong> </span> </h3>
+                    </div>
+                    <div class="card-body" *ngIf="barChartLabels && barChartData && barChartOptions && barChartLegend">
+                        <canvas baseChart height="250px" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"  [legend]="barChartLegend" [chartType]="barChartType" [colors]="barChartColors">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="row" style="text-align: center;">
+                <div class="col col-xl-12">
+                        <div class="card ">
+                                <div class="card-header ">
+                                        <div class="row" style="text-align: center;" >
+                                        <div class="col col-xl-12 ">
+                                    <h3 >  <span> <strong>{{ 'DASHBOARD.TOP_10_INFLUENCERS' | translate }} </strong>  </span>   </h3>
+                                            </div>
+                                    </div>
+                            </div>
+                                <div class="card-body">
+
+                                            <div class="row" style="text-align: center;" >
+                                                <div class="col col-xl-12 ">
+                                        <div class="table-responsive">
+
+                                                <ngx-table
+                                                #followers
+                                                [configuration]="configuration"
+                                                [data]="data"
+                                                [columns]="columns"
+                                                [noResultsTemplate]="noResultsTemplate"
+                                                >
+                                              <ng-template let-row let-index="index">
+
+
+                                                            <td>
+                                                                    <div>
+                                                                        <span> {{ index+1 }} </span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                            <div *ngIf="row.is_verified == true" style="text-align: center;">
+                                                                    <img
+                                                                        src="../../../../assets/icon/verified_user_icon.png"
+                                                                        placement="top"
+                                                                        ngbTooltip="{{
+                                                                            'FOLLOWER.VERIFIED' | translate
+                                                                        }}"
+                                                                    />
+                                                        </div>
+                                                        <div style="text-align: center;">
+                                                            <a
+                                                                target="_blank"
+                                                                href="https://twitter.com/{{
+                                                                    row.screen_name
+                                                                }}"
+                                                            >
+                                                                {{ row.name }}</a
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                            <div *ngIf="row.location == ''" style="text-align: center;">
+                                                                        <span style = "color: black; font-style: italic;"> {{ 'FOLLOWER.EMPTY_LOCATION' | translate }} </span>
+                                                                </div>
+                                                            <div *ngIf="!(row.location == '')" style="text-align: center;">
+                                                                <span> {{ row.location }} </span>
+                                                            </div>
+                                                        </td>
+
+                                                    <td>
+                                                        <div style="text-align: center;">
+                                                        <span> {{row.number_tweets | number}} </span>
+                                                    </div>
+                                                    </td>
+                                                    <td>
+                                                        <div style="text-align: center;">
+                                                            <span> {{row.number_followers | number}} </span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                            <div style="text-align: center;">
+                                                                <span *ngIf="!(row.influence == null)"> <strong style="color: rgb(202, 30, 30);"> {{row.influence | number: '1.0-2'}} </strong> </span>
+                                                                <span *ngIf="row.influence == null" style = "color: black; font-style: italic;"> {{ 'FOLLOWER.EMPTY_INFLUENCE' | translate }}  </span>
+                                                            </div>
+                                                    </td>
+
+                                                </ng-template>
+
+
+                                              </ngx-table>
+
+
+                                              <ng-template #noResultsTemplate>
+                                                    <td [attr.colspan]="6" class="no-results">
+                                                      {{ 'FOLLOWER.EMPTY' | translate }}
+                                                    </td>
+                                                  </ng-template>
+
+                                        </div>
+                                        </div>
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                </div>
+
+
+        </div>
+
+    </div>

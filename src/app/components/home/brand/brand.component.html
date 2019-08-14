@@ -84,13 +84,32 @@
                                 </td>
 
                                 <td>
-                                    <div *ngIf="row.description == ''" style="text-align: center;">
-                                            <span style = "color: black; font-style: italic;"> {{ 'BRAND.EMPTY_DESCRIPTION' | translate }} </span>
-                                    </div>
-                                    <div *ngIf="!(row.description == '')" style="text-align: center;">
-                                        <span> {{ row.description }} </span>
-                                    </div>
-                                </td>
+                                                        <div class="card">
+                                                                <div class="card-header">
+                                                                        <div *ngIf="!(row.description == '')" class="row"  style="text-align: center;">
+                                                                                <div class="col col-xs-12">
+                                                                                    <div> {{ (row.description.length>50)? (row.description | slice:0:50)+'...':(row.description) }}</div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div *ngIf="row.description == ''" class="row"  style="text-align: center;">
+                                                                                    <div class="col col-xs-12">
+                                                                                            <span style = "color: black; font-style: italic;"> {{ 'BRAND.EMPTY_DESCRIPTION' | translate }} </span>
+
+                                                                                    </div>
+                                                                                </div>
+                                                                </div>
+                                                                <div class="card-footer" *ngIf="row.description.length>50" style="text-align: center;">
+
+                                            <button class="btn btn-dark" (click)="open(content)">{{ 'BRAND.DESCRIPTION_SEE' | translate }}
+                                                             </button>
+
+
+                                                    </div>
+
+                                             </div>
+
+
+                                            </td>
                                 <td>
                                     <div style="text-align: center;">
                                         <span *ngIf="language == 'en'">
@@ -139,6 +158,21 @@
                                 </td>
                             </ng-template>
                         </ngx-table>
+
+                        <ng-template #content let-c="close('c')" let-d="dismiss()">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">{{ 'BRAND.DESCRIPTION' | translate }}</h4>
+                                    <button type="button" class="close" aria-label="Close" (click)="d">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p style="text-align: justify;">{{ selected }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" (click)="c">{{ 'BRAND.CLOSE' | translate }}</button>
+                                </div>
+                            </ng-template>
 
                         <ng-template #noResultsTemplate>
                             <td [attr.colspan]="6" class="no-results">

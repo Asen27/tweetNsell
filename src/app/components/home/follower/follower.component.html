@@ -115,38 +115,30 @@
                                                     </div>
                                                 </td>
 
-
                                                 <td>
-                                                        <div class="card text-white bg-primary">
+                                                        <div class="card">
                                                                 <div class="card-header">
-                                                                    <div class="row">
-                                                                        <div class="col col-xs-3">
-                                                                            <i class="fa fa-twitter fa-3x"></i>
-                                                                        </div>
-                                                                        <div class="col col-xs-9" *ngIf="row.description.length>50">
-
-                                                                                        <button class="btn btn-dark" (click)="open(content)">{{ 'FOLLOWER.DESCRIPTION_SEE' | translate }}
-                                                                                    </button>
-
+                                                                        <div *ngIf="!(row.description == '')" class="row"  style="text-align: center;">
+                                                                                <div class="col col-xs-12">
+                                                                                    <div> {{ (row.description.length>50)? (row.description | slice:0:50)+'...':(row.description) }}</div>
+                                                                                </div>
                                                                             </div>
-                                                                    </div>
+                                                                            <div *ngIf="row.description == ''" class="row"  style="text-align: center;">
+                                                                                    <div class="col col-xs-12">
+                                                                                            <span style = "color: black; font-style: italic;"> {{ 'FOLLOWER.EMPTY_DESCRIPTION' | translate }} </span>
+
+                                                                                    </div>
+                                                                                </div>
                                                                 </div>
-                                                                <div class="card-footer">
-                                                                    <div *ngIf="!(row.description == '')" class="row"  style="text-align: center;">
-                                                                        <div class="col col-xs-12">
-                                                                            <div> {{ (row.description.length>50)? (row.description | slice:0:50)+'...':(row.description) }}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div *ngIf="row.description == ''" class="row"  style="text-align: center;">
-                                                                            <div class="col col-xs-12">
-                                                                                    <span style = "color: black; font-style: italic;"> {{ 'FOLLOWER.EMPTY_DESCRIPTION' | translate }} </span>
+                                                                <div class="card-footer" *ngIf="row.description.length>50" style="text-align: center;">
 
-                                                                            </div>
-                                                                        </div>
+                                            <button class="btn btn-dark" (click)="open(content)">{{ 'FOLLOWER.DESCRIPTION_SEE' | translate }}
+                                                             </button>
 
-                                                                </div>
 
-                                                            </div>
+                                                    </div>
+
+                                             </div>
 
 
                                             </td>
@@ -163,7 +155,7 @@
                                             </td>
                                             <td>
                                                     <div style="text-align: center;">
-                                                        <span *ngIf="!(row.influence == null)"> {{row.influence | number: '1.0-2'}} </span>
+                                                        <span *ngIf="!(row.influence == null)"><strong style="color: rgb(202, 30, 30);"> {{row.influence | number: '1.0-2'}} </strong></span>
                                                         <span *ngIf="row.influence == null" style = "color: black; font-style: italic;"> {{ 'FOLLOWER.EMPTY_INFLUENCE' | translate }}  </span>
                                                     </div>
                                             </td>
@@ -190,7 +182,7 @@
                                             cancelText="{{
                                                 'CONFIRM.CANCEL' | translate
                                             }}"
-                                            placement="left"
+                                            placement="bottom"
                                             (confirm)="
                                                 onDeleteEvent(
                                                     row.id

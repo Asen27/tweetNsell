@@ -3,10 +3,10 @@ import { routerTransition } from '../../../router.animations';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { AlertService } from '../../../services/alertService';
 import { DataManagement } from '../../../services/dataManagement';
-import { Brand } from 'src/app/app.data.model';
 import { ConfigService } from './configuration.service';
 import { API, APIDefinition, Columns } from 'ngx-easy-table';
 import { CookieService } from 'ngx-cookie-service';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -30,13 +30,16 @@ export class BrandComponent implements OnInit {
     count: 0,
   };
     language: string;
+    selected: string;
+    closeResult;
 
     constructor(
         private translateService: TranslateService,
         private alertService: AlertService,
         private dm: DataManagement,
         private readonly cdr: ChangeDetectorRef,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        private modalService: NgbModal,
     ) {
         this.language = this.translateService.currentLang;
     }
@@ -90,6 +93,9 @@ export class BrandComponent implements OnInit {
 
 
       private parseEvent(obj: EventObject) {
+        if (obj.value.row !== undefined) {
+            this.selected = obj.value.row.description;
+        } else {
         if (obj.value.page === undefined ) {
             return;
         } else {
@@ -100,7 +106,7 @@ export class BrandComponent implements OnInit {
         this.getBrands(params);
         }
     }
-
+      }
 
     private getBrands(page: Number): void {
         this.alertService.clear();
@@ -119,6 +125,23 @@ export class BrandComponent implements OnInit {
         });
     }
 
+    open(content) {
+        this.modalService.open(content).result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+    }
+
+    private getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+            return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+        } else {
+            return  `with: ${reason}`;
+        }
+    }
 
 
     onDeleteEvent(username: string): void {

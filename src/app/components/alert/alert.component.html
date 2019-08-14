@@ -1,1 +1,12 @@
-﻿<div *ngIf="message" [ngClass]="message.cssClass" style="text-align: center;" (close)="closeAlert();">{{message.text}}</div>
+﻿<div
+    *ngIf="message"
+    [ngClass]="message.cssClass"
+    style="text-align: center;"
+    (close)="closeAlert()"
+>
+    <a class="close" (click)="closeAlert()"
+        >&times;</a
+    >
+    <strong>{{ message.text }}</strong>
+</div>
+

@@ -226,6 +226,17 @@ export class DataManagement {
       });
   }
 
+  public getDashboardData(): Promise<any> {
+    return this.restService
+      .getDashboardData()
+      .then(data => {
+        return Promise.resolve(data);
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
   public register(
     username: string,
     password: string,

@@ -1462,22 +1462,36 @@ class DashboardData(APIView):
 
     def post(self, request):
         stats = {}
+        positive_opinions = []
+        negative_opinions = []
+        neutral_opinions = []
+        labels = []
 
-        service_industries = list(ServiceIndustry.objects.all())
         num_positive_opinions = Func(F('social_rating'), Value('positive'), function='jsonb_extract_path_text')
         num_positive_opinions = Cast(num_positive_opinions, IntegerField())
 
         num_negative_opinions = Func(F('social_rating'), Value('negative'), function='jsonb_extract_path_text')
         num_negative_opinions = Cast(num_negative_opinions, IntegerField())
 
+        best_brands = list(Brand.objects.annotate(total_rating=num_positive_opinions - num_negative_opinions).order_by('-total_rating')[:5])
 
-        for industry in service_industries:
-            query_set = Brand.objects.filter(service_industry = industry).annotate(total_rating=num_positive_opinions - num_negative_opinions).order_by('-total_rating')
+        for brand in best_brands:
+            positive_opinions.append(brand.social_rating['positive'])
+            negative_opinions.append(brand.social_rating['negative'])
+            neutral_opinions.append(brand.social_rating['neutral'])
+            labels.append(brand.user_profile.username)
 
-            stats[industry.name_en] = CompetitorSerializer(query_set, many=True).data
 
 
-        stats['top_influencers'] = list(Follower.objects.exclude(influence__isnull = True).order_by('-influence'))
+        stats['positive_opinions'] = positive_opinions
+        stats['neutral_opinions'] = neutral_opinions
+        stats['negative_opinions'] = negative_opinions
+
+        stats['labels'] = labels
+
+
+        query_set = Follower.objects.exclude(influence__isnull = True).order_by('-influence')[:10]
+        stats['top_influencers'] = FollowerSerializer(query_set, many=True).data
 
         stats['number_brands'] = Brand.objects.all().count()
 

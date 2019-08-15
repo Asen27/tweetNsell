@@ -1098,6 +1098,7 @@ class LoadFollowers(APIView):
             return JsonResponse({'error':'A problem occurred while loading the followers!'}, status=500)
 
         number_results = 0
+        followers_to_evaluate = 0;
         for follower in followers:
             if follower['protected'] == False :
                 id = follower['id_str']
@@ -1117,6 +1118,8 @@ class LoadFollowers(APIView):
                         existing_follower.brands.add(brand)
                         #existing_follower.save()
                         number_results += 1
+                        if (existing_follower.influence is None):
+                            followers_to_evaluate += 1
                         continue
 
 
@@ -1183,12 +1186,13 @@ class LoadFollowers(APIView):
 
                         else:
                             number_results += 1
+                            followers_to_evaluate += 1
                             new_follower.brands.add(brand)
 
 
         print(number_results)
         brand.followers_cursor = next_cursor
-        brand.number_new_followers += number_results
+        brand.number_new_followers += followers_to_evaluate
         brand.save()
         if number_results == 0:
             return JsonResponse({'message':'There are no new followers', 'status':200}, status=200)
@@ -1318,11 +1322,11 @@ class EvaluateFollower(UpdateAPIView):
                     return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=500)
 
                 else:
-                    brand = Brand.objects.get(pk = self.request.user)
                     instance.influence = influence
                     instance.save()
-                    brand.number_new_followers -= 1
-                    brand.save()
+                    for brand in instance.brands.all():
+                        brand.number_new_followers -= 1
+                        brand.save()
 
                     return JsonResponse({'message':'The influence of the follower has been calculated successfuly'}, status=200)
 
@@ -1344,19 +1348,23 @@ class EvaluateAllFollowers(APIView):
             return JsonResponse({'error':'There are not any unevaluated followers!'}, status=404)
         else:
             for follower in followers:
-                try:
-                    influence = calculate_influence(follower.k, follower.k_tweet_publication_moment, follower.k_retweets, follower.number_followers)
-
-                except Exception as e:
-                    print(str(e))
-                    return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=500)
-
+                if (follower.influence is not None):
+                        continue
                 else:
-                    follower.influence = influence
-                    follower.save()
+                    try:
+                        influence = calculate_influence(follower.k, follower.k_tweet_publication_moment, follower.k_retweets, follower.number_followers)
+                    except Exception as e:
+                        print(str(e))
+                        return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=500)
 
-            brand.number_new_followers -= len(followers)
-            brand.save()
+                    else:
+                        follower.influence = influence
+                        follower.save()
+
+                        for elem in follower.brands.all():
+                            elem.number_new_followers -= 1
+                            elem.save()
+
 
             return JsonResponse({'message':'Influence calculated successfuly', 'number_results': len(followers)}, status=200)
 
@@ -1390,11 +1398,11 @@ class DeleteFollower(DestroyAPIView):
         except Exception:
             return JsonResponse({'error': "This follower doesn't exists!"}, status=404)
         else:
-            brand = Brand.objects.get(pk = self.request.user)
-            instance.brands.remove(brand)
             if instance.influence is None:
-                    brand.number_new_followers -= 1
-                    brand.save()
+                brand = Brand.objects.get(pk = self.request.user)
+                brand.number_new_followers -= 1
+                brand.save()
+            instance.brands.remove(brand)
             if instance.brands.all().count() == 0:
                 self.perform_destroy(instance)
 

@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
+    "postinstall": "ng build --aot -prod",
     "build": "ng build --prod",
     "gitbuild": "ng build --prod --base-href /start-angular/SB-Admin-BS4-Angular-7/master/dist/",
     "test": "ng test",
@@ -15,8 +16,10 @@
   "dependencies": {
     "@angular/animations": "8.0.0",
     "@angular/cdk": "^8.1.2",
+    "@angular/cli": "8.0.2",
     "@angular/common": "8.0.0",
     "@angular/compiler": "8.0.0",
+    "@angular/compiler-cli": "8.0.0",
     "@angular/core": "8.0.0",
     "@angular/forms": "8.0.0",
     "@angular/platform-browser": "8.0.0",
@@ -28,14 +31,17 @@
     "angular-confirmation-popover": "^4.2.1",
     "chart.js": "2.7.3",
     "core-js": "2.5.7",
+    "express": "^4.17.1",
     "font-awesome": "4.7.0",
     "ng2-charts": "2.3.0",
     "ng2-odometer": "^1.1.3",
     "ngx-cookie-service": "^2.2.0",
     "ngx-easy-table": "^10.1.2",
+    "path": "^0.12.7",
     "rxjs": "6.5.2",
     "tslib": "^1.9.0",
     "typeface-montserrat": "0.0.75",
+    "typescript": "3.4.5",
     "yarn": "1.16.0",
     "zone.js": "~0.9.1"
   },
@@ -48,6 +54,7 @@
     "@types/jasminewd2": "2.0.5",
     "@types/node": "10.12.2",
     "codelyzer": "^5.0.1",
+    "enhanced-resolve": "^3.3.0",
     "jasmine-core": "3.3.0",
     "jasmine-spec-reporter": "4.2.1",
     "karma": "^4.1.0",
@@ -60,5 +67,9 @@
     "ts-node": "7.0.1",
     "tslint": "5.11.0",
     "typescript": "3.4.5"
+  },
+  "engines": {
+    "node": "11.0.0",
+    "npm": "6.9.0"
   }
 }

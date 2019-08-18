@@ -52,6 +52,8 @@ REST_FRAMEWORK = {
     ('rest_framework.permissions.IsAuthenticated'),
 }
 
+BASE_URL = "https://tweetnsell-server.herokuapp.com"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -148,3 +150,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 from dotenv import load_dotenv
 load_dotenv()
 
+
+import django_heroku
+django_heroku.settings(locals())

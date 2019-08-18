@@ -1,0 +1,2 @@
+% Launch!
+web: sh -c 'gunicorn tweetNSellServer.wsgi --log-file -'

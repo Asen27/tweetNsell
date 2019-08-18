@@ -40,13 +40,13 @@
                 <div class="card-body">
                         <div class="row" style="text-align: center;" >
                             <div class="col col-xl-6 ">
-                                <button  class="btn btn-primary btn-lg btn-block" (click)="onLoadOpinionsEvent()">
+                                <button [disabled]="configuration.isLoading" class="btn btn-primary btn-lg btn-block" (click)="onLoadOpinionsEvent()">
                                     {{ 'OPINION.LOAD' | translate }}
                                 </button>
 
                             </div>
                             <div class="col col-xl-6 ">
-                                <button *ngIf="brand?.number_new_opinions > 0" class="btn btn-success btn-lg btn-block"
+                                <button [disabled]="configuration.isLoading" *ngIf="brand?.number_new_opinions > 0" class="btn btn-success btn-lg btn-block"
                                         mwlConfirmationPopover
                                         popoverTitle="{{
                                             'CONFIRM.TITLE' | translate

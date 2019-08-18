@@ -81,9 +81,10 @@ export class RegisterComponent implements OnInit {
       )
       .then(data => {
         setTimeout(() => {
-            const message = this.translateService.instant('SUCCESS.REGISTER');
-            this.alertService.success(message, true);
-            this.router.navigate(['/login']);
+        this.loading = false;
+        const message = this.translateService.instant('SUCCESS.REGISTER');
+        this.alertService.success(message, true);
+        this.router.navigate(['/register']);
           }, 1500);
         })
         .catch(error => {

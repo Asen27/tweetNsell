@@ -38,31 +38,31 @@ export class InfoComponent implements OnInit {
             imagePath: '../../../../assets/img/slider1.png',
             label: "What is Tweet 'N' Sell?",
             // tslint:disable-next-line: max-line-length
-            text: "Djinn Viziers have the power to tell the future. Anyone possessing a genie's lamp will always be lucky in battle, and his enemy will be subjected to many misfortunes. The Djinns themselves decide how to give their luck. They may provide good luck to their master's allies, or bad luck to the forces of his enemies."
+            text: "Nowadays, Twitter is one of the most popular social networks in the world and it has become a powerful tool that many companies add to their marketing strategy. Tweet 'N' Sell is a web application that aims to help businesses take the most of this social network."
         },
         {
             imagePath: '../../../../assets/img/slider2.png',
             label: 'Who can benefit from it?',
             // tslint:disable-next-line: max-line-length
-            text: 'Steel golems are carefully enchanted by their creators. They are almost impervious to magic (receiving only quarter of damage from magical attacks) and far more deadly than the lesser iron golems in combat, as they retaliate immediately any time they are attacked.'
+            text: "Tweet 'N' Sell is intended for use by medium-sized and large enterprises that offer their services or products to English- or Spanish-speaking countries. In order to use the app, it’s required that your brand has an active account on Twitter. It’s also recommended that your brand’s account is popular and has a significant number of followers."
         },
         {
             imagePath: '../../../../assets/img/slider4.png',
             label: 'How can it help me improve the marketing strategy of my business?',
             // tslint:disable-next-line: max-line-length
-            text: 'The fabled properties of the Mystical Marble, from which the Elemental Gargoyles are formed, have been well documented since time immemorial. This rarest of stones is widely prized by the wizard fraternity for its unique ability to transform the properties of any natural force. Under the influence of the Elemental Gargoyle, fire, water and earth can be transformed into destructive weapons.'
+            text: "Tweet 'N' Sell gives users the opportunity to monitor the online reputation of their brand. Using Tweet ‘N’ Sell, a company can measure the level of satisfaction of its customers towards the products or services it offers. The app is able to analyze how customers perceive the brand when they talk about it on Twitter (that is, whether their attitude is positive, negative or neutral). Tweet 'N' Sell also allows a company to identify potential influencers among their followers that could promote its products or services and help your brand grow."
         },
         {
             imagePath: '../../../../assets/img/slider3.png',
             label: 'How can I monitor the online reputation of my brand?',
             // tslint:disable-next-line: max-line-length
-            text: 'The Academy has returned to its grassroots with a more middle-eastern themed town set in the deserts, and thus it reflects the art style and clothing of its creatures. The Academy line-up remains largely familiar, the only change being the many-armed snake woman for the many-armed lion-man. The Rakshasa is a new creature to the series that reflects the middle-eastern mythology associated with the town. The Academy, traditionally a strong spellcasting town, have continued the trend with the Genie and the Mage occupying levels 4 and 5 for two strong, mid-level spellcasters. Their ranged capability is also powerful, as in Heroes IV with both Gremlins, Mages and Titans able to fire shots at long range. A predominantly unchanged line-up ensures a fairly familiar town for Academy players.'
+            text: 'The user will have to visit the Online Reputation page and click on the button: “Load more opinions”. The app will load and store the most recent tweets that refer to the brand. Once the tweets has been stored, the user will have to click on the button: “Evaluate all opinions”. The app will then proceed to analyze the stored tweets one by one. At the end of the process, the app will have classified the tweets as “positive”, “negative” or “neutral". The results will be illustrated by means of a chart.'
         },
         {
             imagePath: '../../../../assets/img/slider5.png',
             label: 'How can I look for potential influencers among my followers on Twitter?',
             // tslint:disable-next-line: max-line-length
-            text: 'In the beautiful surroundings of Khalef Oasis resides old Naef Al Majalla, the greatest general the Silver Cities have ever known. It is to him that mages come, in the hope of learning how to harness their magic powers in battle, and use it accurately against the enemy without harming their own men.'
+            text: 'The user will have to go to the influence meter and click on the button “Load more followers”. The app will start iterating over the list of the brand’s followers and will store the potential influencers among them. These followers will be displayed in a table and the user will be able to see relevant information about them. When the user clicks on the button “Evaluate all followers”, the app will calculate the influence of each of the stored followers. When the process finishes, those that have the highest influence will be referred to as influencers and the user will be able to contact them.'
         }];
     }
 
@@ -72,31 +72,31 @@ export class InfoComponent implements OnInit {
                 imagePath: '../../../../assets/img/slider1.png',
                 label: "¿Qué es Tweet 'N' Sell?",
                 // tslint:disable-next-line: max-line-length
-                text: 'Un total de 14.262 personas han asistido hasta la fecha a las Noches en los Jardines del Real Alcázar de Sevilla, una cifra que se corresponde con una ocupación del 98 por ciento del aforo ofertado desde su inauguración el 27 de junio.'
+                text: "Hoy en día, Twitter es una de las redes sociales más populares del mundo y se ha convertido en una poderosa herramienta que muchas empresas suman a su estrategia de marketing. Tweet 'N' Sell es una aplicación web que pretende ayudar a las empresas a lograr los máximos beneficios de esta red social."
             },
             {
                 imagePath: '../../../../assets/img/slider2.png',
                 label: '¿A quién está destinado?',
                 // tslint:disable-next-line: max-line-length
-                text: 'Ofrecerán el programa: Ministriles para una vuelta al mundo. Esto será un homenaje a la figura del marino y descubridor Fernando de Magallanes. El recital es un recorrido por las músicas que se escucharon en los reinos de Portugal, Castilla y Aragón durante el floreciente Renacimiento europeo, con pequeños guiños a la música profanaamericana del siglo XVI, para evocar las nuevas culturas descubiertas, según el comunicado.'
+                text: "Tweet 'N' Sell está destinado a ser utilizado por marcas y empresas medianas o grandes que ofrecen sus servicios o productos en países de habla inglesa o española. Un requisito indispensable para usar la aplicación es que la empresa tenga una cuenta activa en Twitter. Es aconsejable también que la cuenta de Twitter de la empresa sea popular y cuente con un importante número de seguidores."
             },
             {
                 imagePath: '../../../../assets/img/slider4.png',
                 label: '¿Cómo puede ayudarme a mejorar la estrategia de marketing de mi negocio?',
                 // tslint:disable-next-line: max-line-length
-                text: 'Los más intrépidos estaban esperando el 11 de mayo para lanzarse. Y la mayoría lo hizo sin problemas. Fueron muchos los jóvenes, incluso familias con hijos, que se tiraron por el tobogán más grande de Europa en Estepona. Sin embargo, otros no hicieron caso a las normas de uso y pillaron demasiada velocidad. Tanta que acabaron magullados. Es cuando llegó una señora con vestido azul, se tendió sobre el acero de la atracción y bajó a toda velocidad.'
+                text: "Tweet 'N' Sell le brinda al usuario la posibilidad de monitorizar la reputación online de su empresa. Gracias a Tweet ‘N’ Sell, la empresa puede determinar el nivel de satisfacción de sus clientes con los productos o los servicios ofrecidos. La aplicación es capaz de analizar cómo los clientes perciben la marca cuando la comentan por Twitter (esto es, si su actitud es positiva, negativa o neutral). Tweet 'N' Sell también posibilita que la empresa identifique entre sus seguidores en Twitter a potenciales influencers que podrían promocionar sus productos y servicios y ayudar al negocio a crecer."
             },
             {
                 imagePath: '../../../../assets/img/slider3.png',
-                label: '¿Cómo puedo monitiorizar la reputación online de mi marca?',
+                label: '¿Cómo puedo monitorizar la reputación online de mi marca?',
                 // tslint:disable-next-line: max-line-length
-                text: 'En las siguientes horas, otros usuarios de este tobogán se quejaron de que habían sufrido moratones. Una de ellas, además, lo hacía diciendo que la Policía Local se había reído de ella cuando la vio tirada por los suelos, con los codos amoratados y el trasero quemado por la fricción. Comenzó una marea de críticas que hizo, que esa misma tarde, el tobogán fuera clausurado hasta nueva orden. Un operario lo precintó y en la entrada se cortó el acceso.'
+                text: 'El usuario tiene que visitar la página de monitorización de la reputación online y hacer clic en el botón “Cargar más opiniones”. La aplicación cargará y almacenará los tweets más recientes que se refieran a la marca. Una vez que los tweets hayan sido almacenados, el usuario tendrá que hacer clic en el botón “Evaluar todas las opiniones”. La aplicación procederá a recorrer los tweets almacenados, analizando el texto de cada uno de ellos de forma individual. Al final del proceso, la aplicación habrá catalogado cada uno de los tweets como “positivo”, “negativo” o “neutral”. Los resultados se ilustrarán mediante un gráfico.'
             },
             {
                 imagePath: '../../../../assets/img/slider5.png',
                 label: '¿Cómo puedo buscar posibles influencers entre mis seguidores de Twitter?',
                 // tslint:disable-next-line: max-line-length
-                text: 'En las siguientes horas, otros usuarios de este tobogán se quejaron de que habían sufrido moratones. Una de ellas, además, lo hacía diciendo que la Policía Local se había reído de ella cuando la vio tirada por los suelos, con los codos amoratados y el trasero quemado por la fricción. Comenzó una marea de críticas que hizo, que esa misma tarde, el tobogán fuera clausurado hasta nueva orden. Un operario lo precintó y en la entrada se cortó el acceso.'
+                text: 'El usuario tiene que acceder al medidor de influencia y pulsar el botón “Cargar más seguidores”. La aplicación irá recorriendo la lista de los seguidores de la marca en Twitter e irá almacenando a los potenciales influencers. Dichos seguidores se visualizarán en un listado y el usuario podrá consultar sus datos más relevantes. Cuando el usuario pulse el botón “Evaluar a todos los seguidores”, la aplicación irá calculando la influencia de cada uno de los seguidores del listado. Cuando el proceso termine, aquellos que tengan la influencia más alta se distinguirán como influencers y el usuario podrá ponerse en contacto con ellos, si lo desea.'
             }
         ];
     }

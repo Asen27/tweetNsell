@@ -342,7 +342,7 @@ class RegisterBrand(APIView):
         brand_info = get_brand_profile(twitter_api, username)
 
         if brand_info is None:
-            return JsonResponse({'error': 'Invalid Twitter account!'}, status=500)
+            return JsonResponse({'error': 'Invalid Twitter account!'}, status=512)
 
 
         encrypted_password = make_password(password)
@@ -1095,7 +1095,7 @@ class LoadFollowers(APIView):
 
 
         if followers is None or next_cursor is None:
-            return JsonResponse({'error':'A problem occurred while loading the followers!'}, status=500)
+            return JsonResponse({'error':'A problem occurred while loading the followers!'}, status=512)
 
         number_results = 0
         followers_to_evaluate = 0;
@@ -1319,7 +1319,7 @@ class EvaluateFollower(UpdateAPIView):
 
                 except Exception as e:
                     print(str(e))
-                    return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=500)
+                    return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=512)
 
                 else:
                     instance.influence = influence
@@ -1355,7 +1355,7 @@ class EvaluateAllFollowers(APIView):
                         influence = calculate_influence(follower.k, follower.k_tweet_publication_moment, follower.k_retweets, follower.number_followers)
                     except Exception as e:
                         print(str(e))
-                        return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=500)
+                        return JsonResponse({'error': "An unexpected error occurred while calculating the influence!"}, status=512)
 
                     else:
                         follower.influence = influence
@@ -1398,8 +1398,8 @@ class DeleteFollower(DestroyAPIView):
         except Exception:
             return JsonResponse({'error': "This follower doesn't exists!"}, status=404)
         else:
+            brand = Brand.objects.get(pk = self.request.user)
             if instance.influence is None:
-                brand = Brand.objects.get(pk = self.request.user)
                 brand.number_new_followers -= 1
                 brand.save()
             instance.brands.remove(brand)
@@ -1449,7 +1449,7 @@ class UpdateBrand(UpdateAPIView):
             brand_info = get_brand_profile(twitter_api, instance.user_profile.username)
 
             if brand_info is None:
-                return JsonResponse({'error': 'Invalid Twitter account!'}, status=500)
+                return JsonResponse({'error': 'Invalid Twitter account!'}, status=512)
 
             else:
                 instance.name = brand_info['name']

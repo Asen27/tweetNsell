@@ -3,7 +3,6 @@ import { routerTransition } from '../../../router.animations';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { DataManagement } from 'src/app/services/dataManagement';
-import { ServiceIndustry, Brand } from 'src/app/app.data.model';
 import { ConfigService } from './configuration.service';
 import { Columns } from 'ngx-easy-table';
 

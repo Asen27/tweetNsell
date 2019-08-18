@@ -39,7 +39,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                                 'ERROR.REGISTER_3'
                             );
                             break;
-                        case 500:
+                        case 512:
                             error = this.translateService.instant(
                                 'ERROR.REGISTER_4'
                             );
@@ -123,7 +123,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                         error = err.statusText;
                     }
                 } else if (request.url.endsWith('followers/load/')) {
-                    if (err.status === 500) {
+                    if (err.status === 512) {
                         error = this.translateService.instant('ERROR.LOAD_2');
                     } else {
                         error = err.statusText;
@@ -133,7 +133,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                         error = this.translateService.instant('ERROR.EVALUATE_FOLLOWER_1');
                     } else if (err.status === 409) {
                         error = this.translateService.instant('ERROR.EVALUATE_FOLLOWER_2');
-                    } else if (err.status === 500) {
+                    } else if (err.status === 512) {
                         error = this.translateService.instant('ERROR.EVALUATE_FOLLOWER_3');
                     } else {
                         error = err.statusText;
@@ -141,7 +141,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 } else if (request.url.endsWith('followers/evaluate/all/')) {
                     if (err.status === 404) {
                         error = this.translateService.instant('ERROR.EVALUATE_ALL_2');
-                     } else if (err.status === 500) {
+                     } else if (err.status === 512) {
                         error = this.translateService.instant('ERROR.EVALUATE_ALL_3');
                      } else {
                         error = err.statusText;
@@ -155,7 +155,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 } else if (request.url.endsWith('brand/update/')) {
                         if (err.status === 404) {
                             error = this.translateService.instant('ERROR.UPDATE_1');
-                         } else if (err.status === 500) {
+                         } else if (err.status === 512) {
                             error = this.translateService.instant('ERROR.UPDATE_2');
                          } else {
                             error = err.statusText;

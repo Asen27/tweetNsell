@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
     Router,
-    CanActivate
+    CanActivate,
+    ActivatedRouteSnapshot,
+    RouterStateSnapshot
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
@@ -10,7 +12,7 @@ import { Observable } from 'rxjs';
 export class AdminGuard implements CanActivate {
     constructor(private router: Router, private cookieService: CookieService) {}
 
-    canActivate(
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot
     ): Observable<boolean> | Promise<boolean> | boolean {
         const isUserLogged = this.cookieService.check('token');
         if (isUserLogged) {
@@ -19,12 +21,14 @@ export class AdminGuard implements CanActivate {
         if (isUserAdmin) {
             // authorised so return true
             return true;
+        } else {
+            this.router.navigate(['/']);
+            return false;
         }
+    } else {
+          this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+          return false;
     }
-
-        // not logged in so redirect to login page with the return url
-        this.router.navigate(['/login']);
-        return false;
     }
 }
 

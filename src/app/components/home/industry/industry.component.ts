@@ -4,7 +4,7 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { AlertService } from '../../../services/alertService';
 import { DataManagement } from '../../../services/dataManagement';
 import { ConfigService } from './configuration.service';
-import { API, APIDefinition, Columns } from 'ngx-easy-table';
+import { APIDefinition, Columns } from 'ngx-easy-table';
 import { CookieService } from 'ngx-cookie-service';
 
 

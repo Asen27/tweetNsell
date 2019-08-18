@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild  } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { routerTransition } from '../../../router.animations';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { AlertService } from '../../../services/alertService';
@@ -41,7 +41,6 @@ export class OpinionComponent implements OnInit {
         private translateService: TranslateService,
         private alertService: AlertService,
         private dm: DataManagement,
-        private readonly cdr: ChangeDetectorRef,
         private modalService: NgbModal,
         private cookieService: CookieService
     ) {
@@ -71,6 +70,7 @@ export class OpinionComponent implements OnInit {
         this.getBrand();
         this.getOpinions(1);
     }
+
 
     getBrand() {
         this.dm.getUserLogged(this.cookieService.get('token')).then((user) => {
@@ -113,10 +113,9 @@ export class OpinionComponent implements OnInit {
         if (obj.value.row !== undefined) {
             this.selected = obj.value.row.text;
         } else {
-        if (obj.value.page === undefined ) {
+        if (obj.value.page === undefined || this.configuration.isLoading) {
             return;
         } else {
-        // this.pagination.limit = obj.value.limit ? obj.value.limit : this.pagination.limit;
         this.pagination.offset = obj.value.page;
         this.pagination = { ...this.pagination };
         const params = this.pagination.offset;
@@ -134,7 +133,6 @@ export class OpinionComponent implements OnInit {
             this.pagination.count =  data.count;
           this.pagination = { ...this.pagination };
           this.configuration.isLoading = false;
-          this.cdr.detectChanges();
           window.scroll(0, 0);
         }).catch(error => {
             this.alertService.error(error);
@@ -143,11 +141,14 @@ export class OpinionComponent implements OnInit {
     }
 
     private onToolbarClick(): void {
+        if ( this.configuration.isLoading) {
+            return;
+        } else {
         this.pagination.offset = 1;
         const params = this.pagination.offset;
-       // this.pagination = { ...this.pagination };
         this.getOpinions(params);
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: 1});
+        }
     }
 
     open(content) {
@@ -185,7 +186,6 @@ export class OpinionComponent implements OnInit {
         } else {
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: currentPage});
         }
-        this.cdr.detectChanges();
         const message = this.translateService.instant('SUCCESS.DELETE_OPINION');
         this.alertService.success(message, false);
         window.scroll(0, 0);
@@ -209,7 +209,6 @@ export class OpinionComponent implements OnInit {
         this.dm.pinOpinion(id).then((data: any) => {
         this.configuration.isLoading = false;
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: currentPage});
-        this.cdr.detectChanges();
         const message = this.translateService.instant('SUCCESS.PIN');
         this.alertService.success(message, false);
         window.scroll(0, 0);
@@ -239,7 +238,6 @@ export class OpinionComponent implements OnInit {
         } else {
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: currentPage});
         }
-        this.cdr.detectChanges();
         const message = this.translateService.instant('SUCCESS.UNPIN');
         this.alertService.success(message, false);
         window.scroll(0, 0);
@@ -270,7 +268,6 @@ export class OpinionComponent implements OnInit {
         } else {
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: currentPage});
         }
-        this.cdr.detectChanges();
         const message = this.translateService.instant('SUCCESS.EVALUATE');
         this.alertService.success(message, false);
         window.scroll(0, 0);
@@ -294,7 +291,6 @@ export class OpinionComponent implements OnInit {
         this.getOpinions(1);
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: 1});
         this.configuration.isLoading = false;
-        this.cdr.detectChanges();
         if (data.status === 200) {
         const message = this.translateService.instant('SUCCESS.LOAD_NO_RESULTS');
         this.alertService.success(message, false);
@@ -320,7 +316,6 @@ export class OpinionComponent implements OnInit {
         this.getOpinions(1);
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: 1});
         this.configuration.isLoading = false;
-        this.cdr.detectChanges();
         const message = this.translateService.instant('SUCCESS.EVALUATE_ALL');
         this.alertService.success(String(data.number_results).concat(message), false);
         window.scroll(0, 0);

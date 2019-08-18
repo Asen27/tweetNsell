@@ -40,13 +40,13 @@
                 <div class="card-body">
                         <div class="row" style="text-align: center;" >
                             <div class="col col-xl-6 ">
-                                <button [disabled]="configuration.isLoading" class="btn btn-primary btn-lg btn-block" (click)="onLoadOpinionsEvent()">
+                                <button [disabled]="blockButtons === true" class="btn btn-primary btn-lg btn-block" (click)="onLoadOpinionsEvent()">
                                     {{ 'OPINION.LOAD' | translate }}
                                 </button>
 
                             </div>
                             <div class="col col-xl-6 ">
-                                <button [disabled]="configuration.isLoading" *ngIf="brand?.number_new_opinions > 0" class="btn btn-success btn-lg btn-block"
+                                <button [disabled]="blockButtons === true" *ngIf="brand?.number_new_opinions > 0" class="btn btn-success btn-lg btn-block"
                                         mwlConfirmationPopover
                                         popoverTitle="{{
                                             'CONFIRM.TITLE' | translate
@@ -235,16 +235,16 @@
                                         <td>
                                             <div style="text-align: center;">
 
-                                    <button *ngIf="!row.is_pinned" class="btn btn-warning" (click)="onPinEvent(row.id)" placement="left" ngbTooltip="{{ 'OPINION.PIN' | translate }}">
+                                    <button *ngIf="!row.is_pinned" [disabled]="blockButtons === true" class="btn btn-warning" (click)="onPinEvent(row.id)" placement="left" ngbTooltip="{{ 'OPINION.PIN' | translate }}">
                                         <i class="fa fa-thumb-tack fa-lg"></i>
                                     </button><span *ngIf="!row.is_pinned">&nbsp;</span>
-                                     <button *ngIf="row.is_pinned" class="btn btn-outline-warning" (click)="onUnpinEvent(row.id)" placement="left" ngbTooltip="{{ 'OPINION.UNPIN' | translate }}">
+                                     <button *ngIf="row.is_pinned"  [disabled]="blockButtons === true" class="btn btn-outline-warning" (click)="onUnpinEvent(row.id)" placement="left" ngbTooltip="{{ 'OPINION.UNPIN' | translate }}">
                                      <i class="fa fa-thumb-tack fa-lg fa-rotate-180"></i>
                                      </button><span *ngIf="row.is_pinned">&nbsp;</span>
-                                     <button *ngIf="row.attitude=='unc'" class="btn btn-info" (click)="onEvaluateEvent(row.id)" placement="top" ngbTooltip="{{ 'OPINION.EVALUATE' | translate }}">
+                                     <button *ngIf="row.attitude=='unc'" [disabled]="blockButtons === true" class="btn btn-info" (click)="onEvaluateEvent(row.id)" placement="top" ngbTooltip="{{ 'OPINION.EVALUATE' | translate }}">
                                      <i class="fa fa-meh-o fa-lg" ></i>
                                     </button><span *ngIf="row.attitude=='unc'">&nbsp;</span>
-                                    <button  class="btn btn-danger" placement="bottom" ngbTooltip="{{ 'OPINION.DELETE' | translate }}"
+                                    <button [disabled]="blockButtons === true" class="btn btn-danger" placement="bottom" ngbTooltip="{{ 'OPINION.DELETE' | translate }}"
                                     mwlConfirmationPopover
                                             popoverTitle="{{
                                                 'CONFIRM.TITLE' | translate

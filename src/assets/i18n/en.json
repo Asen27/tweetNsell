@@ -69,7 +69,8 @@
         "EVALUATE_ALL_2" : "There are no followers to evaluate",
         "EVALUATE_ALL_3" : "An unexpected error occurred while calculating the influence of the followers!",
         "UPDATE_1" : "This account doesn't exist!",
-        "UPDATE_2" : "An unexpected error occurred while updating the profile!  Remember that this applications consumes the Twitter Search API, which, unforunately, have rate limits. Please, retry loading the opinions in 15 minutes."
+        "UPDATE_2" : "An unexpected error occurred while updating the profile!  Remember that this applications consumes the Twitter Search API, which, unforunately, have rate limits. Please, retry loading the opinions in 15 minutes.",
+        "GENERAL" : "An unexpected error ocurred!"
 
     },
 

@@ -68,7 +68,8 @@
         "EVALUATE_ALL_2" : "¡No hay seguidores a evaluar!",
         "EVALUATE_ALL_3" : "¡Se ha producido un error inesperado al calcular la influencia de los seguidores!",
         "UPDATE_1": "¡Esta cuenta no existe!",
-        "UPDATE_2" : "Se ha producido un error inesperado al actualizar el perfil. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos."
+        "UPDATE_2" : "Se ha producido un error inesperado al actualizar el perfil. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",
+        "GENERAL" : "¡Se ha producido un error inesperado!"
 
     },
 

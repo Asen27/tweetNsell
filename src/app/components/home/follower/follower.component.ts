@@ -8,6 +8,7 @@ import { ConfigService } from './configuration.service';
 import { API, APIDefinition, Columns } from 'ngx-easy-table';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
+import { BusyService } from 'src/app/services/busyService';
 
 
 @Component({
@@ -34,15 +35,19 @@ export class FollowerComponent implements OnInit {
   };
    closeResult: string;
    selected: string;
+   blockButtons: boolean;
 
     constructor(
         private translateService: TranslateService,
         private alertService: AlertService,
         private dm: DataManagement,
         private modalService: NgbModal,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        private busyService: BusyService
     ) {
 
+
+    this.blockButtons = JSON.parse(localStorage.getItem('busy'));
 
     }
 
@@ -61,6 +66,12 @@ export class FollowerComponent implements OnInit {
                 this.loadColumnsEs();
             }
         });
+
+        this.busyService.watchStorage().subscribe(busy => {
+            this.blockButtons = JSON.parse(busy);
+          });
+
+
 
         this.getBrand();
         this.getFollowers(1);
@@ -108,7 +119,7 @@ export class FollowerComponent implements OnInit {
         if (obj.value.row !== undefined) {
             this.selected = obj.value.row.description;
         } else {
-        if (obj.value.page === undefined || this.configuration.isLoading) {
+        if (obj.value.page === undefined || this.blockButtons === true) {
             return;
         } else {
         this.pagination.offset = obj.value.page;
@@ -121,6 +132,10 @@ export class FollowerComponent implements OnInit {
 
 
     private getFollowers(page: Number): void {
+        if (this.blockButtons === true) {
+            this.configuration = ConfigService.config;
+            this.configuration.isLoading = true;
+        } else {
         this.alertService.clear();
         this.configuration = ConfigService.config;
         this.configuration.isLoading = true;
@@ -135,9 +150,10 @@ export class FollowerComponent implements OnInit {
             window.scroll(0, 0);
         });
     }
+    }
 
     private onToolbarClick(): void {
-        if ( this.configuration.isLoading) {
+        if ( this.blockButtons === true) {
             return;
         } else {
         this.pagination.offset = 1;
@@ -227,12 +243,14 @@ export class FollowerComponent implements OnInit {
         this.alertService.clear();
         this.configuration = ConfigService.config;
         this.configuration.isLoading = true;
+        this.busyService.setItem('busy', true);
         this.dm.loadFollowers().then((data: any) => {
         this.getBrand();
         this.selector = 'new';
         this.getFollowers(1);
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: 1});
         this.configuration.isLoading = false;
+        this.busyService.removeItem('busy');
         if (data.status === 200) {
         const message = this.translateService.instant('SUCCESS.LOAD_2_NO_RESULTS');
         this.alertService.success(message, false);
@@ -243,6 +261,7 @@ export class FollowerComponent implements OnInit {
         window.scroll(0, 0);
         }).catch(error => {
             this.configuration.isLoading = false;
+            this.busyService.removeItem('busy');
             this.alertService.error(error);
             window.scroll(0, 0);
         });
@@ -253,17 +272,20 @@ export class FollowerComponent implements OnInit {
         this.alertService.clear();
         this.configuration = ConfigService.config;
         this.configuration.isLoading = true;
+        this.busyService.setItem('busy', true);
         this.dm.evaluateAllFollowers().then((data: any) => {
         this.getBrand();
         this.selector = 'evaluated';
         this.getFollowers(1);
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: 1});
         this.configuration.isLoading = false;
+        this.busyService.removeItem('busy');
         const message = this.translateService.instant('SUCCESS.EVALUATE_ALL_2');
         this.alertService.success(String(data.number_results).concat(message), false);
         window.scroll(0, 0);
         }).catch(error => {
             this.configuration.isLoading = false;
+            this.busyService.removeItem('busy');
             this.alertService.error(error);
             window.scroll(0, 0);
         });

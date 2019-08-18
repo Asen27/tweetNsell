@@ -31,7 +31,7 @@
                         <div class="card-body">
                                 <div class="row" style="text-align: center;" >
                                     <div class="col col-xl-6 ">
-                                        <button  [disabled]="configuration.isLoading" class="btn btn-primary btn-lg btn-block"
+                                        <button  [disabled]="blockButtons === true" class="btn btn-primary btn-lg btn-block"
                                         mwlConfirmationPopover
                                         popoverTitle="{{
                                             'CONFIRM.TITLE' | translate
@@ -59,7 +59,7 @@
 
                                     </div>
                                     <div class="col col-xl-6 ">
-                                        <button [disabled]="configuration.isLoading" *ngIf="brand?.number_new_followers > 0" class="btn btn-success btn-lg btn-block" (click)="onEvaluateFollowersEvent()">
+                                        <button [disabled]="blockButtons === true" *ngIf="brand?.number_new_followers > 0" class="btn btn-success btn-lg btn-block" (click)="onEvaluateFollowersEvent()">
                                             {{ 'FOLLOWER.EVALUATE_ALL' | translate }}
                                         </button>
 
@@ -164,10 +164,10 @@
                                                     <div style="text-align: center;">
 
 
-                                             <button *ngIf="row.influence == null" class="btn btn-info" (click)="onEvaluateEvent(row.id)" placement="top" ngbTooltip="{{ 'FOLLOWER.EVALUATE' | translate }}">
+                                             <button *ngIf="row.influence == null" [disabled]="blockButtons === true" class="btn btn-info" (click)="onEvaluateEvent(row.id)" placement="top" ngbTooltip="{{ 'FOLLOWER.EVALUATE' | translate }}">
                                              <i class="fa fa-star-o fa-lg" ></i>
                                             </button><span *ngIf="row.influence == null">&nbsp;</span>
-                                            <button  class="btn btn-danger" placement="bottom" ngbTooltip="{{ 'FOLLOWER.DELETE' | translate }}"
+                                            <button  [disabled]="blockButtons === true" class="btn btn-danger" placement="bottom" ngbTooltip="{{ 'FOLLOWER.DELETE' | translate }}"
                                             mwlConfirmationPopover
                                             popoverTitle="{{
                                                 'CONFIRM.TITLE' | translate

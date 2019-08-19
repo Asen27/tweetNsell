@@ -55,6 +55,7 @@ REST_FRAMEWORK = {
 BASE_URL = "https://tweetnsell-server.herokuapp.com"
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,8 +63,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'tweetNsellServer.urls'
 
@@ -148,7 +151,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 15
 }
 
-CORS_ORIGIN_ALLOW_ALL = True
 
 from dotenv import load_dotenv
 load_dotenv()

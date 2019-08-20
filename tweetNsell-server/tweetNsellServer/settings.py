@@ -79,7 +79,7 @@ CORS_ALLOW_METHODS = (
     'PUT',
 )
 
-  CORS_ALLOW_HEADERS = (
+CORS_ALLOW_HEADERS = (
     'accept',
     'accept-encoding',
     'authorization',

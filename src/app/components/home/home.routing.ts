@@ -26,7 +26,8 @@ const routes: Routes = [
             { path: 'profile', component: ProfileComponent, canActivate: [BrandGuard] },
             { path: 'online-reputation', component: OpinionComponent, canActivate: [BrandGuard] },
             { path: 'online-reputation/charts', component: ChartComponent, canActivate: [BrandGuard] },
-            { path: 'influence-meter', component: FollowerComponent, canActivate: [BrandGuard] }
+            { path: 'influence-meter', component: FollowerComponent, canActivate: [BrandGuard] },
+            { path: '**', redirectTo: '' }
         ]
     }
 ];

@@ -904,21 +904,24 @@ class EvaluateAllOpinions(APIView):
         else:
             num_evaluated_opinions = 0
             for opinion in opinions:
-
-                text = opinion.text
-                if opinion.language == 'en':
-                    attitude = english_sentiment_analyzer(text)
+                try:
+                    text = opinion.text
+                    if opinion.language == 'en':
+                        attitude = english_sentiment_analyzer(text)
+                    else:
+                        attitude = spanish_sentiment_analyzer(text)
+                    opinion.attitude = attitude
+                    opinion.save()
+                except Exception:
+                    continue
                 else:
-                    attitude = spanish_sentiment_analyzer(text)
-                opinion.attitude = attitude
-                opinion.save()
-                if attitude == 'pos':
-                    brand.social_rating['positive'] += 1
-                elif attitude == 'neu':
-                    brand.social_rating['neutral'] += 1
-                else:
-                    brand.social_rating['negative'] += 1
-                num_evaluated_opinions +=1
+                    if attitude == 'pos':
+                        brand.social_rating['positive'] += 1
+                    elif attitude == 'neu':
+                        brand.social_rating['neutral'] += 1
+                    else:
+                        brand.social_rating['negative'] += 1
+                    num_evaluated_opinions +=1
 
             brand.number_new_opinions -= num_evaluated_opinions
             brand.save()

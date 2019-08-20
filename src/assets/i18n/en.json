@@ -59,7 +59,7 @@
         "EVALUATE_ALL" : "There are no opinions to evaluate!",
         "SERVICE_INDUSTRY_1" : "This service industry doesn't exist! ",
         "SERVICE_INDUSTRY_2" : "The default service industry can't be deleted! ",
-        "SERVICE_INDUSTRY_3" : "You can't create more than 10 service industries! ",
+        "SERVICE_INDUSTRY_3" : "You can't create more than 15 service industries! ",
         "SERVICE_INDUSTRY_4" : "This service industry already exists!",
         "BRAND" : "This brand doesn't exist!",
         "LOAD_2" : "An unexpected error occurred while loading the followers! Remember that this applications consumes the Twitter Search API, which, unforunately, have rate limits. Please, retry loading the opinions in 15 minutes.",

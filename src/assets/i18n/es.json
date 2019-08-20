@@ -58,7 +58,7 @@
         "EVALUATE_ALL": "¡No hay opiniones a evaluar!",
         "SERVICE_INDUSTRY_1" : "¡La industria no existe! ",
         "SERVICE_INDUSTRY_2" : "¡La industria por defecto no se puede eliminar! ",
-        "SERVICE_INDUSTRY_3" : "¡No es posible crear más de 10 industrias! ",
+        "SERVICE_INDUSTRY_3" : "¡No es posible crear más de 15 industrias! ",
         "SERVICE_INDUSTRY_4" : "¡Esta industria ya existe!",
         "BRAND" : "¡Esta marca no existe!",
         "LOAD_2": "Se ha producido un error inesperado al cargar los seguidores. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",

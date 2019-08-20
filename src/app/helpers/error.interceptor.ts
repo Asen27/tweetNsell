@@ -50,13 +50,13 @@ export class ErrorInterceptor implements HttpInterceptor {
                             );
                             break;
                         default:
-                            error = this.translateService.instant('ERROR.GENERAL');
+                            error = err.statusText;
                     }
                 } else if (request.url.endsWith('login/')) {
                     if (err.status === 400) {
                         error = this.translateService.instant('ERROR.LOGIN');
                     } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.includes('opinions/pin/')) {
                     if (err.status === 404) {
@@ -64,7 +64,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                     } else if (err.status === 409) {
                         error = this.translateService.instant('ERROR.PIN_2');
                     } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.includes('opinions/unpin/')) {
                     if (err.status === 404) {
@@ -72,13 +72,13 @@ export class ErrorInterceptor implements HttpInterceptor {
                     } else if (err.status === 409) {
                         error = this.translateService.instant('ERROR.UNPIN_2');
                     } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.includes('opinions/delete/')) {
                     if (err.status === 404) {
                         error = this.translateService.instant('ERROR.UNPIN_1');
                     } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.includes('opinions/evaluate/') && (!request.url.includes('evaluate/all/'))) {
                     if (err.status === 404) {
@@ -86,19 +86,19 @@ export class ErrorInterceptor implements HttpInterceptor {
                     } else if (err.status === 409) {
                         error = this.translateService.instant('ERROR.EVALUATE');
                     } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.endsWith('opinions/load/')) {
                     if (err.status === 429) {
                         error = this.translateService.instant('ERROR.LOAD_1');
                      } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.endsWith('opinions/evaluate/all/')) {
                     if (err.status === 404) {
                         error = this.translateService.instant('ERROR.EVALUATE_ALL');
                      } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.includes('service-industries/delete/')) {
                     if (err.status === 404) {
@@ -106,7 +106,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                     } else if (err.status === 412) {
                         error = this.translateService.instant('ERROR.SERVICE_INDUSTRY_2');
                     } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.endsWith('service-industries/create/')) {
                     if (err.status === 412) {
@@ -114,19 +114,19 @@ export class ErrorInterceptor implements HttpInterceptor {
                      } else if (err.status === 409) {
                         error = this.translateService.instant('ERROR.SERVICE_INDUSTRY_4');
                      } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.includes('brands/delete/')) {
                     if (err.status === 404) {
                         error = this.translateService.instant('ERROR.BRAND');
                     } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.endsWith('followers/load/')) {
                     if (err.status === 512) {
                         error = this.translateService.instant('ERROR.LOAD_2');
                     } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.includes('followers/evaluate/') && (!request.url.includes('evaluate/all/'))) {
                     if (err.status === 404) {
@@ -136,7 +136,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                     } else if (err.status === 512) {
                         error = this.translateService.instant('ERROR.EVALUATE_FOLLOWER_3');
                     } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.endsWith('followers/evaluate/all/')) {
                     if (err.status === 404) {
@@ -144,13 +144,13 @@ export class ErrorInterceptor implements HttpInterceptor {
                      } else if (err.status === 512) {
                         error = this.translateService.instant('ERROR.EVALUATE_ALL_3');
                      } else {
-                        error = this.translateService.instant('ERROR.GENERAL');
+                        error = err.statusText;
                     }
                 } else if (request.url.includes('followers/delete/')) {
                         if (err.status === 404) {
                             error = this.translateService.instant('ERROR.EVALUATE_FOLLOWER_1');
                         } else {
-                            error = this.translateService.instant('ERROR.GENERAL');
+                            error = err.statusText;
                         }
                 } else if (request.url.endsWith('brand/update/')) {
                         if (err.status === 404) {
@@ -158,10 +158,10 @@ export class ErrorInterceptor implements HttpInterceptor {
                          } else if (err.status === 512) {
                             error = this.translateService.instant('ERROR.UPDATE_2');
                          } else {
-                            error = this.translateService.instant('ERROR.GENERAL');
+                            error = err.statusText;
                         }
                 } else {
-                    error = this.translateService.instant('ERROR.GENERAL');
+                    error = err.statusText;
                 }
                 return throwError(error);
             })

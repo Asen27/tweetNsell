@@ -406,8 +406,8 @@ class CreateServiceIndustry(APIView):
         name_en = request.data.get('name_en')
         name_es = request.data.get('name_es')
 
-        if ServiceIndustry.objects.count() == 10:
-            return JsonResponse({'error': "There can't be more than 10 service industries!"}, status=412)
+        if ServiceIndustry.objects.count() == 15:
+            return JsonResponse({'error': "There can't be more than 15 service industries!"}, status=412)
 
 
         try:
@@ -902,6 +902,7 @@ class EvaluateAllOpinions(APIView):
         if len(opinions) == 0:
             return JsonResponse({'error':'There are no unevaluated opinions!'}, status=404)
         else:
+            num_evaluated_opinions = 0
             for opinion in opinions:
 
                 text = opinion.text
@@ -917,11 +918,12 @@ class EvaluateAllOpinions(APIView):
                     brand.social_rating['neutral'] += 1
                 else:
                     brand.social_rating['negative'] += 1
+                num_evaluated_opinions +=1
 
-            brand.number_new_opinions -= len(opinions)
+            brand.number_new_opinions -= num_evaluated_opinions
             brand.save()
 
-            return JsonResponse({'message':'Opinions evaluated successfuly', 'number_results': len(opinions)}, status=201)
+            return JsonResponse({'message':'Opinions evaluated successfuly', 'number_results': num_evaluated_opinions}, status=201)
 
 
 class DeleteOpinion(DestroyAPIView):

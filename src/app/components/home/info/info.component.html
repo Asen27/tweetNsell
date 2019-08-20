@@ -3,7 +3,7 @@
 
         <div class="row">
                 <div class="col-xl-12">
-                    <ngb-carousel>
+                    <ngb-carousel [pauseOnHover]="true">
                         <ng-template ngbSlide *ngFor="let slider of sliders">
                             <img class="img-fluid mx-auto d-block" [src]="slider.imagePath" width="100%">
                             <div class="carousel-caption pl-3 pr-3" style="background-color: white; border: 1px solid black; opacity: 0.7;">

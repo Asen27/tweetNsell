@@ -247,10 +247,10 @@ export class FollowerComponent implements OnInit {
         this.dm.loadFollowers().then((data: any) => {
         this.getBrand();
         this.selector = 'new';
+        this.busyService.removeItem('busy');
         this.getFollowers(1);
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: 1});
         this.configuration.isLoading = false;
-        this.busyService.removeItem('busy');
         if (data.status === 200) {
         const message = this.translateService.instant('SUCCESS.LOAD_2_NO_RESULTS');
         this.alertService.success(message, false);
@@ -276,10 +276,10 @@ export class FollowerComponent implements OnInit {
         this.dm.evaluateAllFollowers().then((data: any) => {
         this.getBrand();
         this.selector = 'evaluated';
+        this.busyService.removeItem('busy');
         this.getFollowers(1);
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: 1});
         this.configuration.isLoading = false;
-        this.busyService.removeItem('busy');
         const message = this.translateService.instant('SUCCESS.EVALUATE_ALL_2');
         this.alertService.success(String(data.number_results).concat(message), false);
         window.scroll(0, 0);

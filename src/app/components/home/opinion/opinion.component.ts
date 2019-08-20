@@ -302,10 +302,10 @@ export class OpinionComponent implements OnInit {
         this.dm.loadOpinions().then((data: any) => {
         this.getBrand();
         this.selector = 'new';
+        this.busyService.removeItem('busy');
         this.getOpinions(1);
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: 1});
         this.configuration.isLoading = false;
-        this.busyService.removeItem('busy');
         if (data.status === 200) {
         const message = this.translateService.instant('SUCCESS.LOAD_NO_RESULTS');
         this.alertService.success(message, false);
@@ -330,10 +330,10 @@ export class OpinionComponent implements OnInit {
         this.dm.evaluateAllOpinions().then((data: any) => {
         this.getBrand();
         this.selector = 'evaluated';
+        this.busyService.removeItem('busy');
         this.getOpinions(1);
         this.table.apiEvent({type: API.setPaginationCurrentPage, value: 1});
         this.configuration.isLoading = false;
-        this.busyService.removeItem('busy');
         const message = this.translateService.instant('SUCCESS.EVALUATE_ALL');
         this.alertService.success(String(data.number_results).concat(message), false);
         window.scroll(0, 0);

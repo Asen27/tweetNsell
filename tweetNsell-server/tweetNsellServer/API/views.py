@@ -909,7 +909,7 @@ class EvaluateAllOpinions(APIView):
                     if opinion.language == 'en':
                         attitude = english_sentiment_analyzer(text)
                     else:
-                        attitude = spanish_sentiment_analyzer(text)
+                        attitude = english_sentiment_analyzer(text)
                     opinion.attitude = attitude
                     opinion.save()
                 except Exception:

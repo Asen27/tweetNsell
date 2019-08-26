@@ -56,6 +56,7 @@
         "UNPIN_2" : "This opinion has not been pinned!",
         "EVALUATE" : "This opinion has already been evaluated!",
         "LOAD_1" : "An unexpected error occurred while loading the opinions! Remember that this applications consumes the Twitter Search API, which, unforunately, have rate limits. Please, retry loading the opinions in 15 minutes.",
+        "LOAD_3" : "The GoogleTrans API has temporarily blocked your IP address due to a large number of requests in a short period of time. Please, try again tomorrow!",
         "EVALUATE_ALL" : "There are no opinions to evaluate!",
         "SERVICE_INDUSTRY_1" : "This service industry doesn't exist! ",
         "SERVICE_INDUSTRY_2" : "The default service industry can't be deleted! ",

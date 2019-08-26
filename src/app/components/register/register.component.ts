@@ -7,6 +7,7 @@ import { AlertService  } from '../../services/alertService';
 import { ServiceIndustry } from '../../app.data.model';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { routerTransition } from '../../router.animations';
+import { StorageService } from 'src/app/services/storageService';
 
 @Component({
     selector: 'app-register',
@@ -27,7 +28,8 @@ export class RegisterComponent implements OnInit {
     private alertService: AlertService,
     private cookieService: CookieService,
     private dm: DataManagement,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private storageService: StorageService
   ) {
 
     this.language = this.cookieService.check('lang') ? this.cookieService.get('lang') : 'en';
@@ -84,7 +86,17 @@ export class RegisterComponent implements OnInit {
         this.loading = false;
         const message = this.translateService.instant('SUCCESS.REGISTER');
         this.alertService.success(message, true);
-        this.router.navigate(['/register']);
+        this.dm
+        .login({
+        username: this.f.username.value,
+        password: this.f.password.value
+        })
+        .then(token => {
+          this.cookieService.set('token', token.token);
+          this.dm.getUserLogged(token.token).then(user => {
+            this.storageService.setItem('user:logged', JSON.stringify(user));
+          }).finally(() => this.router.navigate(['/info']));
+        });
           }, 1500);
         })
         .catch(error => {

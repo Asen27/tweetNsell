@@ -19,7 +19,7 @@ from django.http.response import JsonResponse
 from dateutil import parser
 from datetime import datetime, timezone
 from scholarmetrics import hindex
-from math import floor, log10
+from math import floor, log10, pow
 from django.contrib.auth.hashers import make_password
 from urllib.error import URLError
 from http.client import BadStatusLine
@@ -193,54 +193,7 @@ def get_user_by_token(request):
     return user
 
 
-def spanish_sentiment_analyzer(opinion):
-    opinion_without_whitespaces = opinion.strip()
-    opinion_without_mentions = re.sub(r'@\S+', '', opinion_without_whitespaces)
-    opinion_without_hashtags = opinion_without_mentions.replace("#", "")
-
-
-    emoji_list = []
-    emojis = regex.findall(r'\X', opinion_without_hashtags)
-
-    for element in emojis:
-        if any(char in emoji.UNICODE_EMOJI for char in element):
-            emoji_list.append(element)
-
-    if len(emoji_list) > 0:
-
-        acceptable_characters = "abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789áéíóúÁÉÍÓÚñÑ.,¿?¡!;:-()"
-        opinion_without_emojis = ''.join([char if char in acceptable_characters else " " for char in list(opinion_without_hashtags)])
-
-    else:
-        opinion_without_emojis = opinion_without_hashtags
-
-
-    opinion_to_lowercase = opinion_without_emojis.lower()
-
-
-    translator = Translator()
-    try:
-        translated_opinion = translator.translate(opinion_to_lowercase, src='es', dest='en').text
-    except Exception:
-        return 'neu'
-    else:
-        if len(emoji_list) > 0:
-            for elem in emoji_list:
-                translated_opinion += " " + elem
-
-        analyzer = SentimentIntensityAnalyzer()
-        score = analyzer.polarity_scores(translated_opinion)
-        compound = float(score['compound'])
-        if compound > 0.3:
-            attitude = 'pos'
-        elif compound < -0.3:
-            attitude = 'neg'
-        else:
-            attitude = 'neu'
-        return attitude
-
-
-def english_sentiment_analyzer(opinion):
+def text_preprocessor(opinion, in_spanish):
     opinion_without_whitespaces = opinion.strip()
     opinion_without_mentions = re.sub(r'@\S+', '', opinion_without_whitespaces)
     opinion_without_hashtags = opinion_without_mentions.replace("#", "")
@@ -257,16 +210,38 @@ def english_sentiment_analyzer(opinion):
     if len(emoji_list) > 0:
         acceptable_characters = "abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789áéíóúÁÉÍÓÚñÑ.,¿?¡!;:-()+='$%&<>€/"
         opinion_without_emojis = ''.join([char if char in acceptable_characters else " " for char in list(opinion_without_hashtags)])
-
-        for elem in emoji_list:
-            opinion_without_emojis += " " + elem
-
-        processed_opinion = opinion_without_emojis
     else:
-        processed_opinion = opinion_without_hashtags
+        opinion_without_emojis = opinion_without_hashtags
+
+    if in_spanish:
+        opinion_to_lowercase = opinion_without_emojis.lower()
+        return opinion_to_lowercase, emoji_list
+    else:
+        return opinion_without_emojis, emoji_list
+
+
+def translate_opinion(opinion, emoji_list, in_spanish):
+    if in_spanish:
+        translator = Translator()
+        try:
+            translated_opinion = translator.translate(opinion, src='es', dest='en')
+        except Exception:
+            return None
+        else:
+            opinion = translated_opinion.text
+
+    if len(emoji_list) > 0:
+            for elem in emoji_list:
+                opinion += " " + elem
+
+    return opinion
+
+
+
+def sentiment_analyzer(opinion):
 
     analyzer = SentimentIntensityAnalyzer()
-    score = analyzer.polarity_scores(processed_opinion)
+    score = analyzer.polarity_scores(opinion)
     compound = float(score['compound'])
     if compound > 0.3:
         attitude = 'pos'
@@ -275,6 +250,7 @@ def english_sentiment_analyzer(opinion):
     else:
         attitude = 'neu'
     return attitude
+
 
 
 def calculate_influence(k, k_tweet_publication_moment, k_retweets, number_followers):
@@ -287,14 +263,13 @@ def calculate_influence(k, k_tweet_publication_moment, k_retweets, number_follow
             if days_since_k_tweet == 0:
                 days_since_k_tweet += 1
             tweets_creation_rate = k / days_since_k_tweet
-            average_retweets_per_tweet = sum(k_retweets) / k
             h_index = hindex(k_retweets)
             if number_followers > 0:
                 oom_number_followers = floor(log10(number_followers))
             else:
                 oom_number_followers = 0
 
-            return tweets_creation_rate * average_retweets_per_tweet * (h_index + oom_number_followers)
+            return tweets_creation_rate  * pow(h_index, 2) * oom_number_followers
 
 
 def backendWakeUp(request):
@@ -487,42 +462,52 @@ class LoadOpinions(APIView):
     permission_classes = (IsAuthenticated, )
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
-    def search_for_opinions(self, twitter_api, username, language, last_tweet_id=None, max_results=200):
+    def search_for_opinions(self, twitter_api, username, language, last_tweet_id, max_id):
 
         q = '@%s -filter:retweets AND filter:safe' % username
 
-        try:
-            search_results = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=100, tweet_mode='extended', include_entities=True, since_id=last_tweet_id)
-
-        except Exception as e:
-            print(str(e))
-            return None
-
-        opinions = search_results['statuses']
-
-        max_results = min(500, max_results)
-        stop = False
-        for _ in range(5):
-            if len(search_results['statuses']) < 100:
-                stop = True
-
-            if stop is False:
-                max_id = search_results['statuses'][-1]['id_str']
-                try:
-                    search_results = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=100, tweet_mode='extended', include_entities=True, max_id=max_id, since_id=last_tweet_id)
-                except Exception:
-                    return None
-
-                opinions += search_results['statuses'][1:]
+        update_latest_tweet = False
+        if max_id is '0':
+            print("Update since_id")
+            try:
+                search_request = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=30, tweet_mode='extended', include_entities=True, since_id=last_tweet_id)
+            except Exception:
+                return None, None, None
             else:
-                break
+                if search_request is None:
+                    return None, None, None
+                else:
+                    opinions = search_request['statuses']
+                    if len(opinions) > 0:
+                        update_latest_tweet = True
 
-            if len(opinions) > max_results:
-                break
+        else:
+            try:
+                search_request = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=31, tweet_mode='extended', include_entities=True, max_id=max_id)
+            except Exception:
+                return None, None, None
+            else:
+                if search_request is None:
+                    return None, None, None
+                else:
+                    print("Check if exists" + search_request['statuses'][0]['id_str'])
+                    opinions = search_request['statuses'][1:]
 
-        return opinions
 
 
+        if len(opinions) == 30:
+            max_id = opinions[-1]['id_str']
+            print("From:" + opinions[0]['full_text'])
+            print("To:" + opinions[-1]['full_text'])
+
+        else:
+            print('The one week limit has been reached!')
+
+            print(len(opinions))
+            max_id = '0'
+
+
+        return opinions, update_latest_tweet, max_id
 
     def post(self, request):
 
@@ -538,25 +523,38 @@ class LoadOpinions(APIView):
         try:
             last_tweet = Opinion.objects.filter(brand = brand, is_latest = True)[:1].get()
             last_tweet_id = last_tweet.id
-            print(last_tweet_id)
         except Opinion.DoesNotExist:
             last_tweet = None
             last_tweet_id = None
 
-        opinions = self.search_for_opinions(twitter_api, brand.user_profile.username, language, last_tweet_id=last_tweet_id)
 
+        cursor = brand.opinions_cursor
 
-        if opinions is None:
+        opinions, update_latest_tweet, max_id = self.search_for_opinions(twitter_api, brand.user_profile.username, language, last_tweet_id=last_tweet_id, max_id=cursor)
+
+        if opinions is None or max_id is None:
             return JsonResponse({'error':'A problem occurred while searching the opinions!'}, status=429)
 
+        count = 0
         num_results = 0
-        is_first = True;
+        is_first = update_latest_tweet
         for opinion in opinions:
             if (opinion['lang'] == brand.language and len(opinion['entities']['user_mentions']) == 1 and len(opinion['entities']['urls']) == 0):
+                count += 1
                 id = opinion['id_str']
                 text = html.unescape(opinion['full_text'])
                 text = re.sub(r'https?:\/\/.*[\r\n]*', ' ', text, flags=re.MULTILINE)
                 language = opinion['lang']
+                attitude = 'unc'
+                if language == 'en':
+                    preprocessed_text, emoji_list = text_preprocessor(text, False)
+                    preprocessed_text = translate_opinion(preprocessed_text, emoji_list, False)
+                else:
+                    preprocessed_text, emoji_list = text_preprocessor(text, True)
+                    preprocessed_text = translate_opinion(preprocessed_text, emoji_list, True)
+                    if preprocessed_text is None:
+                        return JsonResponse({'error':'A problem occurred while searching the opinions!'}, status=430)
+
                 publication_moment = parser.parse(opinion['created_at'])
                 number_favorites = opinion['favorite_count']
                 number_retweets = opinion['retweet_count']
@@ -568,11 +566,12 @@ class LoadOpinions(APIView):
                 except Exception:
                     author_url = ''
                 author_number_followers = opinion['user']['followers_count']
-                if is_first is True:
+                if is_first:
                     is_latest = True
                     is_first = False
                 else:
                     is_latest = False
+
 
                 try:
                     author = Customer(
@@ -597,11 +596,11 @@ class LoadOpinions(APIView):
                         author.save()
 
                 try:
-
-                    new_opinion = Opinion(
+                    new_opinion = Opinion.objects.create(
                     id = id,
                     text = text,
                     language = language,
+                    preprocessed_text = preprocessed_text,
                     publication_moment = publication_moment,
                     number_favorites = number_favorites,
                     number_retweets = number_retweets,
@@ -611,11 +610,11 @@ class LoadOpinions(APIView):
                     brand = brand,
                     author = author
                     )
-                    new_opinion.save()
 
                 except Exception as e:
-                    print(str(e))
-                    print(text)
+                    print("Already exists!")
+                    max_id = '0'
+                    continue
 
                 else:
                     num_results += 1
@@ -623,7 +622,9 @@ class LoadOpinions(APIView):
                         last_tweet.is_latest = False
                         last_tweet.save()
 
-
+        print("Count" + str(count))
+        brand.opinions_cursor = max_id
+        brand.save()
         if num_results == 0:
             return JsonResponse({'message':'There are no new tweets', 'status': 200}, status=200)
         else:
@@ -866,11 +867,8 @@ class EvaluateOpinion(UpdateAPIView):
             if not instance.attitude == 'unc':
                 return JsonResponse({'error': "This opinion has been evaluated already!"}, status=409)
             else:
-                opinion = instance.text
-                if instance.language == 'en':
-                    attitude = english_sentiment_analyzer(opinion)
-                else:
-                    attitude = spanish_sentiment_analyzer(opinion)
+                opinion = instance.preprocessed_text
+                attitude = sentiment_analyzer(opinion)
                 brand = instance.brand
                 instance.attitude = attitude
                 brand.number_new_opinions -= 1
@@ -905,11 +903,7 @@ class EvaluateAllOpinions(APIView):
             num_evaluated_opinions = 0
             for opinion in opinions:
                 try:
-                    text = opinion.text
-                    if opinion.language == 'en':
-                        attitude = english_sentiment_analyzer(text)
-                    else:
-                        attitude = english_sentiment_analyzer(text)
+                    attitude = sentiment_analyzer(opinion.preprocessed_text)
                     opinion.attitude = attitude
                     opinion.save()
                 except Exception:
@@ -1509,9 +1503,15 @@ class DashboardData(APIView):
         stats['number_brands'] = Brand.objects.all().count()
 
         number_opinions = Opinion.objects.all().count()
-        stats['opinions_per_brand'] = number_opinions / stats['number_brands']
+        if stats['number_brands'] == 0:
+            stats['opinions_per_brand'] = 0
+        else:
+            stats['opinions_per_brand'] = number_opinions / stats['number_brands']
 
         total_rating = Brand.objects.annotate(total_rating=num_positive_opinions - num_negative_opinions).aggregate(Sum('total_rating')).get('total_rating__sum')
-        stats['total_rating_per_brand'] = total_rating / stats['number_brands']
+        if stats['number_brands'] == 0:
+            stats['total_rating_per_brand'] = 0
+        else:
+            stats['total_rating_per_brand'] = total_rating / stats['number_brands']
 
         return JsonResponse(stats, status = 200)

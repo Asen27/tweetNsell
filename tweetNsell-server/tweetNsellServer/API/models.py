@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import JSONField
 class ServiceIndustry(models.Model):
     name_en = models.CharField(max_length = 30, unique=True)
     name_es = models.CharField(max_length = 30, unique=True)
-    
+
     def __str__(self):
         return "%s (%s)" % (self.name_en, self.name_es)
 
@@ -46,6 +46,7 @@ class Brand(models.Model):
     social_rating = JSONField()
     number_new_opinions = models.PositiveIntegerField(default=0)
 
+    opinions_cursor = models.CharField(max_length = 30, default = '0')
     followers_cursor = models.CharField(max_length = 30, default = '0')
     number_new_followers = models.PositiveIntegerField(default=0)
 
@@ -77,6 +78,7 @@ class Customer(models.Model):
 class Opinion(models.Model):
     id = models.CharField(max_length = 30, primary_key=True)
     text = models.TextField(blank = True)
+    preprocessed_text = models.TextField(blank = True)
 
     ENGLISH = 'en'
     SPANISH = 'es'
@@ -155,4 +157,4 @@ class Follower(models.Model):
 
 
 
- 
+

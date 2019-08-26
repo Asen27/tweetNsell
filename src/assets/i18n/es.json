@@ -55,6 +55,7 @@
         "UNPIN_2": "¡Esta opinión no ha sido marcada como destacada!",
         "EVALUATE": "¡Esta opinión ya ha sido evaluada!",
         "LOAD_1": "Se ha producido un error inesperado al cargar las opiniones. Recuerde que esta aplicación consume la API de Twitter, la cual, desafortunadamente, tiene ciertos límites de tasa. Por favor, intente cargar las opiniones de nuevo en 15 minutos.",
+        "LOAD_3" : "La API de GoogleTrans ha bloqueado su dirección IP debido a la gran cantidad de peticiones que Ud. ha realizado. ¡Por favor, vuelva a intentar cargar las opiniones mañana!",
         "EVALUATE_ALL": "¡No hay opiniones a evaluar!",
         "SERVICE_INDUSTRY_1" : "¡La industria no existe! ",
         "SERVICE_INDUSTRY_2" : "¡La industria por defecto no se puede eliminar! ",

@@ -470,7 +470,7 @@ class LoadOpinions(APIView):
         if max_id is '0':
             print("Update since_id")
             try:
-                search_request = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=30, tweet_mode='extended', include_entities=True, since_id=last_tweet_id)
+                search_request = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=50, tweet_mode='extended', include_entities=True, since_id=last_tweet_id)
             except Exception:
                 return None, None, None
             else:
@@ -483,7 +483,7 @@ class LoadOpinions(APIView):
 
         else:
             try:
-                search_request = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=31, tweet_mode='extended', include_entities=True, max_id=max_id)
+                search_request = make_twitter_request(twitter_api.search.tweets, q=q, lang=language, count=51, tweet_mode='extended', include_entities=True, max_id=max_id)
             except Exception:
                 return None, None, None
             else:
@@ -495,7 +495,7 @@ class LoadOpinions(APIView):
 
 
 
-        if len(opinions) == 30:
+        if len(opinions) == 50:
             max_id = opinions[-1]['id_str']
             print("From:" + opinions[0]['full_text'])
             print("To:" + opinions[-1]['full_text'])

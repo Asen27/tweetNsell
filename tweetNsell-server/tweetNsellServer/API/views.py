@@ -553,6 +553,9 @@ class LoadOpinions(APIView):
                     preprocessed_text, emoji_list = text_preprocessor(text, True)
                     preprocessed_text = translate_opinion(preprocessed_text, emoji_list, True)
                     if preprocessed_text is None:
+                        brand.opinions_cursor = max_id
+                        brand.number_new_opinions += num_results
+                        brand.save()
                         return JsonResponse({'error':'A problem occurred while searching the opinions!'}, status=430)
 
                 publication_moment = parser.parse(opinion['created_at'])

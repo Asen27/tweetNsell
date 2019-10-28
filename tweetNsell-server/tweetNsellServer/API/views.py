@@ -490,7 +490,6 @@ class LoadOpinions(APIView):
                 if search_request is None:
                     return None, None, None
                 else:
-                    print("Check if exists" + search_request['statuses'][0]['id_str'])
                     opinions = search_request['statuses'][1:]
 
 

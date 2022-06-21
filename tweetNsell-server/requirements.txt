@@ -15,7 +15,7 @@ django-cors-headers==2.5.2
 twitter==1.18.0
 whitenoise==4.1.2
 dj-database-url==0.5.0
-numpy==1.15.2
+numpy==1.22.0
 
 #Heroku requirements
 gunicorn
